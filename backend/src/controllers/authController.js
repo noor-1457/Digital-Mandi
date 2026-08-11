@@ -193,7 +193,7 @@ export const refreshToken = async (req, res) => {
 // Get Profile (using access token)
 export const getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = await User.findById(req.user._id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -209,7 +209,7 @@ export const getProfile = async (req, res) => {
 // Update Profile (using access token)
 export const updateProfile = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user._id;
         const updateData = req.body;
         
         // Don't allow email or role change
@@ -241,7 +241,7 @@ export const updateProfile = async (req, res) => {
 // Logout (clear refresh token)
 export const logout = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user._id;
         await User.findByIdAndUpdate(userId, { 
             refreshToken: null 
         });
