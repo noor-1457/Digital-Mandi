@@ -2,7 +2,7 @@ import  User  from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 
-// ✅ REGISTRATION - No changes needed
+// REGISTRATION 
 export const register = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -67,7 +67,7 @@ export const register = async (req, res) => {
 };
 
 
-// ✅ FIXED LOGIN - With Access & Refresh Tokens
+// With Access & Refresh Tokens
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -140,7 +140,7 @@ export const login = async (req, res) => {
     }
 };
 
-// ✅ NEW - Refresh Token Endpoint
+// Refresh Token Endpoint
 export const refreshToken = async (req, res) => {
     try {
         const { refreshToken } = req.body;
@@ -190,7 +190,7 @@ export const refreshToken = async (req, res) => {
     }
 };
 
-// ✅ FIXED - Get Profile (using access token)
+// Get Profile (using access token)
 export const getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId);
@@ -206,7 +206,7 @@ export const getProfile = async (req, res) => {
     }
 };
 
-// ✅ FIXED - Update Profile (using access token)
+// Update Profile (using access token)
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -238,7 +238,7 @@ export const updateProfile = async (req, res) => {
     }
 };
 
-// ✅ NEW - Logout (clear refresh token)
+// Logout (clear refresh token)
 export const logout = async (req, res) => {
     try {
         const userId = req.user.userId;

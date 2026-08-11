@@ -11,31 +11,30 @@ import { verifyJWT } from '../middlewares/user.middleware.js';
 
 const router = express.Router();
 
-// ============================================
-// PUBLIC ROUTES (No authentication needed)
-// ============================================
 
-// 1️⃣ Register - Create new account
+// PUBLIC ROUTES (No authentication needed)
+
+
+// Register - Create new account
 router.post('/register', register);
 
-// 2️⃣ Login - Get access & refresh tokens
+// Login - Get access & refresh tokens
 router.post('/login', login);
 
-// 3️⃣ Refresh Token - Get new access token
+// Refresh Token - Get new access token
 router.post('/refresh-token', refreshToken);
 
 
-// ============================================
 // PROTECTED ROUTES (Need access token)
-// ============================================
 
-// 4️⃣ Get Profile - View user details
+
+// Get Profile - View user details
 router.get('/profile', verifyJWT, getProfile);
 
-// 5️⃣ Update Profile - Edit user details
+// Update Profile - Edit user details
 router.put('/profile', verifyJWT, updateProfile);
 
-// 6️⃣ Logout - Clear refresh token
+// Logout - Clear refresh token
 router.post('/logout', verifyJWT, logout);
 
 export default router;
