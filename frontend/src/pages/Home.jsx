@@ -9,11 +9,8 @@ import {
   Users,
 } from "lucide-react";
 
-import cereals from "../assets/cereals.jpg";
+import hero from "../assets/hero.jpg";
 
-// ============================================================
-// HOW IT WORKS DATA
-// ============================================================
 
 const steps = [
   {
@@ -39,9 +36,6 @@ const steps = [
   },
 ];
 
-// ============================================================
-// WHY DIGITAL MANDI DATA
-// ============================================================
 
 const benefits = [
   {
@@ -64,25 +58,19 @@ const benefits = [
   },
 ];
 
-// ============================================================
-// HOME PAGE
-// ============================================================
 
 export const Home = () => {
   return (
     <main className="bg-[#f8f7f2] text-[#263326]">
 
-      {/* ======================================================
-          HERO SECTION
-      ====================================================== */}
-
+          {/* HERO SECTION */}
       <section className="relative min-h-[620px] h-[76vh] max-h-[720px] flex items-center overflow-hidden">
 
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(${cereals})`,
+            backgroundImage: `url(${hero})`,
           }}
         />
 
@@ -90,23 +78,17 @@ export const Home = () => {
         <div className="absolute inset-0 bg-[#172016]/75" />
 
         {/* Decorative background glow */}
-        <div className="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-[#a7c957]/10 blur-3xl" />
+        <div className="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-[#fdd835]/10 blur-3xl" />
 
         {/* Hero content */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8">
 
           <div className="max-w-3xl">
 
-            {/* Small hero label */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 bg-white/10 backdrop-blur-sm text-[#d7e7b0] text-xs sm:text-sm font-medium">
-              <Leaf size={15} />
-              Smart Agricultural Marketplace
-            </div>
-
             {/* Main heading */}
             <h1 className="font-display mt-6 text-5xl sm:text-6xl lg:text-7xl font-medium leading-[1.05] text-white">
 
-              <span className="italic text-[#c7df8b]">
+              <span className="italic text-[#fdd835]">
                 Smart Agriculture.
               </span>
 
@@ -129,7 +111,7 @@ export const Home = () => {
               {/* Register */}
               <a
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#a7c957] hover:bg-[#b8d875] text-[#1f2d20] font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#fdd835] to-[#006400] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
                 Create Account
 
@@ -158,9 +140,7 @@ export const Home = () => {
       </section>
 
 
-      {/* ======================================================
-          HOW DIGITAL MANDI WORKS
-      ====================================================== */}
+          {/* HOW DIGITAL MANDI WORKS */}
 
       <section className="py-20 lg:py-24 bg-[#f8f7f2]">
 
@@ -171,24 +151,24 @@ export const Home = () => {
 
             <div className="flex items-center gap-3 mb-4">
 
-              <span className="w-10 h-px bg-[#6f8f3f]" />
+              <span className="w-10 h-px bg-[#fdd835]" />
 
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#6f8f3f]">
+              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#006400]">
                 Getting Started
               </span>
 
             </div>
 
-            <h2 className="font-display text-4xl sm:text-5xl leading-tight text-[#293829]">
+            <h2 className="font-display text-4xl sm:text-5xl leading-tight text-[#006400]">
 
               How Digital Mandi
-              <span className="italic text-[#6f8f3f]">
+              <span className="italic text-[#fdd835]">
                 {" "}works.
               </span>
 
             </h2>
 
-            <p className="mt-4 text-[#6b7468] leading-relaxed">
+            <p className="mt-4 text-black leading-relaxed">
               Getting started is simple. Create an account, complete your
               profile, and access a dashboard designed around your role.
             </p>
@@ -205,29 +185,29 @@ export const Home = () => {
               return (
                 <div
                   key={step.number}
-                  className="relative bg-white border border-[#e4e7de] rounded-2xl p-7 hover:border-[#cbd8ae] hover:-translate-y-1 transition-all duration-300"
+                  className="relative bg-white border border-[#fdd835] rounded-2xl p-7 hover:border-[#ffeb3b] hover:-translate-y-1 transition-all duration-300"
                 >
 
                   {/* Step number */}
                   <div className="flex items-center justify-between">
 
-                    <span className="text-sm font-semibold text-[#a7b29c]">
+                    <span className="text-sm font-semibold text-[#006400]">
                       {step.number}
                     </span>
 
-                    <div className="w-11 h-11 rounded-xl bg-[#eef3e4] flex items-center justify-center text-[#607b37]">
+                    <div className="w-11 h-11 rounded-xl bg-[#ffeb3b] flex items-center justify-center text-[#006400]">
                       <Icon size={21} />
                     </div>
 
                   </div>
 
                   {/* Step title */}
-                  <h3 className="mt-7 text-xl font-semibold text-[#293829]">
+                  <h3 className="mt-7 text-xl font-semibold text-[#006400]">
                     {step.title}
                   </h3>
 
                   {/* Step description */}
-                  <p className="mt-3 text-sm text-[#737b70] leading-relaxed">
+                  <p className="mt-3 text-sm text-black leading-relaxed">
                     {step.description}
                   </p>
 
@@ -242,9 +222,7 @@ export const Home = () => {
       </section>
 
 
-      {/* ======================================================
-          CHOOSE YOUR ROLE
-      ====================================================== */}
+          {/* CHOOSE YOUR ROLE */}
 
       <section className="py-20 lg:py-24 bg-[#eef2e7]">
 
@@ -254,19 +232,19 @@ export const Home = () => {
           <div className="text-center max-w-2xl mx-auto mb-12">
 
             <div className="flex justify-center mb-5">
-              <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-[#607b37] border border-[#dde4d3]">
+              <div className="w-12 h-12 rounded-xl bg-[#fdd835] flex items-center justify-center text-[#006400] border border-[#ffeb3b]">
                 <Users size={23} />
               </div>
             </div>
 
-            <h2 className="font-display text-4xl sm:text-5xl text-[#293829]">
+            <h2 className="font-display text-4xl sm:text-5xl text-[#006400]">
               Choose your
-              <span className="italic text-[#6f8f3f]">
+              <span className="italic text-[#fdd835]">
                 {" "}role.
               </span>
             </h2>
 
-            <p className="mt-4 text-[#6b7468] leading-relaxed">
+            <p className="mt-4 text-black leading-relaxed">
               Digital Mandi provides separate experiences for the two primary
               users of the platform.
             </p>
@@ -278,18 +256,18 @@ export const Home = () => {
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
 
             {/* Farmer card */}
-            <div className="group bg-[#263326] rounded-3xl p-8 lg:p-10 text-white overflow-hidden relative">
+            <div className="group bg-[#006400] rounded-3xl p-8 lg:p-10 text-white overflow-hidden relative">
 
               {/* Decorative circle */}
-              <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#a7c957]/10" />
+              <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#ffeb3b]" />
 
               <div className="relative z-10">
 
-                <div className="w-12 h-12 rounded-xl bg-[#a7c957]/15 flex items-center justify-center text-[#c7df8b]">
+                <div className="w-12 h-12 rounded-xl bg-[#a7c957]/15 flex items-center justify-center text-[#fdd835]">
                   <Leaf size={24} />
                 </div>
 
-                <p className="mt-7 text-xs uppercase tracking-[0.2em] text-[#b8d875] font-semibold">
+                <p className="mt-7 text-xs uppercase tracking-[0.2em] text-[#fdd835] font-semibold">
                   For Farmers
                 </p>
 
@@ -304,7 +282,7 @@ export const Home = () => {
 
                 <a
                   href="/register?role=farmer"
-                  className="inline-flex items-center gap-2 mt-7 text-sm font-semibold text-[#c7df8b] group-hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 mt-7 text-sm font-semibold text-[#fdd835] cursor-pointer"
                 >
                   Register as Farmer
 
@@ -323,15 +301,15 @@ export const Home = () => {
             <div className="group bg-white rounded-3xl p-8 lg:p-10 border border-[#dde4d3] overflow-hidden relative">
 
               {/* Decorative circle */}
-              <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#d89b55]/10" />
+              <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#006400]" />
 
               <div className="relative z-10">
 
-                <div className="w-12 h-12 rounded-xl bg-[#f5eadf] flex items-center justify-center text-[#a96935]">
+                <div className="w-12 h-12 rounded-xl bg-[#006400]/10 flex items-center justify-center text-[#fdd835]">
                   <Users size={24} />
                 </div>
 
-                <p className="mt-7 text-xs uppercase tracking-[0.2em] text-[#a96935] font-semibold">
+                <p className="mt-7 text-xs uppercase tracking-[0.2em] text-[#fdd835] font-semibold">
                   For Buyers
                 </p>
 
@@ -346,7 +324,7 @@ export const Home = () => {
 
                 <a
                   href="/register?role=buyer"
-                  className="inline-flex items-center gap-2 mt-7 text-sm font-semibold text-[#6f8f3f] group-hover:text-[#4f682d] transition-colors"
+                  className="inline-flex items-center gap-2 mt-7 text-sm font-semibold text-[#fdd835] cursor-pointer"
                 >
                   Register as Buyer
 
@@ -367,9 +345,7 @@ export const Home = () => {
       </section>
 
 
-      {/* ======================================================
-          WHY DIGITAL MANDI
-      ====================================================== */}
+          {/* WHY DIGITAL MANDI */}
 
       <section className="py-20 lg:py-24 bg-[#f8f7f2]">
 
@@ -380,17 +356,17 @@ export const Home = () => {
 
             <div className="flex items-center gap-3 mb-4">
 
-              <span className="w-10 h-px bg-[#6f8f3f]" />
+              <span className="w-10 h-px bg-[#fdd835]" />
 
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#6f8f3f]">
+              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#006400]">
                 The Platform
               </span>
 
             </div>
 
-            <h2 className="font-display text-4xl sm:text-5xl text-[#293829]">
+            <h2 className="font-display text-4xl sm:text-5xl text-[#006400]">
               Designed around
-              <span className="italic text-[#6f8f3f]">
+              <span className="italic text-[#fdd835]">
                 {" "}people.
               </span>
             </h2>
@@ -410,16 +386,16 @@ export const Home = () => {
                   className="flex gap-5 p-6 rounded-2xl border border-[#e4e7de] bg-white"
                 >
 
-                  <div className="shrink-0 w-11 h-11 rounded-xl bg-[#eef3e4] flex items-center justify-center text-[#607b37]">
+                  <div className="shrink-0 w-11 h-11 rounded-xl bg-[#fdd835] flex items-center justify-center text-[#006400]">
                     <Icon size={21} />
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-[#293829]">
+                    <h3 className="font-semibold text-[#006400]">
                       {benefit.title}
                     </h3>
 
-                    <p className="mt-2 text-sm text-[#737b70] leading-relaxed">
+                    <p className="mt-2 text-sm text-black leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -435,30 +411,28 @@ export const Home = () => {
       </section>
 
 
-      {/* ======================================================
-          FINAL CALL TO ACTION
-      ====================================================== */}
+          {/* FINAL CALL TO ACTION */}
 
       <section className="px-6 pb-20 lg:pb-24 bg-[#f8f7f2]">
 
         <div className="max-w-7xl mx-auto">
 
-          <div className="relative overflow-hidden rounded-3xl bg-[#263326] px-7 py-12 md:px-12 text-center">
+          <div className="relative overflow-hidden rounded-3xl bg-[#006400] px-7 py-12 md:px-12 text-center">
 
             {/* Decorative elements */}
-            <div className="absolute -top-32 -right-24 w-80 h-80 rounded-full bg-[#a7c957]/10 blur-3xl" />
+            <div className="absolute -top-32 -right-24 w-80 h-80 rounded-full bg-[#ffeb3b]/50 blur-3xl" />
 
-            <div className="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-[#d89b55]/10 blur-3xl" />
+            <div className="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-[#ffeb3b]/50 blur-3xl" />
 
             <div className="relative z-10 max-w-2xl mx-auto">
 
-              <p className="text-xs uppercase tracking-[0.2em] text-[#b8d875] font-semibold">
+              <p className="text-xs uppercase tracking-[0.2em] text-white font-semibold">
                 Join Digital Mandi
               </p>
 
               <h2 className="font-display text-4xl sm:text-5xl text-white mt-4">
                 Ready to get
-                <span className="italic text-[#c7df8b]">
+                <span className="italic text-[#fdd835]">
                   {" "}started?
                 </span>
               </h2>
@@ -472,7 +446,7 @@ export const Home = () => {
 
                 <a
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#a7c957] hover:bg-[#b8d875] text-[#1f2d20] font-semibold transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#006400] font-semibold transition-all duration-300"
                 >
                   Create Account
                   <ArrowRight size={18} />
@@ -480,7 +454,7 @@ export const Home = () => {
 
                 <a
                   href="/login"
-                  className="inline-flex items-center justify-center px-6 py-3.5 rounded-full border border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3.5 rounded-full border border-white text-white hover:bg-white/10 font-medium transition-all duration-300"
                 >
                   Login
                 </a>

@@ -46,7 +46,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#202a1f]/95 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#006400] backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -61,12 +61,12 @@ export const Navbar = () => {
             {/* Logo icon */}
             <div className="relative">
 
-              <div className="w-11 h-11 rounded-2xl bg-[#a7c957] flex items-center justify-center shadow-md shadow-black/10 group-hover:bg-[#b8d875] group-hover:scale-105 transition-all duration-300">
+              <div className="w-11 h-11 rounded-2xl bg-[#fdd835] flex items-center justify-center shadow-md shadow-black/10 group-hover:scale-105 transition-all duration-300">
 
                 <Leaf
                   size={24}
                   strokeWidth={2}
-                  className="text-[#263326]"
+                  className="text-[#006400]"
                 />
 
               </div>
@@ -81,7 +81,7 @@ export const Navbar = () => {
                 Digital Mandi
               </h1>
 
-              <p className="hidden sm:block text-[9px] uppercase tracking-[0.2em] text-white/45 font-medium">
+              <p className="hidden sm:block text-[9px] uppercase tracking-[0.2em] text-[#ffeb3b] font-medium">
                 Smart Agricultural Marketplace
               </p>
 
@@ -108,7 +108,7 @@ export const Navbar = () => {
 
                     ${
                       isActive(link.path)
-                        ? "text-[#c7df8b] bg-white/[0.08]"
+                        ? "text-white bg-white/[0.08]"
                         : "text-white/65 hover:text-white hover:bg-white/[0.06]"
                     }
                   `}
@@ -122,8 +122,8 @@ export const Navbar = () => {
 
                       ${
                         isActive(link.path)
-                          ? "text-[#a7c957]"
-                          : "text-white/45 group-hover:text-[#a7c957]"
+                          ? "text-[#ffeb3b]"
+                          : "text-white/45 group-hover:text-[#ffeb3b]"
                       }
                     `}
                   />
@@ -192,8 +192,8 @@ export const Navbar = () => {
                 flex items-center gap-2
                 px-5 py-2.5
                 rounded-full
-                bg-[#a7c957]
-                hover:bg-[#b8d875]
+                bg-[#fdd835]
+                hover:bg-[#ffeb3b]
                 text-[#263326]
                 text-sm font-semibold
                 shadow-md shadow-black/10
