@@ -23,7 +23,7 @@ function BuyerDashboard() {
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
 
-      {/* ================= MOBILE HEADER ================= */}
+      {/* MOBILE HEADER */}
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#006400] text-white h-20 px-5 flex items-center justify-between shadow-lg">
 
@@ -59,7 +59,7 @@ function BuyerDashboard() {
       </div>
 
 
-      {/* ================= SIDEBAR ================= */}
+      {/* SIDEBAR*/}
 
       <aside
         className={`
@@ -179,7 +179,7 @@ function BuyerDashboard() {
       </aside>
 
 
-      {/* ================= MOBILE OVERLAY ================= */}
+      {/* MOBILE OVERLAY */}
 
       {sidebarOpen && (
         <div
@@ -189,7 +189,7 @@ function BuyerDashboard() {
       )}
 
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* MAIN CONTENT */}
 
       <section className="lg:ml-72 min-h-screen pt-24 lg:pt-0">
 
@@ -244,7 +244,7 @@ function BuyerDashboard() {
           </div>
 
 
-          {/* ================= WELCOME CARD ================= */}
+          {/* WELCOME CARD */}
 
           <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-[1px] shadow-lg">
 
@@ -291,7 +291,7 @@ function BuyerDashboard() {
           </div>
 
 
-          {/* ================= DASHBOARD CARDS ================= */}
+          {/* DASHBOARD CARDS*/}
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
 
@@ -381,7 +381,7 @@ function BuyerDashboard() {
           </div>
 
 
-          {/* ================= CONTINUE SHOPPING ================= */}
+          {/* CONTINUE SHOPPING */}
 
           <div className="mt-10 flex justify-center">
 

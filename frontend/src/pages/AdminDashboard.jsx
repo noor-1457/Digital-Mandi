@@ -5,7 +5,6 @@ function BuyerDashboard() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Abhi frontend redirect
     navigate("/login");
   };
 

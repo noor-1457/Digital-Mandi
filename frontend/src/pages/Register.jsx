@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
-  // ================= FORM STATE =================
+  // FORM STATE 
 
   const [formData, setFormData] = useState({
     fullName: "",

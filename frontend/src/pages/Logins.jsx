@@ -23,18 +23,18 @@ function Logins() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ================= FORM STATE =================
+  // FORM STATE
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // ================= PASSWORD VISIBILITY =================
+  // PASSWORD VISIBILITY
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // ================= HANDLE INPUT CHANGE =================
+  // HANDLE INPUT CHANGE 
 
   // This function updates the formData state whenever an input field changes.
   // prev is used to ensure that we are updating the state based on the previous state,
@@ -53,7 +53,7 @@ function Logins() {
     setSuccess("");
   };
 
-  // ================= FORM SUBMIT =================
+  // FORM SUBMIT 
 
   // e.preventDefault() prevents the default form submission behavior,
   // which would cause a page reload.
