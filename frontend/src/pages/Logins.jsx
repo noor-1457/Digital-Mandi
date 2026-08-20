@@ -102,13 +102,7 @@ function Logins() {
       });
 
       // Redirect user according to their role
-      if (user?.userRole === "farmer") {
-        navigate("/farmer-dashboard");
-      } else if (user?.userRole === "buyer") {
-        navigate("/buyer-dashboard");
-      } else {
-        navigate("/");
-      }
+      navigate(response.data.dashboardUrl);
 
     } catch (error) {
 

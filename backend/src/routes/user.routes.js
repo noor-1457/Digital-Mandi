@@ -5,7 +5,8 @@ import {
     refreshToken, 
     getProfile, 
     updateProfile,
-    logout 
+    logout,
+    adminLogin 
 } from '../controllers/authController.js';
 import { verifyJWT } from '../middlewares/user.middleware.js';
 
@@ -14,6 +15,8 @@ const router = express.Router();
 
 // PUBLIC ROUTES (No authentication needed)
 
+//admin login route
+router.post('/admin/login', adminLogin);
 
 // Register - Create new account
 router.post('/register', register);
