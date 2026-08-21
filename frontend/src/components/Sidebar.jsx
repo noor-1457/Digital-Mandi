@@ -1,39 +1,141 @@
-import { Link, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ShoppingBag, User, LogOut, Leaf, Menu, X } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  User,
+  LogOut,
+  Leaf,
+  Menu,
+  X,
+  Users,
+  Package,
+  ClipboardList,
+} from "lucide-react";
 import { useState } from "react";
 
 function Sidebar() {
+  const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+const role = user?.userRole || "buyer";
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  /* ================= SIDEBAR DATA ================= */
+
+  const sidebarData = {
+    buyer: {
+      title: "Buyer Dashboard",
+      portal: "Buyer Portal",
+      dashboard: "/buyer-dashboard",
+
+      links: [
+        {
+          name: "Dashboard",
+          path: "/buyer-dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          name: "My Orders",
+          path: "/orders",
+          icon: ShoppingBag,
+        },
+        {
+          name: "My Profile",
+          path: "/profile",
+          icon: User,
+        },
+      ],
+    },
+
+    farmer: {
+      title: "Farmer Dashboard",
+      portal: "Farmer Portal",
+      dashboard: "/farmer-dashboard",
+
+      links: [
+        {
+          name: "Dashboard",
+          path: "/farmer-dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          name: "My Products",
+          path: "/my-products",
+          icon: Package,
+        },
+        {
+          name: "Orders",
+          path: "/farmer-orders",
+          icon: ClipboardList,
+        },
+        {
+          name: "My Profile",
+          path: "/profile",
+          icon: User,
+        },
+      ],
+    },
+
+    admin: {
+      title: "Admin Dashboard",
+      portal: "Admin Portal",
+      dashboard: "/admin-dashboard",
+
+      links: [
+        {
+          name: "Dashboard",
+          path: "/admin-dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          name: "Users",
+          path: "/users",
+          icon: Users,
+        },
+        {
+          name: "Products",
+          path: "/products",
+          icon: Package,
+        },
+        {
+          name: "My Profile",
+          path: "/profile",
+          icon: User,
+        },
+      ],
+    },
+  };
+
+  const currentSidebar = sidebarData[role] || sidebarData.buyer;
+
+  /* ================= LOGOUT ================= */
 
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Backend logout
-      const response = await fetch("http://localhost:8000/api/auth/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/auth/logout",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 
       console.log("Logout response:", data);
 
-      // Remove frontend authentication data
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      // Go to login
       navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
 
-      // Even if backend request fails,
-      // remove local authentication
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
@@ -43,10 +145,9 @@ function Sidebar() {
 
   return (
     <>
-    {/* MOBILE HEADER */}
+      {/* ================= MOBILE HEADER ================= */}
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#006400] text-white h-20 px-5 flex items-center justify-between shadow-lg">
-
         <div className="flex items-center gap-3">
 
           <div className="w-10 h-10 rounded-xl bg-[#fdd835] flex items-center justify-center">
@@ -59,7 +160,7 @@ function Sidebar() {
             </p>
 
             <h1 className="font-bold">
-              Buyer Dashboard
+              {currentSidebar.title}
             </h1>
           </div>
 
@@ -75,11 +176,9 @@ function Sidebar() {
             <Menu size={22} />
           )}
         </button>
-
       </div>
 
-
-      {/* MOBILE OVERLAY */}
+      {/* ================= MOBILE OVERLAY ================= */}
 
       {sidebarOpen && (
         <div
@@ -87,6 +186,8 @@ function Sidebar() {
           className="fixed inset-0 z-40 bg-black/40 lg:hidden"
         />
       )}
+
+      {/* ================= SIDEBAR ================= */}
 
       <aside
         className={`
@@ -100,72 +201,91 @@ function Sidebar() {
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* LOGO */}
+
+        {/* ================= LOGO ================= */}
 
         <div className="h-24 px-6 flex items-center gap-3 border-b border-white/10">
+
           <div className="w-12 h-12 rounded-2xl bg-[#fdd835] flex items-center justify-center">
             <Leaf size={26} className="text-[#006400]" />
           </div>
 
           <div>
-            <h1 className="text-xl font-bold">Digital Mandi</h1>
+            <h1 className="text-xl font-bold">
+              Digital Mandi
+            </h1>
 
-            <p className="text-xs text-[#dce8d5]">Buyer Portal</p>
+            <p className="text-xs text-[#dce8d5]">
+              {currentSidebar.portal}
+            </p>
           </div>
+
         </div>
 
-        {/* NAVIGATION */}
+        {/* ================= NAVIGATION ================= */}
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-          {/* Dashboard */}
 
-          <Link
-            to="/buyer-dashboard"
-            onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 transition"
-          >
-            <LayoutDashboard size={20} />
+          {currentSidebar.links.map((link) => {
+            const Icon = link.icon;
 
-            <span className="font-medium">Dashboard</span>
-          </Link>
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setSidebarOpen(false)}
+                className={`
+                  flex items-center gap-3
+                  px-4 py-3.5
+                  rounded-xl
+                  transition
+                  ${
+                    location.pathname === link.path
+                      ? "bg-white/10"
+                      : "hover:bg-white/10"
+                  }
+                `}
+              >
+                <Icon size={20} />
 
-          {/* Orders */}
+                <span className="font-medium">
+                  {link.name}
+                </span>
+              </Link>
+            );
+          })}
 
-          <Link
-            to="/orders"
-            onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
-          >
-            <ShoppingBag size={20} />
-
-            <span className="font-medium">My Orders</span>
-          </Link>
-
-          {/* Profile */}
-
-          <Link
-            to="/profile"
-            onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
-          >
-            <User size={20} />
-
-            <span className="font-medium">My Profile</span>
-          </Link>
         </nav>
 
-        {/* LOGOUT */}
+        {/* ================= LOGOUT ================= */}
 
-        {/* <div className="p-2 mb-2 border-t border-white/10 bg-red-700 rounded-full text-center justify-center items-center"> */}
+        <div className="p-4 border-t border-white/10">
+
           <button
             onClick={handleLogout}
-                className="group inline-flex mb-3 items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-red-700 text-white font-semibold cursor-pointer"
+            className="
+              w-full
+              flex items-center justify-center
+              gap-2
+              px-6 py-3.5
+              rounded-full
+              bg-red-700
+              hover:bg-red-800
+              text-white
+              font-semibold
+              cursor-pointer
+              transition
+            "
           >
             <LogOut size={20} />
 
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">
+              Logout
+            </span>
           </button>
-        {/* </div> */}
+
+        </div>
+
       </aside>
     </>
   );

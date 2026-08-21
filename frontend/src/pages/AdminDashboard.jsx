@@ -44,96 +44,102 @@ function BuyerDashboard() {
 };
 
   return (
-    <main className="min-h-screen bg-[#f8f7f2] pt-24 px-4 sm:px-6 pb-12">
-      <div className="max-w-7xl mx-auto">
-        {/* HEADER */}
-        <div className="bg-[#006400] rounded-3xl p-6 sm:p-8 text-white shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#fdd835] flex items-center justify-center">
-                <Leaf size={28} className="text-[#006400]" />
-              </div>
+  <main className="min-h-screen bg-[#f8f7f2] lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
+  <div className="max-w-7xl mx-auto">
 
-              <div>
-                <p className="text-sm text-[#cbd5c0]">Digital Mandi</p>
+    {/* HEADER */}
+    <div className="bg-[#006400] rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-                <h1 className="text-2xl sm:text-3xl font-bold">
-                  Admin Dashboard
-                </h1>
-              </div>
-            </div>
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#fdd835] flex items-center justify-center">
+            <Leaf size={28} className="text-[#006400]" />
+          </div>
 
-            <button
-              onClick={handleLogout}
-              className="flex items-center justify-center cursor-pointer gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition"
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
+          <div>
+            <p className="text-sm text-[#cbd5c0]">Digital Mandi</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              Admin Dashboard
+            </h1>
           </div>
         </div>
 
-        {/* WELCOME */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-[#293829]">
-            Welcome, Admin 👋
-          </h2>
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center cursor-pointer gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
 
-          <p className="mt-1 text-[#737b70]">
-            Manage and monitor the Digital Mandi platform.
-          </p>
-        </div>
-
-        {/* DASHBOARD CARDS */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {/* USERS */}
-          <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
-            <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
-              <Users size={24} />
-            </div>
-
-            <h3 className="mt-5 text-lg font-bold text-[#293829]">Users</h3>
-
-            <p className="mt-1 text-sm text-[#737b70]">
-              Manage registered farmers and buyers.
-            </p>
-          </div>
-
-          {/* PROFILE */}
-          <Link
-            to="/profile"
-            className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:-translate-y-1 transition-all"
-          >
-            <div className="w-12 h-12 rounded-xl bg-[#f8eee5] text-[#966235] flex items-center justify-center">
-              <User size={24} />
-            </div>
-
-            <h3 className="mt-5 text-lg font-bold text-[#293829]">
-              My Profile
-            </h3>
-
-            <p className="mt-1 text-sm text-[#737b70]">
-              View and update admin profile information.
-            </p>
-          </Link>
-
-          {/* DASHBOARD STATUS */}
-          <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
-            <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
-              <LayoutDashboard size={24} />
-            </div>
-
-            <h3 className="mt-5 text-lg font-bold text-[#293829]">
-              Platform Overview
-            </h3>
-
-            <p className="mt-1 text-sm text-[#737b70]">
-              Buyer control panel is ready.
-            </p>
-          </div>
-        </div>
       </div>
-    </main>
+    </div>
+
+    {/* WELCOME */}
+    <div className="mt-8">
+      <h2 className="text-2xl font-bold text-[#293829]">
+        Welcome, Admin 👋
+      </h2>
+
+      <p className="mt-1 text-[#737b70]">
+        Manage and monitor the Digital Mandi platform.
+      </p>
+    </div>
+
+    {/* DASHBOARD CARDS */}
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+
+      {/* USERS */}
+      <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:-translate-y-1 transition-all">
+        <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
+          <Users size={24} />
+        </div>
+
+        <h3 className="mt-5 text-lg font-bold text-[#293829]">
+          Users
+        </h3>
+
+        <p className="mt-1 text-sm text-[#737b70]">
+          Manage registered farmers and buyers.
+        </p>
+      </div>
+
+      {/* PROFILE */}
+      <Link
+        to="/profile"
+        className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:-translate-y-1 transition-all"
+      >
+        <div className="w-12 h-12 rounded-xl bg-[#f8eee5] text-[#966235] flex items-center justify-center">
+          <User size={24} />
+        </div>
+
+        <h3 className="mt-5 text-lg font-bold text-[#293829]">
+          My Profile
+        </h3>
+
+        <p className="mt-1 text-sm text-[#737b70]">
+          View and update admin profile information.
+        </p>
+      </Link>
+
+      {/* PLATFORM OVERVIEW */}
+      <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:-translate-y-1 transition-all">
+        <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
+          <LayoutDashboard size={24} />
+        </div>
+
+        <h3 className="mt-5 text-lg font-bold text-[#293829]">
+          Platform Overview
+        </h3>
+
+        <p className="mt-1 text-sm text-[#737b70]">
+          Buyer control panel is ready.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</main>
   );
 }
 

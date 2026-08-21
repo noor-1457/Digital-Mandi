@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
-  // FORM STATE 
+  // FORM STATE
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -47,8 +47,8 @@ function Register() {
 
   //  HANDLE INPUT CHANGE
 
- // This function updates the formData state whenever an input field changes.
- // prev is used to ensure that we are updating the state based on the previous state, which is important for maintaining the other fields in formData.
+  // This function updates the formData state whenever an input field changes.
+  // prev is used to ensure that we are updating the state based on the previous state, which is important for maintaining the other fields in formData.
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -62,7 +62,7 @@ function Register() {
     setSuccess("");
   };
 
-  // HANDLE ROLE CHANGE 
+  // HANDLE ROLE CHANGE
 
   // This function updates the role state and the userRole field in formData when the user selects a role (Farmer or Buyer).
   const handleRoleChange = (selectedRole) => {
@@ -77,8 +77,7 @@ function Register() {
     setSuccess("");
   };
 
-  //  FORM SUBMIT 
-
+  //  FORM SUBMIT
 
   //e.preventDefault() is used to prevent the default form submission behavior, which would cause a page reload. Instead, we handle the submission with our own logic.
   const handleSubmit = async (e) => {
@@ -116,13 +115,12 @@ function Register() {
         // Farmer-specific fields
         farmName: role === "farmer" ? formData.farmName : "",
         farmLocation: role === "farmer" ? formData.farmLocation : "",
-        primaryCropType:
-          role === "farmer" ? formData.primaryCropType : "",
+        primaryCropType: role === "farmer" ? formData.primaryCropType : "",
       };
 
       const response = await axios.post(
         "http://localhost:8000/api/auth/register",
-        registrationData
+        registrationData,
       );
 
       console.log(response.data);
@@ -151,7 +149,7 @@ function Register() {
 
       setError(
         error.response?.data?.message ||
-          "Registration failed. Please try again."
+          "Registration failed. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -160,41 +158,35 @@ function Register() {
 
   return (
     <main className="min-h-screen bg-[#f8f7f2] pt-24 pb-12 px-4 sm:px-6">
-
       {/*PAGE CONTAINER*/}
 
       <div className="max-w-2xl w-full mx-auto">
-
         <div className="flex justify-center items-center">
-
           {/*REGISTER CARD*/}
 
           <div className="w-full max-w-2xl">
-
             <div className="bg-white border border-[#e3e7dc] rounded-3xl shadow-[0_20px_60px_-25px_rgba(38,51,38,0.25)] p-6 sm:p-8">
-
               {/*CARD HEADER*/}
 
               <div className="text-center mb-7">
-
                 <div className="flex justify-center mb-4">
-
-                  <div className="w-12 h-12 rounded-2xl bg-[#eef3e4] flex items-center justify-center text-[#607b37]">
-                    <Leaf size={24} />
+                  <div className="w-11 h-11 rounded-2xl bg-[#fdd835] flex items-center justify-center shadow-md shadow-black/10 group-hover:scale-105 transition-all duration-300">
+                    <Leaf
+                      size={24}
+                      strokeWidth={2}
+                      className="text-[#006400]"
+                    />
                   </div>
-
                 </div>
 
-                <h2 className="font-display text-3xl sm:text-4xl text-[#293829]">
+                <h2 className="font-display text-3xl sm:text-4xl text-black">
                   Create your account
                 </h2>
 
                 <p className="mt-2 text-sm text-[#7a8277]">
                   Join Digital Mandi as a Farmer or Buyer.
                 </p>
-
               </div>
-
 
               {/* SUCCESS MESSAGE */}
 
@@ -204,7 +196,6 @@ function Register() {
                 </div>
               )}
 
-
               {/* ERROR MESSAGE */}
 
               {error && (
@@ -213,18 +204,12 @@ function Register() {
                 </div>
               )}
 
-
               {/*REGISTRATION FORM*/}
 
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-4"
-              >
-
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/*FULL NAME*/}
 
                 <div className="relative">
-
                   <User
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -246,23 +231,19 @@ function Register() {
                       text-sm text-[#293829]
                       placeholder:text-[#a1a89e]
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                       transition-all
                     "
                   />
-
                 </div>
-
 
                 {/*EMAIL + PHONE*/}
 
                 <div className="grid sm:grid-cols-2 gap-4">
-
                   {/* Email */}
 
                   <div className="relative">
-
                     <Mail
                       size={18}
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -284,19 +265,16 @@ function Register() {
                         text-sm text-[#293829]
                         placeholder:text-[#a1a89e]
                         outline-none
-                        focus:border-[#8da94d]
+                        focus:border-[#006400]
                         focus:ring-2 focus:ring-[#a7c957]/20
                         transition-all
                       "
                     />
-
                   </div>
-
 
                   {/* Phone */}
 
                   <div className="relative">
-
                     <Phone
                       size={18}
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -318,21 +296,17 @@ function Register() {
                         text-sm text-[#293829]
                         placeholder:text-[#a1a89e]
                         outline-none
-                        focus:border-[#8da94d]
+                        focus:border-[#006400]
                         focus:ring-2 focus:ring-[#a7c957]/20
                         transition-all
                       "
                     />
-
                   </div>
-
                 </div>
-
 
                 {/*ADDRESS*/}
 
                 <div className="relative">
-
                   <MapPin
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -354,19 +328,16 @@ function Register() {
                       text-sm text-[#293829]
                       placeholder:text-[#a1a89e]
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                       transition-all
                     "
                   />
-
                 </div>
-
 
                 {/*CITY + PROVINCE*/}
 
                 <div className="grid sm:grid-cols-2 gap-4">
-
                   <input
                     type="text"
                     name="city"
@@ -383,7 +354,7 @@ function Register() {
                       text-sm text-[#293829]
                       placeholder:text-[#a1a89e]
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                       transition-all
                     "
@@ -402,12 +373,11 @@ function Register() {
                       px-4 py-3
                       text-sm text-[#60695d]
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                       transition-all
                     "
                   >
-
                     <option value="" disabled>
                       Select Province
                     </option>
@@ -417,25 +387,15 @@ function Register() {
                     <option value="Khyber Pakhtunkhwa">
                       Khyber Pakhtunkhwa
                     </option>
-                    <option value="Balochistan">
-                      Balochistan
-                    </option>
-                    <option value="Gilgit-Baltistan">
-                      Gilgit-Baltistan
-                    </option>
-                    <option value="Azad Kashmir">
-                      Azad Kashmir
-                    </option>
-
+                    <option value="Balochistan">Balochistan</option>
+                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                    <option value="Azad Kashmir">Azad Kashmir</option>
                   </select>
-
                 </div>
-
 
                 {/*ROLE*/}
 
                 <div className="grid sm:grid-cols-2 gap-3">
-
                   {/* Farmer */}
 
                   <button
@@ -457,21 +417,16 @@ function Register() {
                       }
                     `}
                   >
-
                     <Leaf size={20} />
 
                     <div>
-                      <p className="text-sm font-semibold">
-                        Farmer
-                      </p>
+                      <p className="text-sm font-semibold">Farmer</p>
 
                       <p className="text-xs opacity-70">
                         Manage farm information
                       </p>
                     </div>
-
                   </button>
-
 
                   {/* Buyer */}
 
@@ -494,57 +449,37 @@ function Register() {
                       }
                     `}
                   >
-
                     <User size={20} />
 
                     <div>
-                      <p className="text-sm font-semibold">
-                        Buyer
-                      </p>
+                      <p className="text-sm font-semibold">Buyer</p>
 
                       <p className="text-xs opacity-70">
                         Create your buyer profile
                       </p>
                     </div>
-
                   </button>
-
                 </div>
-
 
                 {/* Hidden role input for form submission */}
 
-                <input
-                  type="hidden"
-                  name="role"
-                  value={role}
-                />
-
+                <input type="hidden" name="role" value={role} />
 
                 {/*FARMER-SPECIFIC FIELDS*/}
 
                 {role === "farmer" && (
-
                   <div className="space-y-4 p-4 rounded-2xl bg-[#f5f8ef] border border-[#e1e8d6]">
-
                     <div className="flex items-center gap-2">
-
-                      <Wheat
-                        size={17}
-                        className="text-[#607b37]"
-                      />
+                      <Wheat size={17} className="text-[#607b37]" />
 
                       <p className="text-sm font-semibold text-[#536d2d]">
                         Farm Information
                       </p>
-
                     </div>
-
 
                     {/* Farm Name */}
 
                     <div className="relative">
-
                       <Building2
                         size={18}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -565,18 +500,15 @@ function Register() {
                           pl-11 pr-4 py-3
                           text-sm
                           outline-none
-                          focus:border-[#8da94d]
+                          focus:border-[#006400]
                           focus:ring-2 focus:ring-[#a7c957]/20
                         "
                       />
-
                     </div>
-
 
                     {/* Farm Location */}
 
                     <div className="relative">
-
                       <MapPin
                         size={18}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -597,18 +529,15 @@ function Register() {
                           pl-11 pr-4 py-3
                           text-sm
                           outline-none
-                          focus:border-[#8da94d]
+                          focus:border-[#006400]
                           focus:ring-2 focus:ring-[#a7c957]/20
                         "
                       />
-
                     </div>
-
 
                     {/* Crop Type */}
 
                     <div className="relative">
-
                       <Wheat
                         size={18}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -629,22 +558,17 @@ function Register() {
                           pl-11 pr-4 py-3
                           text-sm
                           outline-none
-                          focus:border-[#8da94d]
+                          focus:border-[#006400]
                           focus:ring-2 focus:ring-[#a7c957]/20
                         "
                       />
-
                     </div>
-
                   </div>
-
                 )}
-
 
                 {/*PASSWORD*/}
 
                 <div className="relative">
-
                   <Lock
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -666,34 +590,23 @@ function Register() {
                       pl-11 pr-12 py-3
                       text-sm
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                     "
                   />
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword((prev) => !prev)
-                    }
+                    onClick={() => setShowPassword((prev) => !prev)}
                     className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
                   >
-
-                    {showPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
-
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
-
                 </div>
-
 
                 {/*CONFIRM PASSWORD*/}
 
                 <div className="relative">
-
                   <CheckCircle2
                     size={18}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -715,29 +628,23 @@ function Register() {
                       pl-11 pr-12 py-3
                       text-sm
                       outline-none
-                      focus:border-[#8da94d]
+                      focus:border-[#006400]
                       focus:ring-2 focus:ring-[#a7c957]/20
                     "
                   />
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowConfirmPassword((prev) => !prev)
-                    }
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
                     className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
                   >
-
                     {showConfirmPassword ? (
                       <EyeOff size={18} />
                     ) : (
                       <Eye size={18} />
                     )}
-
                   </button>
-
                 </div>
-
 
                 {/*SUBMIT BUTTON*/}
 
@@ -749,7 +656,7 @@ function Register() {
                     w-full
                     flex items-center justify-center gap-2
                     rounded-xl
-                    bg-[#263326]
+                     bg-gradient-to-r from-[#fdd835] to-[#006400]
                     hover:bg-[#344534]
                     disabled:bg-[#7a8277]
                     disabled:cursor-not-allowed
@@ -763,7 +670,6 @@ function Register() {
                     cursor-pointer
                   "
                 >
-
                   <UserPlus
                     size={18}
                     className="group-hover:scale-110 transition-transform"
@@ -777,32 +683,24 @@ function Register() {
                       className="group-hover:translate-x-1 transition-transform"
                     />
                   )}
-
                 </button>
-
               </form>
-
 
               {/*LOGIN LINK*/}
 
               <p className="mt-6 text-center text-sm text-[#737b70]">
-
                 Already have an account?
-
                 <Link
                   to="/login"
-                  className="ml-1 font-semibold text-[#6f8f3f] hover:text-[#536d2d] transition-colors"
+                  className="ml-1 font-semibold text-[#ffd385] hover:text-[#006400] transition-colors"
                 >
                   Login
                 </Link>
-
               </p>
-
 
               {/*TRUST FOOTER*/}
 
-              <div className="mt-5 pt-5 border-t border-[#edf0e9] flex items-center justify-center gap-5 text-[11px] text-[#9aa296]">
-
+              <div className="mt-5 pt-5 border-t border-[#edf0e9] flex items-center justify-center gap-5 text-[11px] text-[#006400]">
                 <span className="flex items-center gap-1">
                   <ShieldIcon />
                   Secure
@@ -817,21 +715,14 @@ function Register() {
                   <CheckCircle2 size={13} />
                   Simple
                 </span>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </main>
   );
 }
-
 
 // SMALL SHIELD ICON
 

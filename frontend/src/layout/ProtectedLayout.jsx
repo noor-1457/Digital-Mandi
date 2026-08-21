@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar.jsx";
 export default function ProtectedLayout() {
   return (
     <>
-      <div className="bg-slate-200 dark:bg-slate-900">
+      <div>
         <Sidebar />
 
         <main>
