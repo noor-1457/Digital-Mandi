@@ -19,48 +19,65 @@ function FarmerDashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleLogout = () => {
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // Backend logout
+      const response = await fetch("http://localhost:8000/api/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      console.log("Logout response:", data);
+
+      // Remove frontend authentication data
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // Go to login
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+
+      // Even if backend request fails,
+      // remove local authentication
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      navigate("/login");
+    }
   };
 
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
-
       {/* MOBILE HEADER */}
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#006400] text-white h-20 px-5 flex items-center justify-between shadow-lg">
-
         <div className="flex items-center gap-3">
-
           <div className="w-10 h-10 rounded-xl bg-[#fdd835] flex items-center justify-center">
             <Leaf size={22} className="text-[#006400]" />
           </div>
 
           <div>
-            <p className="text-xs text-[#dce8d5]">
-              Digital Mandi
-            </p>
+            <p className="text-xs text-[#dce8d5]">Digital Mandi</p>
 
-            <h1 className="font-bold">
-              Farmer Dashboard
-            </h1>
+            <h1 className="font-bold">Farmer Dashboard</h1>
           </div>
-
         </div>
 
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"
         >
-          {sidebarOpen ? (
-            <X size={22} />
-          ) : (
-            <Menu size={22} />
-          )}
+          {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
-
       </div>
-
 
       {/* SIDEBAR */}
 
@@ -76,37 +93,23 @@ function FarmerDashboard() {
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-
         {/* LOGO */}
 
         <div className="h-24 px-6 flex items-center gap-3 border-b border-white/10">
-
           <div className="w-12 h-12 rounded-2xl bg-[#fdd835] flex items-center justify-center">
-            <Leaf
-              size={26}
-              className="text-[#006400]"
-            />
+            <Leaf size={26} className="text-[#006400]" />
           </div>
 
           <div>
+            <h1 className="text-xl font-bold">Digital Mandi</h1>
 
-            <h1 className="text-xl font-bold">
-              Digital Mandi
-            </h1>
-
-            <p className="text-xs text-[#dce8d5]">
-              Farmer Portal
-            </p>
-
+            <p className="text-xs text-[#dce8d5]">Farmer Portal</p>
           </div>
-
         </div>
-
 
         {/* NAVIGATION */}
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-
           {/* Dashboard */}
 
           <Link
@@ -114,15 +117,10 @@ function FarmerDashboard() {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 transition"
           >
-
             <LayoutDashboard size={20} />
 
-            <span className="font-medium">
-              Dashboard
-            </span>
-
+            <span className="font-medium">Dashboard</span>
           </Link>
-
 
           {/* My Products */}
 
@@ -131,15 +129,10 @@ function FarmerDashboard() {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
           >
-
             <Package size={20} />
 
-            <span className="font-medium">
-              My Products
-            </span>
-
+            <span className="font-medium">My Products</span>
           </Link>
-
 
           {/* Add Product */}
 
@@ -148,15 +141,10 @@ function FarmerDashboard() {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
           >
-
             <PlusCircle size={20} />
 
-            <span className="font-medium">
-              Add Product
-            </span>
-
+            <span className="font-medium">Add Product</span>
           </Link>
-
 
           {/* Orders */}
 
@@ -165,15 +153,10 @@ function FarmerDashboard() {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
           >
-
             <ShoppingBag size={20} />
 
-            <span className="font-medium">
-              Orders
-            </span>
-
+            <span className="font-medium">Orders</span>
           </Link>
-
 
           {/* Profile */}
 
@@ -182,39 +165,25 @@ function FarmerDashboard() {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition"
           >
-
             <User size={20} />
 
-            <span className="font-medium">
-              My Profile
-            </span>
-
+            <span className="font-medium">My Profile</span>
           </Link>
-
         </nav>
-
 
         {/* LOGOUT */}
 
         <div className="p-4 border-t border-white/10">
-
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/10 transition text-left"
           >
-
             <LogOut size={20} />
 
-            <span className="font-medium">
-              Logout
-            </span>
-
+            <span className="font-medium">Logout</span>
           </button>
-
         </div>
-
       </aside>
-
 
       {/* MOBILE OVERLAY*/}
 
@@ -225,30 +194,20 @@ function FarmerDashboard() {
         />
       )}
 
-
       {/* MAIN CONTENT */}
 
       <section className="lg:ml-72 min-h-screen pt-24 lg:pt-0">
-
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8">
-
-
           {/* TOP HEADER */}
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
             <div>
-
-              <p className="text-sm text-[#7a8277]">
-                Welcome back 👋
-              </p>
+              <p className="text-sm text-[#7a8277]">Welcome back 👋</p>
 
               <h2 className="text-3xl font-bold text-[#293829] mt-1">
                 Farmer Dashboard
               </h2>
-
             </div>
-
 
             {/* PROFILE SHORTCUT */}
 
@@ -256,49 +215,29 @@ function FarmerDashboard() {
               to="/profile"
               className="flex items-center gap-3 bg-white border border-[#e3e7dc] px-4 py-3 rounded-xl hover:shadow-md transition"
             >
-
               <div className="w-9 h-9 rounded-full bg-[#eef3e4] flex items-center justify-center">
-
-                <User
-                  size={18}
-                  className="text-[#607b37]"
-                />
-
+                <User size={18} className="text-[#607b37]" />
               </div>
 
               <div>
-
                 <p className="text-sm font-semibold text-[#293829]">
                   My Profile
                 </p>
 
-                <p className="text-xs text-[#8a9186]">
-                  View account
-                </p>
-
+                <p className="text-xs text-[#8a9186]">View account</p>
               </div>
-
             </Link>
-
           </div>
-
 
           {/* WELCOME CARD */}
 
           <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-[1px] shadow-lg">
-
             <div className="rounded-[23px] bg-[#fffef8] p-6 sm:p-8">
-
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
                 <div>
-
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef3e4] text-[#607b37] text-xs font-semibold">
-
                     <Wheat size={14} />
-
                     Farmer Account
-
                   </span>
 
                   <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-[#293829]">
@@ -306,50 +245,36 @@ function FarmerDashboard() {
                   </h3>
 
                   <p className="mt-2 text-[#737b70] max-w-xl">
-                    Manage your farm, products and profile from
-                    your farmer dashboard.
+                    Manage your farm, products and profile from your farmer
+                    dashboard.
                   </p>
-
                 </div>
-
 
                 <Link
                   to="/add-product"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
                 >
-
                   Add Product
-
                   <ArrowRight
                     size={18}
                     className="group-hover:translate-x-1 transition-transform"
                   />
-
                 </Link>
-
               </div>
-
             </div>
-
           </div>
-
 
           {/* DASHBOARD CARDS*/}
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-
-
             {/* MY PRODUCTS */}
 
             <Link
               to="/products"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-
               <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
-
                 <Package size={24} />
-
               </div>
 
               <h3 className="mt-5 text-lg font-bold text-[#293829]">
@@ -361,18 +286,13 @@ function FarmerDashboard() {
               </p>
 
               <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-[#607b37]">
-
                 View Products
-
                 <ArrowRight
                   size={15}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-
               </div>
-
             </Link>
-
 
             {/* ADD PRODUCT */}
 
@@ -380,11 +300,8 @@ function FarmerDashboard() {
               to="/add-product"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-
               <div className="w-12 h-12 rounded-xl bg-[#fff8d9] text-[#b28a00] flex items-center justify-center">
-
                 <PlusCircle size={24} />
-
               </div>
 
               <h3 className="mt-5 text-lg font-bold text-[#293829]">
@@ -396,18 +313,13 @@ function FarmerDashboard() {
               </p>
 
               <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-[#b28a00]">
-
                 Add Product
-
                 <ArrowRight
                   size={15}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-
               </div>
-
             </Link>
-
 
             {/* PROFILE */}
 
@@ -415,11 +327,8 @@ function FarmerDashboard() {
               to="/profile"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-
               <div className="w-12 h-12 rounded-xl bg-[#f8eee5] text-[#966235] flex items-center justify-center">
-
                 <User size={24} />
-
               </div>
 
               <h3 className="mt-5 text-lg font-bold text-[#293829]">
@@ -431,58 +340,38 @@ function FarmerDashboard() {
               </p>
 
               <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-[#966235]">
-
                 View Profile
-
                 <ArrowRight
                   size={15}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-
               </div>
-
             </Link>
-
           </div>
-
 
           {/* ACCOUNT STATUS*/}
 
           <div className="mt-8 bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
-
             <div className="flex items-center gap-4">
-
               <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
-
                 <Leaf size={24} />
-
               </div>
 
               <div>
-
-                <h3 className="font-bold text-[#293829]">
-                  Farmer Account
-                </h3>
+                <h3 className="font-bold text-[#293829]">Farmer Account</h3>
 
                 <p className="text-sm text-[#737b70]">
                   Your farmer account is active and ready to use.
                 </p>
-
               </div>
 
               <span className="ml-auto hidden sm:block px-3 py-1 rounded-full bg-[#eef3e4] text-[#607b37] text-xs font-semibold">
                 Active
               </span>
-
             </div>
-
           </div>
-
-
         </div>
-
       </section>
-
     </main>
   );
 }

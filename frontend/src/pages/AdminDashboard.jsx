@@ -4,9 +4,44 @@ import { Link, useNavigate } from "react-router-dom";
 function BuyerDashboard() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    // Backend logout
+    const response = await fetch(
+      "http://localhost:8000/api/auth/logout",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Logout response:", data);
+
+    // Remove frontend authentication data
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Go to login
     navigate("/login");
-  };
+
+  } catch (error) {
+    console.error("Logout error:", error);
+
+    // Even if backend request fails,
+    // remove local authentication
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/login");
+  }
+};
 
   return (
     <main className="min-h-screen bg-[#f8f7f2] pt-24 px-4 sm:px-6 pb-12">

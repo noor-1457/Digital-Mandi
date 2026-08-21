@@ -111,7 +111,7 @@ export const Home = () => {
               {/* Register */}
               <a
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#fdd835] to-[#006400] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                className="cursor-pointer group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#fdd835] to-[#006400] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
                 Create Account
 

@@ -16,7 +16,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Logins() {
-
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -34,7 +33,7 @@ function Logins() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // HANDLE INPUT CHANGE 
+  // HANDLE INPUT CHANGE
 
   // This function updates the formData state whenever an input field changes.
   // prev is used to ensure that we are updating the state based on the previous state,
@@ -53,7 +52,7 @@ function Logins() {
     setSuccess("");
   };
 
-  // FORM SUBMIT 
+  // FORM SUBMIT
 
   // e.preventDefault() prevents the default form submission behavior,
   // which would cause a page reload.
@@ -85,15 +84,19 @@ function Logins() {
         loginData,
         {
           withCredentials: true,
-        }
+        },
       );
 
       console.log(response.data);
-
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
       setSuccess("Login successful!");
 
       // Get logged-in user from backend response
-      const user = response.data?.data?.user;
+      const user = response.data.user;
 
       // Clear form after successful login
       setFormData({
@@ -103,61 +106,51 @@ function Logins() {
 
       // Redirect user according to their role
       navigate(response.data.dashboardUrl);
-
     } catch (error) {
-
       console.log(error);
 
       setError(
         error.response?.data?.message ||
-        "Login failed. Please check your email and password."
+          "Login failed. Please check your email and password.",
       );
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
   return (
     <>
       <main className="min-h-screen bg-[#f8f7f2] pt-24 pb-12 px-4 sm:px-6">
-
         {/* PAGE CONTAINER */}
 
         <div className="max-w-2xl w-full mx-auto">
-
           <div className="flex justify-center items-center">
-
             {/* LOGIN CARD */}
 
             <div className="w-full max-w-2xl">
-
               <div className="bg-white border border-[#e3e7dc] rounded-3xl shadow-[0_20px_60px_-25px_rgba(38,51,38,0.25)] p-6 sm:p-8">
-
                 {/* CARD HEADER */}
 
                 <div className="text-center mb-7">
-
                   <div className="flex justify-center mb-4">
+                    <div className="w-11 h-11 rounded-2xl bg-[#fdd835] flex items-center justify-center shadow-md shadow-black/10 group-hover:scale-105 transition-all duration-300">
 
-                    <div className="w-12 h-12 rounded-2xl bg-[#eef3e4] flex items-center justify-center text-[#607b37]">
+                <Leaf
+                  size={24}
+                  strokeWidth={2}
+                  className="text-[#006400]"
+                />
 
-                      <Leaf size={24} />
-
-                    </div>
-
+              </div>
                   </div>
 
-                  <h2 className="font-display text-3xl sm:text-4xl text-[#293829]">
+                  <h2 className="font-display text-3xl sm:text-4xl text-black">
                     Log in to your account
                   </h2>
 
                   <p className="mt-2 text-sm text-[#7a8277]">
                     Welcome back to Digital Mandi.
                   </p>
-
                 </div>
 
                 {/* SUCCESS MESSAGE */}
@@ -178,15 +171,10 @@ function Logins() {
 
                 {/* LOGIN FORM */}
 
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-4"
-                >
-
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {/* EMAIL */}
 
                   <div className="relative">
-
                     <Mail
                       size={18}
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -214,13 +202,11 @@ function Logins() {
                         transition-all
                       "
                     />
-
                   </div>
 
                   {/* PASSWORD */}
 
                   <div className="relative">
-
                     <Lock
                       size={18}
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
@@ -252,20 +238,11 @@ function Logins() {
 
                     <button
                       type="button"
-                      onClick={() =>
-                        setShowPassword((prev) => !prev)
-                      }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
                     >
-
-                      {showPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
-
                   </div>
 
                   {/* SUBMIT BUTTON */}
@@ -278,7 +255,7 @@ function Logins() {
                       w-full
                       flex items-center justify-center gap-2
                       rounded-xl
-                      bg-[#263326]
+                      bg-gradient-to-r from-[#ffd835] to-[#006400]
                       hover:bg-[#344534]
                       disabled:bg-[#7a8277]
                       disabled:cursor-not-allowed
@@ -289,9 +266,9 @@ function Logins() {
                       shadow-lg shadow-[#263326]/15
                       transition-all duration-300
                       hover:-translate-y-0.5
+                      cursor-pointer
                     "
                   >
-
                     <UserPlus
                       size={18}
                       className="group-hover:scale-110 transition-transform"
@@ -305,30 +282,24 @@ function Logins() {
                         className="group-hover:translate-x-1 transition-transform"
                       />
                     )}
-
                   </button>
-
                 </form>
 
                 {/* REGISTER LINK */}
 
                 <p className="mt-6 text-center text-sm text-[#737b70]">
-
                   Don't have an account?
-
                   <Link
                     to="/register"
-                    className="ml-1 font-semibold text-[#6f8f3f] hover:text-[#536d2d] transition-colors"
+                    className="ml-1 font-semibold text-[#ffd835] hover:text-[#006400] transition-colors cursor-pointer"
                   >
                     Register
                   </Link>
-
                 </p>
 
                 {/* TRUST FOOTER */}
 
-                <div className="mt-5 pt-5 border-t border-[#edf0e9] flex items-center justify-center gap-5 text-[11px] text-[#9aa296]">
-
+                <div className="mt-5 pt-5 border-t border-[#edf0e9] flex items-center justify-center gap-5 text-[11px] text-[#006400]">
                   <span className="flex items-center gap-1">
                     <ShieldIcon />
                     Secure
@@ -343,17 +314,11 @@ function Logins() {
                     <CheckCircle2 size={13} />
                     Simple
                   </span>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </main>
     </>
   );

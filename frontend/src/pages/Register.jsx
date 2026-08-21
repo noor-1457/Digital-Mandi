@@ -448,6 +448,7 @@ function Register() {
                       border
                       text-left
                       transition-all duration-300
+                      cursor-pointer
 
                       ${
                         role === "farmer"
@@ -484,6 +485,7 @@ function Register() {
                       border
                       text-left
                       transition-all duration-300
+                      cursor-pointer
 
                       ${
                         role === "buyer"
@@ -674,7 +676,7 @@ function Register() {
                     onClick={() =>
                       setShowPassword((prev) => !prev)
                     }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
+                    className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
                   >
 
                     {showPassword ? (
@@ -723,7 +725,7 @@ function Register() {
                     onClick={() =>
                       setShowConfirmPassword((prev) => !prev)
                     }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
+                    className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
                   >
 
                     {showConfirmPassword ? (
@@ -758,6 +760,7 @@ function Register() {
                     shadow-lg shadow-[#263326]/15
                     transition-all duration-300
                     hover:-translate-y-0.5
+                    cursor-pointer
                   "
                 >
 
