@@ -21,7 +21,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // ================= GET PROFILE =================
+  //  GET PROFILE 
 
   const fetchProfile = async () => {
     try {
@@ -60,7 +60,7 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  // ================= INPUT CHANGE =================
+  // INPUT CHANGE 
 
   const handleChange = (e) => {
     setFormData({
@@ -69,21 +69,21 @@ const Profile = () => {
     });
   };
 
-  // ================= EDIT =================
+  // EDIT
 
   const handleEdit = () => {
     setFormData(profile);
     setIsEditing(true);
   };
 
-  // ================= CANCEL =================
+  // CANCEL 
 
   const handleCancel = () => {
     setFormData(profile);
     setIsEditing(false);
   };
 
-  // ================= UPDATE PROFILE =================
+  // UPDATE PROFILE 
 
   const handleSave = async () => {
     try {
@@ -132,7 +132,7 @@ const Profile = () => {
     }
   };
 
-  // ================= LOADING =================
+  // LOADING 
 
   if (loading) {
     return (
@@ -146,7 +146,7 @@ const Profile = () => {
     );
   }
 
-  // ================= ERROR =================
+  // ERROR 
 
   if (error && !profile) {
     return (
