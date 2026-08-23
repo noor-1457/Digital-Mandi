@@ -15,7 +15,7 @@ import hero from "../assets/hero.jpg";
 const steps = [
   {
     number: "01",
-    title: "Create Your Account",
+    title: "Create Your Account.",
     description:
       "Register with your basic information and choose whether you are a Farmer or Buyer.",
     icon: UserPlus,
