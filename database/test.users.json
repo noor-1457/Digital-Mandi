@@ -1,0 +1,77 @@
+[{
+  "_id": {
+    "$oid": "6a84235d8830eca31e573e1f"
+  },
+  "fullName": "Noor Fatima Zafar",
+  "email": "noor@gmail.com",
+  "password": "$2b$10$K.M44isdZHLk0l5ylF1cC.nBLhe5pd0Mf9iaBSombktGvEu8qq7Tq",
+  "mobileNumber": "03034340693",
+  "address": "House no.4 Street no.4 Alhamd Garden Near Phool mandi Chowk, Saggian Lahore.",
+  "city": "lahore,pakistan",
+  "province": "Punjab",
+  "userRole": "buyer",
+  "adminLevel": "basic",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTg0MjM1ZDg4MzBlY2EzMWU1NzNlMWYiLCJpYXQiOjE3ODczMzg1NjIsImV4cCI6MTc4ODIwMjU2Mn0.pJwdb6z5YpXXkemvAhb62CO4JJNdOEoKFu9a9y2FEQs",
+  "registrationDate": {
+    "$date": "2026-08-18T09:18:21.763Z"
+  },
+  "createdAt": {
+    "$date": "2026-08-18T09:18:21.788Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-21T18:56:02.642Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a86b2a4cb378c9898198a13"
+  },
+  "fullName": "Digital Mandi Admin",
+  "email": "admin@digitalmandi.com",
+  "password": "$2b$10$uxYfGJbqAVrsnTsIz0t0EuDjHIeum30/sHofmLpp.oOWHFSwcy50K",
+  "mobileNumber": "03001234567",
+  "address": "Digital Mandi Office",
+  "city": "Lahore",
+  "province": "Punjab",
+  "userRole": "admin",
+  "adminLevel": "super",
+  "farmName": "",
+  "farmLocation": "",
+  "primaryCropType": "",
+  "registrationDate": {
+    "$date": "2026-08-20T00:00:00.000Z"
+  },
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTg2YjJhNGNiMzc4Yzk4OTgxOThhMTMiLCJpYXQiOjE3ODczMzg0MzEsImV4cCI6MTc4ODIwMjQzMX0.fSrV13BA4aa0dsCzO61b-MFU90m35rxsa_XgoDeZJYs",
+  "updatedAt": {
+    "$date": "2026-08-21T18:53:51.710Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a86b6f2bff3c637c1319970"
+  },
+  "fullName": "Farmer",
+  "email": "farmer@gmail.com",
+  "password": "$2b$10$SVgLGvobPg8LogzUgxXZ8eNOGu4sjRvxW2GsXzUvGrLm8JNE1VhH2",
+  "mobileNumber": "012345",
+  "address": "ABC",
+  "city": "ABC",
+  "province": "Khyber Pakhtunkhwa",
+  "userRole": "farmer",
+  "farmName": "ABC-Goods",
+  "farmLocation": "khyber pakhtunkhwa",
+  "primaryCropType": "Rice",
+  "adminLevel": "basic",
+  "refreshToken": null,
+  "registrationDate": {
+    "$date": "2026-08-20T08:12:34.206Z"
+  },
+  "createdAt": {
+    "$date": "2026-08-20T08:12:34.207Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-21T19:00:02.753Z"
+  },
+  "__v": 0
+}]
