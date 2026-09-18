@@ -27,6 +27,7 @@ function Register() {
     password: "",
     confirmPassword: "",
     mobileNumber: "",
+    cnic:"",
     address: "",
     city: "",
     province: "",
@@ -107,6 +108,7 @@ function Register() {
         email: formData.email,
         password: formData.password,
         mobileNumber: formData.mobileNumber,
+        cnic: formData.cnic,
         address: formData.address,
         city: formData.city,
         province: formData.province,
@@ -134,6 +136,7 @@ function Register() {
         password: "",
         confirmPassword: "",
         mobileNumber: "",
+        cnic:"",
         address: "",
         city: "",
         province: "",
@@ -286,6 +289,34 @@ function Register() {
                       value={formData.mobileNumber}
                       onChange={handleChange}
                       placeholder="Mobile Number"
+                      required
+                      className="
+                        w-full
+                        rounded-xl
+                        border border-[#dfe4d9]
+                        bg-[#fafbf8]
+                        pl-11 pr-4 py-3
+                        text-sm text-[#293829]
+                        placeholder:text-[#a1a89e]
+                        outline-none
+                        focus:border-[#006400]
+                        focus:ring-2 focus:ring-[#a7c957]/20
+                        transition-all
+                      "
+                    />
+                  </div>
+                    <div className="relative">
+                    <cnic
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa296]"
+                    />
+
+                    <input
+                      type="cnic"
+                      name="cnic"
+                      value={formData.cnic}
+                      onChange={handleChange}
+                      placeholder="cnic"
                       required
                       className="
                         w-full

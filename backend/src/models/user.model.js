@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Mobile number is required"],
     },
+    cnic: {
+      type: String,
+      required: [true, "cnic number is required"],
+    },
     address: {
       type: String,
       required: [true, "Address is required"],

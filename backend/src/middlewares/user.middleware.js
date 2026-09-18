@@ -18,7 +18,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     // 2️ Verify token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    // 3️Use userId
+    // 3️ Use userId
     const user = await User.findById(decodedToken.userId).select(
       "-password -refreshToken",
     );
@@ -29,9 +29,9 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 
     // 4️ Attach user to request
     req.user = user;
+
     next();
   } catch (error) {
-    // Better error handling
     if (error.name === "TokenExpiredError") {
       throw new ApiError(401, "Access token expired");
     }

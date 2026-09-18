@@ -1,4 +1,4 @@
-import { Navigate, Outlet, replace } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoutes({allowedRoles}) {
   const token = localStorage.getItem("token");

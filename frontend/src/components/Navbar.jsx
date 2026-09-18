@@ -34,6 +34,12 @@ export const Navbar = () => {
       label: "About",
       icon: Info,
     },
+    
+    {
+      path: "/chat",
+      label: "chat page",
+      icon: Info,
+    },
   ];
 
   // CHECK ACTIVE ROUTE

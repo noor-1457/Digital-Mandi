@@ -33,15 +33,14 @@ function App() {
             <Route element={<ProtectedRoutes allowedRoles={["farmer"]} />}>
               <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
             </Route>
-          <Route
-            element={
-              <ProtectedRoutes allowedRoles={["buyer", "farmer", "admin"]} />
-            }
-          >
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              element={
+                <ProtectedRoutes allowedRoles={["buyer", "farmer", "admin"]} />
+              }
+            >
+              <Route path="/profile" element={<Profile />} />
+            </Route>
           </Route>
-          </Route>
-
         </Routes>
       </BrowserRouter>
     </>

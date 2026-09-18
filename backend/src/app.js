@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import authRoutes from "./routes/user.routes.js";
+import productRoutes from "./routes/product.routes.js";
 
 dotenv.config();
 
@@ -23,8 +24,9 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" })); // Parse URL enc
 // Cookie Parser
 app.use(cookieParser());
 
-// Auth routes
+// routes
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
 // ERROR HANDLING
 
