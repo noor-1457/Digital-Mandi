@@ -10,6 +10,7 @@ import FarmerDashboard from "./pages/FarmerDashboard";
 import Profile from "./pages/Profile";
 import ProtectedRoutes from "./routes/ProtectedRoutes.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
+import AddProduct from "./pages/addProduct.jsx";
 function App() {
   return (
     <>
@@ -32,6 +33,7 @@ function App() {
 
             <Route element={<ProtectedRoutes allowedRoles={["farmer"]} />}>
               <Route path="/farmer-dashboard" element={<FarmerDashboard />} />
+              <Route path="/addProduct" element={<AddProduct />} />
             </Route>
             <Route
               element={

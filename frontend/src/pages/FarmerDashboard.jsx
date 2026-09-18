@@ -6,11 +6,13 @@ import {
   ArrowRight,
   Wheat,
 } from "lucide-react";
+// import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
 function FarmerDashboard() {
- 
+  // const navigate = useNavigate();
+
 
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
@@ -72,7 +74,7 @@ function FarmerDashboard() {
                 </div>
 
                 <Link
-                  to="/add-product"
+                  to="/addProduct"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
                 >
                   Add Product
@@ -118,7 +120,7 @@ function FarmerDashboard() {
             {/* ADD PRODUCT */}
 
             <Link
-              to="/add-product"
+              to="/addProduct"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
               <div className="w-12 h-12 rounded-xl bg-[#fff8d9] text-[#b28a00] flex items-center justify-center">
