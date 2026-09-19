@@ -34,6 +34,7 @@ router.get(
 // Update Product
 router.put(
     "/:id",
+    upload.single("image"),
     updateProduct
 );
 

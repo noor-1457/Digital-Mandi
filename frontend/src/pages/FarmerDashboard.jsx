@@ -75,7 +75,7 @@ function FarmerDashboard() {
 
                 <Link
                   to="/addProduct"
-                  className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
+                  className="w-50 group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
                 >
                   Add Product
                   <ArrowRight

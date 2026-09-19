@@ -1,8 +1,12 @@
-import { useState } from "react";
-// import axios from "axios";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AddProduct = () => {
+  const { id } = useParams();          // URL mein id ho to edit mode
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -13,6 +17,50 @@ const AddProduct = () => {
     image: null,
   });
 
+  const [existingImage, setExistingImage] = useState(""); // edit mode mein purani image
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+
+  // ---------- EDIT MODE: purana product fetch karo ----------
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const fetchProduct = async () => {
+      setFetching(true);
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/products/${id}`
+        );
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load product");
+        }
+
+        setFormData({
+          name: data.name || "",
+          description: data.description || "",
+          price: data.price || "",
+          category: data.category || "",
+          quantity: data.quantity || "",
+          location: data.location || "",
+          image: null, // naya image sirf tab jab user select kare
+        });
+
+        setExistingImage(data.image || "");
+      } catch (error) {
+        console.error("Error:", error);
+        toast.error(error.message);
+        navigate("/myProducts");
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id, isEditMode, navigate]);
+
+  // ---------- Input change ----------
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
@@ -21,8 +69,10 @@ const AddProduct = () => {
     }));
   };
 
+  // ---------- Submit: POST (add) ya PUT (edit) ----------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const data = new FormData();
@@ -33,49 +83,81 @@ const AddProduct = () => {
       data.append("category", formData.category);
       data.append("quantity", formData.quantity);
       data.append("location", formData.location);
-      data.append("image", formData.image);
 
-      const response = await fetch("http://localhost:8000/api/products", {
-        method: "POST",
+      // Image sirf tab bhejo jab user ne nayi select ki ho
+      if (formData.image) {
+        data.append("image", formData.image);
+      }
+
+      const url = isEditMode
+        ? `http://localhost:8000/api/products/${id}`
+        : "http://localhost:8000/api/products";
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
         body: data,
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to add product");
+        throw new Error(
+          result.message ||
+            (isEditMode ? "Failed to update product" : "Failed to add product")
+        );
       }
 
-      console.log("Product created:", result);
+      toast.success(
+        isEditMode
+          ? "Product updated successfully!"
+          : "Product added successfully!"
+      );
 
-      toast.success("Product added successfully!");
-      // Form reset
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        category: "",
-        quantity: "",
-        location: "",
-        image: null,
-      });
+      // Add mode mein form reset
+      if (!isEditMode) {
+        setFormData({
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+          quantity: "",
+          location: "",
+          image: null,
+        });
+      } else {
+        navigate("/myProducts");
+      }
     } catch (error) {
       console.error("Error:", error);
-      alert(error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ---------- Loading state (edit mode mein fetch hotay waqt) ----------
+  if (fetching) {
+    return (
+      <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0 flex items-center justify-center">
+        <p className="text-gray-500">Loading product...</p>
+      </div>
+    );
+  }
+
   return (
-    // YAHAN FIX HAI: lg:ml-72 add kiya gaya hai taaki sidebar ke saath overlap na ho
     <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-[#006400] md:text-3xl">
-            Add Product
+            {isEditMode ? "Edit Product" : "Add Product"}
           </h1>
           <p className="mt-2 text-sm text-gray-600 md:text-base">
-            Add your agricultural product for buyers.
+            {isEditMode
+              ? "Update your product details."
+              : "Add your agricultural product for buyers."}
           </p>
         </div>
 
@@ -114,7 +196,7 @@ const AddProduct = () => {
               />
             </div>
 
-            {/* Price + Quantity (Grid Layout) */}
+            {/* Price + Quantity */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -134,7 +216,7 @@ const AddProduct = () => {
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Quantity
+                  Quantity (kg)
                 </label>
                 <input
                   type="number"
@@ -192,24 +274,53 @@ const AddProduct = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Product Image
               </label>
+
+              {/* Edit mode mein purani image ka preview */}
+              {isEditMode && existingImage && (
+                <div className="mb-3 flex items-center gap-4">
+                  <img
+                    src={existingImage}
+                    alt="Current"
+                    className="h-20 w-20 rounded-lg object-cover border border-gray-200"
+                  />
+                </div>
+              )}
+
               <input
                 type="file"
                 name="image"
                 accept="image/*"
                 onChange={handleChange}
-                required
+                required={!isEditMode}   // edit mein optional
                 className="cursor-pointer w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#006400] file:text-white hover:file:bg-[#004d00]"
               />
             </div>
 
             {/* Submit */}
-            <div className="pt-4">
+            <div className="pt-4 flex gap-3">
               <button
                 type="submit"
-                className="cursor-pointer w-full rounded-lg bg-[#006400] px-6 py-3.5 font-semibold text-white transition hover:bg-[#004d00] md:w-auto md:min-w-[200px]"
+                disabled={loading}
+                className="cursor-pointer w-full rounded-lg bg-[#006400] px-6 py-3.5 font-semibold text-white transition hover:bg-[#004d00] disabled:opacity-60 md:w-auto md:min-w-[200px]"
               >
-                Add Product
+                {loading
+                  ? isEditMode
+                    ? "Updating..."
+                    : "Adding..."
+                  : isEditMode
+                  ? "Update Product"
+                  : "Add Product"}
               </button>
+
+              {isEditMode && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/myProducts")}
+                  className="cursor-pointer rounded-lg border border-gray-300 px-6 py-3.5 font-semibold text-gray-700 transition hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
         </div>

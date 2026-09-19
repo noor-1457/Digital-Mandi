@@ -109,18 +109,34 @@ const updateProduct = async (req, res) => {
             location
         } = req.body;
 
+        const updateData = {
+            name,
+            description,
+            price,
+            category,
+            quantity,
+            location
+        };
+
+        // Agar new image select ki gayi hai
+        if (req.file?.path) {
+            const productImage = await uploadOnCloudinary(req.file.path);
+
+            if (!productImage) {
+                return res.status(400).json({
+                    message: "Product image upload failed"
+                });
+            }
+
+            updateData.image = productImage.url;
+        }
+
         const updatedProduct = await Product.findByIdAndUpdate(
             productId,
+            updateData,
             {
-                name,
-                description,
-                price,
-                category,
-                quantity,
-                location
-            },
-            {
-                new: true
+                new: true,
+                runValidators: true
             }
         );
 
@@ -136,6 +152,8 @@ const updateProduct = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Update Product Error:", error);
+
         return res.status(400).json({
             message: error.message
         });

@@ -60,7 +60,7 @@ const role = user?.userRole || "buyer";
         },
         {
           name: "My Products",
-          path: "/my-products",
+          path: "/myProducts",
           icon: Package,
         },
         {
