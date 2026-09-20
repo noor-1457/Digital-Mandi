@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import Categories from "../components/Categories";
+import BestSellers from "../components/BestSellers";
 
 export const Home = () => {
   return (
@@ -7,6 +8,7 @@ export const Home = () => {
 
      <Hero />
      <Categories />
+      <BestSellers />
 
     </main>
   );

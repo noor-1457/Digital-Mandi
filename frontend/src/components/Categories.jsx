@@ -45,7 +45,7 @@ const Categories = () => {
 
           <div className="flex items-center gap-3">
 
-            {/* Leaf */}
+            {/* small box */}
                      <div className="bg-[#006400] h-5 w-15 rounded"></div>
 
 

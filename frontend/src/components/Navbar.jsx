@@ -305,7 +305,7 @@ export const Navbar = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div className="h-[50px] flex ">
+          <div className="h-[55px] flex ">
 
             {/* Desktop Links */}
             <div className="hidden md:flex  space-between gap-1 flex-1">
@@ -362,7 +362,7 @@ export const Navbar = () => {
             {/* Mobile Search */}
             <form
               onSubmit={handleSearch}
-              className="md:hidden flex-1 relative"
+              className="md:hidden flex-1 relative mt-1.5"
             >
 
               <Search
