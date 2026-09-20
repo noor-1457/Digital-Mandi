@@ -12,7 +12,7 @@ import ProtectedRoutes from "./routes/ProtectedRoutes.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import AddProduct from "./pages/addProduct.jsx";
 import MyProducts from "./pages/MyProducts.jsx";
-import BuyerProducts from "./pages/BuyerProducts";
+
 function App() {
   return (
     <>
@@ -31,7 +31,6 @@ function App() {
 
             <Route element={<ProtectedRoutes allowedRoles={["buyer"]} />}>
               <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
-              <Route path="/buyer-products" element={<BuyerProducts />} />
             </Route>
 
             <Route element={<ProtectedRoutes allowedRoles={["farmer"]} />}>
