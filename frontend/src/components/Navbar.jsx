@@ -1,364 +1,518 @@
 import {
-  Home,
-  ShoppingBasket,
-  Info,
-  LogIn,
-  UserPlus,
+  Search,
+  Heart,
+  ShoppingCart,
+  User,
   Menu,
   X,
   Leaf,
 } from "lucide-react";
 
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // NAVIGATION LINKS
-
+  // Bottom navigation links
   const navLinks = [
     {
       path: "/",
       label: "Home",
-      icon: Home,
     },
     {
       path: "/products",
-      label: "Products",
-      icon: ShoppingBasket,
+      label: "Deals",
     },
     {
-      path: "/about",
-      label: "About",
-      icon: Info,
+      path: "/products",
+      label: "Best Sellers",
     },
-    
     {
-      path: "/chat",
-      label: "chat page",
-      icon: Info,
+      path: "/contact",
+      label: "Contact Us",
     },
   ];
 
-  // CHECK ACTIVE ROUTE
+  const isActive = (path) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
 
-  const isActive = (path) => location.pathname === path;
+    return location.pathname.startsWith(path);
+  };
 
-  // Close mobile menu after navigation
   const handleLinkClick = () => {
     setIsOpen(false);
   };
 
+  // Search products
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (search.trim()) {
+      navigate(`/products?search=${encodeURIComponent(search.trim())}`);
+    }
+  };
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#006400] backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ================= TOP ROW ================= */}
+      <div className="bg-white">
 
-        <div className="h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <Link
-            to="/"
-            onClick={handleLinkClick}
-            className="flex items-center gap-3 group"
-          >
+          <div className="h-[88px] flex items-center justify-between gap-6">
 
-            {/* Logo icon */}
-            <div className="relative">
+            {/* ================= LOGO ================= */}
+            <Link
+              to="/"
+              onClick={handleLinkClick}
+              className="flex items-center gap-2.5 shrink-0"
+            >
 
-              <div className="w-11 h-11 rounded-2xl bg-[#fdd835] flex items-center justify-center shadow-md shadow-black/10 group-hover:scale-105 transition-all duration-300">
+              {/* Logo Icon */}
+              <div className="relative w-11 h-11 flex items-center justify-center">
+                <Leaf
+                  size={42}
+                  strokeWidth={1.7}
+                  className="text-[#006400]"
+                />
 
                 <Leaf
-                  size={24}
+                  size={20}
                   strokeWidth={2}
-                  className="text-[#006400]"
+                  className="absolute bottom-1 right-0 text-[#5b9b58]"
+                />
+              </div>
+
+              {/* Logo Text */}
+              <div className="leading-none">
+
+                <h1 className="text-[24px] sm:text-[27px] font-bold text-[#006400] tracking-tight">
+                  Digital Mandi
+                </h1>
+
+                <p className="text-[9px] sm:text-[10px] text-[#6b756e] tracking-[0.14em] mt-1">
+                  Fresh Produce&nbsp;&nbsp;•&nbsp;&nbsp;Better Living
+                </p>
+
+              </div>
+
+            </Link>
+
+
+            {/* ================= SEARCH BAR ================= */}
+            <form
+              onSubmit={handleSearch}
+              className="hidden md:flex flex-1 max-w-[430px]"
+            >
+
+              <div className="relative w-full">
+
+                <Search
+                  size={19}
+                  strokeWidth={2}
+                  className="
+                    absolute
+                    left-4
+                    top-1/2
+                    -translate-y-1/2
+                    text-[#52605a]
+                  "
+                />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search for fruits, vegetables, grains..."
+                  className="
+                    w-full
+                    h-[47px]
+                    pl-11
+                    pr-5
+                    rounded-full
+                    border
+                    border-[#d5d9d5]
+                    bg-white
+                    text-sm
+                    text-[#263326]
+                    outline-none
+                    transition-all
+                    duration-200
+                    focus:border-[#006400]
+                    focus:ring-2
+                    focus:ring-[#006400]/10
+                  "
                 />
 
               </div>
 
-            </div>
+            </form>
 
 
-            {/* Logo text */}
-            <div className="leading-tight">
+            {/* ================= RIGHT ACTIONS ================= */}
+            <div className="hidden md:flex items-center gap-6 shrink-0">
 
-              <h1 className="font-display text-xl sm:text-2xl font-semibold text-white tracking-tight">
-                Digital Mandi
-              </h1>
+              {/* Wishlist */}
+              <Link
+                to="/wishlist"
+                className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  text-[#173f32]
+                  hover:text-[#006400]
+                  transition-colors
+                "
+              >
 
-              <p className="hidden sm:block text-[9px] uppercase tracking-[0.2em] text-[#ffeb3b] font-medium">
-                Smart Agricultural Marketplace
-              </p>
+                <Heart
+                  size={23}
+                  strokeWidth={1.8}
+                />
 
-            </div>
+                <span className="text-[12px] font-medium">
+                  Wishlist
+                </span>
 
-          </Link>
+              </Link>
 
-            {/* Desktop */}
-          <div className="hidden md:flex items-center gap-1">
 
-            {navLinks.map((link) => {
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="
+                  relative
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  text-[#173f32]
+                  hover:text-[#006400]
+                  transition-colors
+                "
+              >
 
-              const Icon = link.icon;
+                <div className="relative">
 
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`
-                    group relative flex items-center gap-2
-                    px-4 py-2.5 rounded-xl
-                    text-sm font-medium
-                    transition-all duration-300
-
-                    ${
-                      isActive(link.path)
-                        ? "text-white bg-white/[0.08]"
-                        : "text-white/65 hover:text-white hover:bg-white/[0.06]"
-                    }
-                  `}
-                >
-
-                  <Icon
-                    size={17}
-                    strokeWidth={2}
-                    className={`
-                      transition-all duration-300
-
-                      ${
-                        isActive(link.path)
-                          ? "text-[#ffeb3b]"
-                          : "text-white/45 group-hover:text-[#ffeb3b]"
-                      }
-                    `}
+                  <ShoppingCart
+                    size={23}
+                    strokeWidth={1.8}
                   />
 
-                  {link.label}
-
-
-                  {/* Active indicator */}
+                  {/* Cart Count */}
                   <span
-                    className={`
-                      absolute bottom-1 left-1/2
-                      -translate-x-1/2
-                      h-[2px]
+                    className="
+                      absolute
+                      -top-2
+                      -right-3
+                      min-w-[17px]
+                      h-[17px]
+                      px-1
+                      flex
+                      items-center
+                      justify-center
                       rounded-full
-                      bg-[#a7c957]
-                      transition-all duration-300
+                      bg-[#006400]
+                      text-white
+                      text-[9px]
+                      font-bold
+                    "
+                  >
+                    0
+                  </span>
 
-                      ${
-                        isActive(link.path)
-                          ? "w-5"
-                          : "w-0 group-hover:w-5"
-                      }
-                    `}
-                  />
+                </div>
 
-                </Link>
-              );
-            })}
+                <span className="text-[12px] font-medium">
+                  Cart
+                </span>
 
-          </div>
-
-           {/* Right side  */}
-
-          <div className="hidden md:flex items-center gap-2">
-
-            {/* Login */}
-            <Link
-              to="/login"
-              className={`
-                flex items-center gap-2
-                px-4 py-2.5
-                rounded-xl
-                text-sm font-medium
-                transition-all duration-300
-
-                ${
-                  isActive("/login")
-                    ? "text-[#c7df8b] bg-white/[0.08]"
-                    : "text-white/65 hover:text-white hover:bg-white/[0.06]"
-                }
-              `}
-            >
-
-              <LogIn size={17} />
-
-              Login
-
-            </Link>
+              </Link>
 
 
-            {/* Register */}
-            <Link
-              to="/register"
+              {/* Account */}
+              <Link
+                to="/login"
+                className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  text-[#173f32]
+                  hover:text-[#006400]
+                  transition-colors
+                "
+              >
+
+                <User
+                  size={23}
+                  strokeWidth={1.8}
+                />
+
+                <span className="text-[12px] font-medium">
+                  Account
+                </span>
+
+              </Link>
+
+            </div>
+
+
+            {/* ================= MOBILE MENU BUTTON ================= */}
+            <button
+              onClick={() => setIsOpen((prev) => !prev)}
               className="
-                group
-                flex items-center gap-2
-                px-5 py-2.5
-                rounded-full
-                bg-[#fdd835]
-                hover:bg-[#ffeb3b]
-                text-[#263326]
-                text-sm font-semibold
-                shadow-md shadow-black/10
-                transition-all duration-300
-                hover:-translate-y-0.5
+                md:hidden
+                w-10
+                h-10
+                flex
+                items-center
+                justify-center
+                rounded-lg
+                bg-[#eef5ed]
+                text-[#15543d]
               "
+              aria-label="Toggle navigation menu"
             >
-
-              <UserPlus
-                size={17}
-                className="group-hover:scale-110 transition-transform duration-300"
-              />
-
-              Register
-
-            </Link>
+              {isOpen ? (
+                <X size={22} />
+              ) : (
+                <Menu size={22} />
+              )}
+            </button>
 
           </div>
-
-        {/* Mobile Navigation*/}
-
-          <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="
-              md:hidden
-              w-10 h-10
-              flex items-center justify-center
-              rounded-xl
-              bg-white/[0.08]
-              border border-white/10
-              text-white
-              hover:bg-white/[0.13]
-              transition-all duration-300
-            "
-            aria-label="Toggle navigation menu"
-          >
-
-            {isOpen ? (
-              <X size={21} />
-            ) : (
-              <Menu size={21} />
-            )}
-
-          </button>
 
         </div>
 
       </div>
 
-          {/* Mobile view */}
 
+      {/* ================= BOTTOM GREEN NAVIGATION ================= */}
+      <div className="bg-[#006400]">
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="h-[50px] flex ">
+
+            {/* Desktop Links */}
+            <div className="hidden md:flex  space-between gap-1 flex-1">
+
+              {navLinks.map((link, index) => (
+                <Link
+                  key={`${link.label}-${index}`}
+                  to={link.path}
+                  className={`
+                    relative
+                    h-[50px]
+                    flex
+                    items-center
+                    space-between
+                    px-6
+                    text-[14px]
+                    font-semibold
+                    text-white
+                    transition-colors
+                    hover:bg-white/5
+
+                    ${
+                      isActive(link.path)
+                        ? "bg-white/5"
+                        : ""
+                    }
+                  `}
+                >
+
+                  {link.label}
+
+                  {/* Active underline */}
+                  {isActive(link.path) && (
+                    <span
+                      className="
+                        absolute
+                        bottom-0
+                        left-1/2
+                        -translate-x-1/2
+                        w-12
+                        h-[3px]
+                        rounded-t-full
+                        bg-[#d8e78b]
+                      "
+                    />
+                  )}
+
+                </Link>
+              ))}
+
+            </div>
+
+
+            {/* Mobile Search */}
+            <form
+              onSubmit={handleSearch}
+              className="md:hidden flex-1 relative"
+            >
+
+              <Search
+                size={17}
+                className="
+                  absolute
+                  left-3
+                  top-1/2
+                  -translate-y-1/2
+                  text-white/60
+                "
+              />
+
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products..."
+                className="
+                  w-full
+                  h-[36px]
+                  pl-9
+                  pr-3
+                  rounded-full
+                  bg-white/10
+                  border
+                  border-white/20
+                  text-white
+                  placeholder:text-white/60
+                  text-sm
+                  outline-none
+                "
+              />
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      {/* ================= MOBILE MENU ================= */}
       <div
         className={`
           md:hidden
           overflow-hidden
-          transition-all duration-300 ease-in-out
-          border-t border-white/10
-
+          transition-all
+          duration-300
+          bg-white
+          shadow-lg
           ${
             isOpen
-              ? "max-h-[500px] opacity-100"
+              ? "max-h-[450px] opacity-100"
               : "max-h-0 opacity-0"
           }
         `}
       >
 
-        <div className="bg-[#202a1f] px-5 py-5 space-y-2">
+        <div className="px-5 py-4 space-y-1">
 
-          {/* Mobile navigation links */}
-
-          {navLinks.map((link) => {
-
-            const Icon = link.icon;
-
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={handleLinkClick}
-                className={`
-                  flex items-center gap-3
-                  px-4 py-3.5
-                  rounded-xl
-                  text-sm font-medium
-                  transition-all duration-300
-
-                  ${
-                    isActive(link.path)
-                      ? "bg-white/[0.08] text-[#c7df8b]"
-                      : "text-white/65 hover:text-white hover:bg-white/[0.06]"
-                  }
-                `}
-              >
-
-                <Icon
-                  size={19}
-                  className={
-                    isActive(link.path)
-                      ? "text-[#a7c957]"
-                      : "text-white/40"
-                  }
-                />
-
-                {link.label}
-
-              </Link>
-            );
-          })}
+          {/* Mobile Navigation */}
+          {navLinks.map((link, index) => (
+            <Link
+              key={`${link.label}-mobile-${index}`}
+              to={link.path}
+              onClick={handleLinkClick}
+              className={`
+                block
+                px-4
+                py-3
+                rounded-lg
+                text-sm
+                font-medium
+                ${
+                  isActive(link.path)
+                    ? "bg-[#eef5ed] text-[#15543d]"
+                    : "text-[#39453f] hover:bg-[#f5f7f4]"
+                }
+              `}
+            >
+              {link.label}
+            </Link>
+          ))}
 
 
-          {/* Mobile Login */}
+          <div className="border-t border-gray-100 my-2" />
 
+
+          {/* Wishlist */}
+          <Link
+            to="/wishlist"
+            onClick={handleLinkClick}
+            className="
+              flex
+              items-center
+              gap-3
+              px-4
+              py-3
+              rounded-lg
+              text-sm
+              text-[#39453f]
+              hover:bg-[#f5f7f4]
+            "
+          >
+            <Heart size={19} />
+            Wishlist
+          </Link>
+
+
+          {/* Cart */}
+          <Link
+            to="/cart"
+            onClick={handleLinkClick}
+            className="
+              flex
+              items-center
+              gap-3
+              px-4
+              py-3
+              rounded-lg
+              text-sm
+              text-[#39453f]
+              hover:bg-[#f5f7f4]
+            "
+          >
+            <ShoppingCart size={19} />
+            Cart
+          </Link>
+
+
+          {/* Account */}
           <Link
             to="/login"
             onClick={handleLinkClick}
             className="
-              flex items-center gap-3
-              px-4 py-3.5
-              rounded-xl
-              text-sm font-medium
-              text-white/65
-              hover:text-white
-              hover:bg-white/[0.06]
-              transition-all duration-300
+              flex
+              items-center
+              gap-3
+              px-4
+              py-3
+              rounded-lg
+              text-sm
+              text-[#39453f]
+              hover:bg-[#f5f7f4]
             "
           >
-
-            <LogIn
-              size={19}
-              className="text-white/40"
-            />
-
-            Login
-
-          </Link>
-
-
-          {/* Mobile Register */}
-
-          <Link
-            to="/register"
-            onClick={handleLinkClick}
-            className="
-              flex items-center justify-center gap-2
-              mt-3
-              px-5 py-3.5
-              rounded-full
-              bg-[#a7c957]
-              hover:bg-[#b8d875]
-              text-[#263326]
-              font-semibold
-              transition-all duration-300
-            "
-          >
-
-            <UserPlus size={19} />
-
-            Register
-
+            <User size={19} />
+            Account
           </Link>
 
         </div>
