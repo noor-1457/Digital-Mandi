@@ -88,7 +88,7 @@ function Logins() {
       );
 
       console.log(response.data);
-      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem("token", response.data.token);
       localStorage.setItem(
         "user",
         JSON.stringify(response.data.user)
@@ -105,8 +105,8 @@ function Logins() {
       });
 
       // Redirect user according to their role
-      navigate(response.data.dashboardUrl);
-    } catch (error) {
+console.log("Navigating to:", response.data.dashboardUrl);
+navigate(response.data.dashboardUrl);    } catch (error) {
       console.log(error);
 
       setError(

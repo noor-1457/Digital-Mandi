@@ -9,7 +9,17 @@ function MyProducts() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/products");
+      const token = localStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        "http://localhost:8000/api/products/my-products",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -18,17 +28,25 @@ function MyProducts() {
     }
   };
 
-    const DeleteProducts = async (productId) => {
+  const DeleteProducts = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/products/${productId}`);
-      // After successful deletion, fetch the updated product list
-      const response = await axios.get("http://localhost:8000/api/products");
-      setProducts(response.data);
+      const token = localStorage.getItem("accessToken");
+
+      await axios.delete(
+        `http://localhost:8000/api/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Refresh only logged-in farmer's products
+      fetchProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
-
 
   useEffect(() => {
     fetchProducts();
@@ -71,6 +89,7 @@ function MyProducts() {
                       alt={product.name}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+
                     <span className="absolute left-3 top-3 rounded-full bg-[#006400] px-3 py-1 text-xs font-semibold text-white shadow-sm">
                       {product.category}
                     </span>
@@ -87,14 +106,17 @@ function MyProducts() {
                         <p className="text-[10px] uppercase tracking-wide text-gray-400">
                           Price
                         </p>
+
                         <p className="text-base font-bold text-[#006400]">
                           PKR {product.price}
                         </p>
                       </div>
+
                       <div className="text-right">
                         <p className="text-[10px] uppercase tracking-wide text-gray-400">
                           Quantity
                         </p>
+
                         <p className="text-sm font-semibold text-gray-700">
                           {product.quantity} kg
                         </p>
@@ -102,14 +124,19 @@ function MyProducts() {
                     </div>
 
                     <div className="mt-4 flex gap-2">
-                      <button 
-                      onClick={() => navigate(`/edit-product/${product._id}`)}
-                      className="flex-1 rounded-lg border border-[#006400] py-1.5 text-xs font-medium text-[#006400] transition-all duration-300 hover:bg-[#006400] hover:text-white active:scale-95">
+                      <button
+                        onClick={() =>
+                          navigate(`/edit-product/${product._id}`)
+                        }
+                        className="flex-1 rounded-lg border border-[#006400] py-1.5 text-xs font-medium text-[#006400] transition-all duration-300 hover:bg-[#006400] hover:text-white active:scale-95"
+                      >
                         Edit
                       </button>
-                      <button 
+
+                      <button
                         onClick={() => DeleteProducts(product._id)}
-                        className="flex-1 cursor-pointer rounded-lg bg-red-600 py-1.5 text-xs font-medium text-white transition-all duration-300 hover:bg-red-700 active:scale-95">
+                        className="flex-1 cursor-pointer rounded-lg bg-red-600 py-1.5 text-xs font-medium text-white transition-all duration-300 hover:bg-red-700 active:scale-95"
+                      >
                         Delete
                       </button>
                     </div>

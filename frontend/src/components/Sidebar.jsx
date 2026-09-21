@@ -10,6 +10,7 @@ import {
   Users,
   Package,
   ClipboardList,
+  House,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -43,6 +44,10 @@ const role = user?.userRole || "buyer";
           name: "My Profile",
           path: "/profile",
           icon: User,
+        },{
+          name: "Home",
+          path: "/",
+          icon: House,
         },
       ],
     },
@@ -73,6 +78,11 @@ const role = user?.userRole || "buyer";
           path: "/profile",
           icon: User,
         },
+        {
+          name: "Home",
+          path: "/",
+          icon: House,
+        },
       ],
     },
 
@@ -101,6 +111,11 @@ const role = user?.userRole || "buyer";
           name: "My Profile",
           path: "/profile",
           icon: User,
+        },
+        {
+          name: "Home",
+          path: "/",
+          icon: House,
         },
       ],
     },

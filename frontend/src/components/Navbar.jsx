@@ -18,6 +18,27 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+const handleAccountClick = () => {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  if (!user) {
+    window.location.href = "/login";
+    return;
+  }
+
+  if (user.userRole === "farmer") {
+    window.location.href = "/farmer-dashboard";
+  } 
+  else if (user.userRole === "buyer") {
+    window.location.href = "/buyer-dashboard";
+  } 
+  else if (user.userRole === "admin") {
+    window.location.href = "/admin-dashboard";
+  } 
+  else {
+    window.location.href = "/login";
+  }
+};
   // Bottom navigation links
   const navLinks = [
     {
@@ -243,7 +264,7 @@ export const Navbar = () => {
 
               {/* Account */}
               <Link
-                to="/login"
+                onClick={handleAccountClick}
                 className="
                   flex
                   flex-col

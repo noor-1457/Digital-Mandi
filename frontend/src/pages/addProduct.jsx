@@ -72,6 +72,8 @@ const AddProduct = () => {
   // ---------- Submit: POST (add) ya PUT (edit) ----------
   const handleSubmit = async (e) => {
     e.preventDefault();
+      console.log("🔥 ADD PRODUCT HANDLE SUBMIT RUNNING");
+
     setLoading(true);
 
     try {
@@ -95,10 +97,17 @@ const AddProduct = () => {
 
       const method = isEditMode ? "PUT" : "POST";
 
-      const response = await fetch(url, {
-        method,
-        body: data,
-      });
+     const token = localStorage.getItem("accessToken");
+console.log("🔥 URL:", url);
+console.log("🔥 METHOD:", method);
+console.log("🔥 TOKEN:", token ? "TOKEN EXISTS" : "NO TOKEN");
+const response = await fetch(url, {
+  method,
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+  body: data,
+});
 
       const result = await response.json();
 

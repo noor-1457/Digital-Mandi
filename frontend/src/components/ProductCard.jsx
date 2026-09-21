@@ -17,9 +17,8 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col relative group">
-      
       {/* Wishlist */}
-      <button className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors z-10">
+      <button className="cursor-pointer absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors z-10">
         <Heart size={19} />
       </button>
 

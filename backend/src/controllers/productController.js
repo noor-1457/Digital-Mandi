@@ -2,194 +2,277 @@ import Product from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 
-// Create Product
-const createProduct = async (req, res) => {
-    try {
-        const {
-            name,
-            description,
-            price,
-            category,
-            quantity,
-            location
-        } = req.body;
+// ======================================================
+// CREATE PRODUCT
+// ======================================================
+const createProduct = async (req, res, next) => {
+  try {
+    console.log("\n========== CREATE PRODUCT ==========");
 
-        // Get image path from Multer
-        const image = req.file?.path;
+    console.log("REQ.BODY:", req.body);
+    console.log("REQ.FILE:", req.file);
+    console.log("REQ.USER:", req.user);
+    console.log("REQ.USER ID:", req.user?._id);
 
-        if (!image) {
-            throw new ApiError(400, "Product image is required");
-        }
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      location,
+    } = req.body;
 
-        // Upload image to Cloudinary
-        const productImage = await uploadOnCloudinary(image);
+    // Get image path from Multer
+    const image = req.file?.path;
 
-        console.log("Product Image Path:", image);
-        console.log("Cloudinary Response:", productImage);
+    console.log("Multer Image Path:", image);
 
-        if (!productImage) {
-            throw new ApiError(400, "Product image upload failed");
-        }
-
-        // Create product in MongoDB
-        const newProduct = new Product({
-            name,
-            description,
-            price,
-            image: productImage.url,
-            category,
-            quantity,
-            location
-        });
-
-        await newProduct.save();
-
-        return res.status(201).json({
-            message: "Product created successfully",
-            product: newProduct
-        });
-
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        });
+    if (!image) {
+      throw new ApiError(400, "Product image is required");
     }
+
+    // Upload image to Cloudinary
+    console.log("Uploading image to Cloudinary...");
+
+    const productImage = await uploadOnCloudinary(image);
+
+    console.log("Cloudinary Response:", productImage);
+
+    if (!productImage) {
+      throw new ApiError(400, "Product image upload failed");
+    }
+
+    if (!req.user?._id) {
+      throw new ApiError(401, "User authentication required");
+    }
+
+    // Create product
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      image: productImage.url,
+      category,
+      quantity,
+      location,
+      farmer: req.user._id,
+    });
+
+    console.log("NEW PRODUCT BEFORE SAVE:", newProduct);
+
+    await newProduct.save();
+
+    console.log("PRODUCT SAVED SUCCESSFULLY:", newProduct._id);
+    console.log("==================================\n");
+
+    return res.status(201).json({
+      message: "Product created successfully",
+      product: newProduct,
+    });
+  } catch (error) {
+    console.error("\n❌ CREATE PRODUCT ERROR:");
+    console.error(error);
+
+    // ApiError ko error middleware/controller tak bhejo
+    next(error);
+  }
 };
 
 
-// Get All Products
-const getProducts = async (req, res) => {
-    try {
-        const products = await Product.find();
+// ======================================================
+// GET ALL PRODUCTS
+// ======================================================
+const getProducts = async (req, res, next) => {
+  try {
+    console.log("\n========== GET ALL PRODUCTS ==========");
 
-        return res.status(200).json(products);
+    const products = await Product.find();
 
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        });
-    }
+    console.log("Products Found:", products.length);
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("❌ GET PRODUCTS ERROR:", error);
+
+    next(error);
+  }
 };
 
 
-// Get Product By ID
-const getProductById = async (req, res) => {
-    try {
-        const productId = req.params.id;
+// ======================================================
+// GET PRODUCT BY ID
+// ======================================================
+const getProductById = async (req, res, next) => {
+  try {
+    console.log("\n========== GET PRODUCT BY ID ==========");
 
-        const product = await Product.findById(productId);
+    const productId = req.params.id;
 
-        if (!product) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
-        }
+    console.log("Product ID:", productId);
 
-        return res.status(200).json(product);
+    const product = await Product.findById(productId);
 
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        });
+    if (!product) {
+      throw new ApiError(404, "Product not found");
     }
+
+    console.log("Product Found:", product._id);
+
+    return res.status(200).json(product);
+  } catch (error) {
+    console.error("❌ GET PRODUCT BY ID ERROR:", error);
+
+    next(error);
+  }
 };
 
 
-// Update Product
-const updateProduct = async (req, res) => {
-    try {
-        const productId = req.params.id;
+// ======================================================
+// UPDATE PRODUCT
+// ======================================================
+const updateProduct = async (req, res, next) => {
+  try {
+    console.log("\n========== UPDATE PRODUCT ==========");
 
-        const {
-            name,
-            description,
-            price,
-            category,
-            quantity,
-            location
-        } = req.body;
+    const productId = req.params.id;
 
-        const updateData = {
-            name,
-            description,
-            price,
-            category,
-            quantity,
-            location
-        };
+    console.log("Product ID:", productId);
+    console.log("REQ.BODY:", req.body);
+    console.log("REQ.FILE:", req.file);
 
-        // Agar new image select ki gayi hai
-        if (req.file?.path) {
-            const productImage = await uploadOnCloudinary(req.file.path);
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      location,
+    } = req.body;
 
-            if (!productImage) {
-                return res.status(400).json({
-                    message: "Product image upload failed"
-                });
-            }
+    const updateData = {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      location,
+    };
 
-            updateData.image = productImage.url;
-        }
+    // Agar new image select ki gayi hai
+    if (req.file?.path) {
+      console.log("New image detected:", req.file.path);
+      console.log("Uploading new image to Cloudinary...");
 
-        const updatedProduct = await Product.findByIdAndUpdate(
-            productId,
-            updateData,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
+      const productImage = await uploadOnCloudinary(req.file.path);
 
-        if (!updatedProduct) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
-        }
+      console.log("Cloudinary Response:", productImage);
 
-        return res.status(200).json({
-            message: "Product updated successfully",
-            product: updatedProduct
-        });
+      if (!productImage) {
+        throw new ApiError(400, "Product image upload failed");
+      }
 
-    } catch (error) {
-        console.error("Update Product Error:", error);
+      updateData.image = productImage.url;
 
-        return res.status(400).json({
-            message: error.message
-        });
+      console.log("New Image URL:", updateData.image);
     }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedProduct) {
+      throw new ApiError(404, "Product not found");
+    }
+
+    console.log("PRODUCT UPDATED:", updatedProduct._id);
+    console.log("===================================\n");
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error("\n❌ UPDATE PRODUCT ERROR:");
+    console.error(error);
+
+    next(error);
+  }
 };
 
 
-// Delete Product
-const deleteProduct = async (req, res) => {
-    try {
-        const productId = req.params.id;
+// ======================================================
+// DELETE PRODUCT
+// ======================================================
+const deleteProduct = async (req, res, next) => {
+  try {
+    console.log("\n========== DELETE PRODUCT ==========");
 
-        const deletedProduct = await Product.findByIdAndDelete(productId);
+    const productId = req.params.id;
 
-        if (!deletedProduct) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
-        }
+    console.log("Product ID:", productId);
 
-        return res.status(200).json({
-            message: "Product deleted successfully"
-        });
+    const deletedProduct = await Product.findByIdAndDelete(productId);
 
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        });
+    if (!deletedProduct) {
+      throw new ApiError(404, "Product not found");
     }
+
+    console.log("PRODUCT DELETED:", deletedProduct._id);
+    console.log("===================================\n");
+
+    return res.status(200).json({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error("\n❌ DELETE PRODUCT ERROR:");
+    console.error(error);
+
+    next(error);
+  }
+};
+
+
+// ======================================================
+// GET MY PRODUCTS
+// ======================================================
+const getMyProducts = async (req, res, next) => {
+  try {
+    console.log("\n========== GET MY PRODUCTS ==========");
+
+    console.log("REQ.USER:", req.user);
+    console.log("FARMER ID:", req.user?._id);
+
+    if (!req.user?._id) {
+      throw new ApiError(401, "User authentication required");
+    }
+
+    const products = await Product.find({
+      farmer: req.user._id,
+    });
+
+    console.log("My Products Found:", products.length);
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("\n❌ GET MY PRODUCTS ERROR:");
+    console.error(error);
+
+    next(error);
+  }
 };
 
 
 export {
-    createProduct,
-    getProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct
+  createProduct,
+  getProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  getMyProducts,
 };

@@ -1,43 +1,49 @@
-//this will verify is the user is logged in or not
-import { ApiError } from "../utils/apiError.js";
+import {ApiError} from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
-    // 1️ Get token from cookie OR header
+    // 1️⃣ Token extract karein
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      throw new ApiError(401, "Unauthorized request - No token");
+      return next(new ApiError(401, "Unauthorized request - No token"));
     }
 
-    // 2️ Verify token
+    // 2️⃣ Token verify karein
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    // 3️ Use userId
-    const user = await User.findById(decodedToken.userId).select(
-      "-password -refreshToken",
-    );
+    // 3️⃣ Safe ID extraction (Optional chaining lagayi hai taaki code safe rahay)
+    const idToSearch = decodedToken?._id || decodedToken?.userId || decodedToken?.id;
 
-    if (!user) {
-      throw new ApiError(401, "Unauthorized request - User not found");
+    if (!idToSearch) {
+      return next(new ApiError(401, "Invalid token payload - User ID missing"));
     }
 
-    // 4️ Attach user to request
+    // 4️⃣ User ko DB se fetch karein
+    const user = await User.findById(idToSearch).select("-password -refreshToken");
+
+    if (!user) {
+      return next(new ApiError(401, "Unauthorized request - User not found"));
+    }
+
+    // 5️⃣ User context attach karein
     req.user = user;
+    
+    // Explicit server log check:
+    console.log("🟢 [MIDDLEWARE SUCCESS] Farmer Authenticated ID:", user._id.toString());
 
     next();
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      throw new ApiError(401, "Access token expired");
-    }
-    if (error.name === "JsonWebTokenError") {
-      throw new ApiError(401, "Invalid access token");
-    }
-    throw new ApiError(401, error.message || "Unauthorized request");
+    let message = error.message || "Unauthorized request";
+    if (error.name === "TokenExpiredError") message = "Access token expired";
+    if (error.name === "JsonWebTokenError") message = "Invalid access token";
+    
+    console.error("🔴 [MIDDLEWARE ERROR] JWT Verification Failed:", message);
+    return next(new ApiError(401, message));
   }
 });
