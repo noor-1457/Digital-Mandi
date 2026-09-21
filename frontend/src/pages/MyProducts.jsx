@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 function MyProducts() {
   const [products, setProducts] = useState([]);
@@ -9,7 +11,7 @@ function MyProducts() {
 
   const fetchProducts = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("token");
 
       const response = await axios.get(
         "http://localhost:8000/api/products/my-products",
@@ -55,16 +57,29 @@ function MyProducts() {
   return (
     <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#006400] md:text-3xl">
-            My Products
-          </h1>
-          <p className="mt-2 text-sm text-gray-600 md:text-base">
-            Manage your agricultural products for buyers.
-          </p>
-        </div>
+      {/* Header */}
+<div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <div>
+    <h1 className="text-2xl font-bold text-[#006400] md:text-3xl">
+      My Products
+    </h1>
 
+    <p className="mt-2 text-sm text-gray-600 md:text-base">
+      Manage your agricultural products for buyers.
+    </p>
+  </div>
+
+  <Link
+    to="/addProduct"
+    className="group inline-flex w-fit items-center justify-center gap-2 rounded-full bg-[#006400] px-6 py-3.5 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#004d00]"
+  >
+    Add Product
+    <ArrowRight
+      size={18}
+      className="transition-transform group-hover:translate-x-1"
+    />
+  </Link>
+</div>
         {/* Product List */}
         <div className="w-full rounded-2xl bg-white p-6 shadow-sm sm:p-8">
           {loading ? (

@@ -125,38 +125,43 @@ const role = user?.userRole || "buyer";
 
   /* ================= LOGOUT ================= */
 
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("token");
+ const handleLogout = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:8000/api/auth/logout",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    console.log("TOKEN BEFORE LOGOUT:", token);
 
-      const data = await response.json();
+    const response = await fetch(
+      "http://localhost:8000/api/auth/logout",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-      console.log("Logout response:", data);
+    console.log("LOGOUT STATUS:", response.status);
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+    const data = await response.json();
 
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
+    console.log("LOGOUT RESPONSE:", data);
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-      navigate("/login");
-    }
-  };
+    window.location.href = "/login";
+
+  } catch (error) {
+    console.error("Logout error:", error);
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "/login";
+  }
+};
 
   return (
     <>

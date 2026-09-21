@@ -12,6 +12,7 @@ import ProtectedRoutes from "./routes/ProtectedRoutes.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import AddProduct from "./pages/addProduct.jsx";
 import MyProducts from "./pages/MyProducts.jsx";
+import AllProducts from "./pages/AllProducts.jsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Logins />} />
+            <Route path="/allProducts" element={<AllProducts />} />
           </Route>
 
           <Route element={<ProtectedLayout />}>

@@ -83,18 +83,135 @@ const createProduct = async (req, res, next) => {
 // ======================================================
 // GET ALL PRODUCTS
 // ======================================================
+// ======================================================
+// GET ALL PRODUCTS / SEARCH / FILTER PRODUCTS
+// ======================================================
+
 const getProducts = async (req, res, next) => {
   try {
-    console.log("\n========== GET ALL PRODUCTS ==========");
+    console.log("\n========== GET / SEARCH PRODUCTS ==========");
 
-    const products = await Product.find();
+    const {
+      search,
+      category,
+      location,
+      minPrice,
+      maxPrice,
+      availability,
+      freshness,
+    } = req.query;
+
+    console.log("Search:", search);
+    console.log("Category:", category);
+    console.log("Location:", location);
+    console.log("Min Price:", minPrice);
+    console.log("Max Price:", maxPrice);
+    console.log("Availability:", availability);
+    console.log("Freshness:", freshness);
+
+    const filter = {};
+
+    // ==========================================
+    // SEARCH BY KEYWORD
+    // ==========================================
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // ==========================================
+    // FILTER BY CATEGORY
+    // ==========================================
+
+    if (category) {
+      filter.category = {
+        $regex: category,
+        $options: "i",
+      };
+    }
+
+    // ==========================================
+    // FILTER BY LOCATION
+    // ==========================================
+
+    if (location) {
+      filter.location = {
+        $regex: location,
+        $options: "i",
+      };
+    }
+
+    // ==========================================
+    // FILTER BY PRICE RANGE
+    // ==========================================
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+
+      if (minPrice) {
+        filter.price.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        filter.price.$lte = Number(maxPrice);
+      }
+    }
+
+    // ==========================================
+    // FILTER BY AVAILABILITY
+    // ==========================================
+
+    if (availability === "available") {
+      filter.quantity = { $gt: 0 };
+    }
+
+    // ==========================================
+    // FILTER BY FRESHNESS
+    // ==========================================
+
+    if (freshness) {
+      const now = new Date();
+      let dateLimit;
+
+      if (freshness === "today") {
+        dateLimit = new Date();
+        dateLimit.setHours(0, 0, 0, 0);
+      }
+
+      if (freshness === "week") {
+        dateLimit = new Date();
+        dateLimit.setDate(now.getDate() - 7);
+      }
+
+      if (freshness === "month") {
+        dateLimit = new Date();
+        dateLimit.setDate(now.getDate() - 30);
+      }
+
+      if (dateLimit) {
+        filter.createdAt = { $gte: dateLimit };
+      }
+    }
+
+    // ==========================================
+    // GET PRODUCTS
+    // ==========================================
+
+    const products = await Product.find(filter)
+      .populate("farmer", "name email")
+      .sort({ createdAt: -1 });
 
     console.log("Products Found:", products.length);
+    console.log("=========================================\n");
 
     return res.status(200).json(products);
   } catch (error) {
-    console.error("❌ GET PRODUCTS ERROR:", error);
-
+    console.error("❌ GET / SEARCH PRODUCTS ERROR:", error);
     next(error);
   }
 };

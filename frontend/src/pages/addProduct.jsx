@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AddProduct = () => {
-  const { id } = useParams();          // URL mein id ho to edit mode
+  const { id } = useParams(); // URL mein id ho to edit mode
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
 
@@ -29,7 +29,7 @@ const AddProduct = () => {
       setFetching(true);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/products/${id}`
+          `http://localhost:8000/api/products/${id}`,
         );
         const data = await response.json();
 
@@ -72,7 +72,7 @@ const AddProduct = () => {
   // ---------- Submit: POST (add) ya PUT (edit) ----------
   const handleSubmit = async (e) => {
     e.preventDefault();
-      console.log("🔥 ADD PRODUCT HANDLE SUBMIT RUNNING");
+    console.log("🔥 ADD PRODUCT HANDLE SUBMIT RUNNING");
 
     setLoading(true);
 
@@ -97,31 +97,32 @@ const AddProduct = () => {
 
       const method = isEditMode ? "PUT" : "POST";
 
-     const token = localStorage.getItem("accessToken");
-console.log("🔥 URL:", url);
-console.log("🔥 METHOD:", method);
-console.log("🔥 TOKEN:", token ? "TOKEN EXISTS" : "NO TOKEN");
-const response = await fetch(url, {
-  method,
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-  body: data,
-});
+      const token = localStorage.getItem("token");
+      console.log("🔥 URL:", url);
+      console.log("🔥 METHOD:", method);
+      console.log("🔥 TOKEN:", token ? "TOKEN EXISTS" : "NO TOKEN");
+      const response = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
 
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(
           result.message ||
-            (isEditMode ? "Failed to update product" : "Failed to add product")
+            (isEditMode ? "Failed to update product" : "Failed to add product"),
         );
       }
+        window.location.href = "/myProducts";
 
       toast.success(
         isEditMode
           ? "Product updated successfully!"
-          : "Product added successfully!"
+          : "Product added successfully!",
       );
 
       // Add mode mein form reset
@@ -136,7 +137,7 @@ const response = await fetch(url, {
           image: null,
         });
       } else {
-        navigate("/myProducts");
+        window.location.href = "/myProducts";
       }
     } catch (error) {
       console.error("Error:", error);
@@ -168,6 +169,7 @@ const response = await fetch(url, {
               ? "Update your product details."
               : "Add your agricultural product for buyers."}
           </p>
+          
         </div>
 
         {/* Form Card */}
@@ -258,7 +260,7 @@ const response = await fetch(url, {
                 <option value="Grains">Grains</option>
                 <option value="Pulses">Pulses</option>
                 <option value="Seeds">Seeds</option>
-                <option value="Other">Other</option>
+                <option value="Spices">Spices</option>
               </select>
             </div>
 
@@ -300,7 +302,7 @@ const response = await fetch(url, {
                 name="image"
                 accept="image/*"
                 onChange={handleChange}
-                required={!isEditMode}   // edit mein optional
+                required={!isEditMode} // edit mein optional
                 className="cursor-pointer w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#006400] file:text-white hover:file:bg-[#004d00]"
               />
             </div>
@@ -317,8 +319,8 @@ const response = await fetch(url, {
                     ? "Updating..."
                     : "Adding..."
                   : isEditMode
-                  ? "Update Product"
-                  : "Add Product"}
+                    ? "Update Product"
+                    : "Add Product"}
               </button>
 
               {isEditMode && (
