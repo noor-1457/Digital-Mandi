@@ -7,6 +7,7 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
+  ArrowLeftIcon
 } from "lucide-react";
 
 import { useState } from "react";
@@ -98,6 +99,7 @@ function Logins() {
           Soft green-tinted background that blends well with the brand green.
           It's lighter and fresher than the previous beige, giving a natural/organic feel. */}
       <main className="min-h-screen bg-gradient-to-br from-[#f0f7ed] via-[#f7fbf5] to-[#eaf3e6] pt-6 pb-10 px-4 sm:px-6">
+        <button onClick={()=>navigate("/")} className="text-[#006400] underline flex absolute cursor-pointer"><ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer"/>Back</button>
         <div className="max-w-md w-full mx-auto">
           {/* LOGIN CARD */}
           <div

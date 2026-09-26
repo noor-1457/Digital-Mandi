@@ -12,15 +12,16 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
+  ArrowLeftIcon
 } from "lucide-react";
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState} from "react";
+import { Link , useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
   // FORM STATE
-
+const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -148,6 +149,8 @@ function Register() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#f0f7ed] via-[#f7fbf5] to-[#eaf3e6] pt-8 pb-10 px-4 sm:px-6">
+              <button onClick={()=>navigate("/")} className="text-[#006400] underline flex absolute cursor-pointer"><ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer"/>Back</button>
+
       <div className="max-w-md w-full mx-auto">
         {/* REGISTER CARD */}
         <div
