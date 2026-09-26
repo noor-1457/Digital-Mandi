@@ -1,17 +1,10 @@
-import {
-  Search,
-  Heart,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
-  Leaf,
-} from "lucide-react";
-
-import { useState } from "react";
+import { Search, Heart, ShoppingCart, User, Menu, X, Leaf } from "lucide-react";
+import { ShopContext } from "../context/ShopContext";
+import { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+  const { getTotalcartItems, getTotalWishlistItems } = useContext(ShopContext);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -111,11 +104,7 @@ export const Navbar = () => {
               className="flex items-center gap-2.5 shrink-0"
             >
               <div className="relative w-11 h-11 flex items-center justify-center">
-                <Leaf
-                  size={42}
-                  strokeWidth={1.7}
-                  className="text-[#006400]"
-                />
+                <Leaf size={42} strokeWidth={1.7} className="text-[#006400]" />
                 <Leaf
                   size={20}
                   strokeWidth={2}
@@ -181,14 +170,14 @@ export const Navbar = () => {
             {/* ================= RIGHT ACTIONS ================= */}
             <div className="hidden md:flex items-center gap-6 shrink-0">
               {/* Wishlist */}
-              <Link
-                to="/wishlist"
-                className="
-                  flex flex-col items-center justify-center gap-1
-                  text-[#173f32] hover:text-[#006400] transition-colors
-                "
-              >
-                <Heart size={23} strokeWidth={1.8} />
+              <Link to="/wishlist" className="relative flex flex-col items-center justify-center gap-1
+                  text-[#173f32] hover:text-[#006400] transition-colors">
+                <Heart size={23} className="text-gray-700" />
+                {getTotalWishlistItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {getTotalWishlistItems()}
+                  </span>
+                )}
                 <span className="text-[12px] font-medium">Wishlist</span>
               </Link>
 
@@ -201,18 +190,13 @@ export const Navbar = () => {
                 "
               >
                 <div className="relative">
-                  <ShoppingCart size={23} strokeWidth={1.8} />
-                  <span
-                    className="
-                      absolute -top-2 -right-3
-                      min-w-[17px] h-[17px] px-1
-                      flex items-center justify-center
-                      rounded-full bg-[#006400]
-                      text-white text-[9px] font-bold
-                    "
-                  >
-                    0
-                  </span>
+                  <ShoppingCart size={23} className="text-gray-700" />
+                  {/* ✅ Cart Badge */}
+                  {getTotalcartItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {getTotalcartItems()}
+                    </span>
+                  )}
                 </div>
                 <span className="text-[12px] font-medium">Cart</span>
               </Link>
@@ -226,7 +210,7 @@ export const Navbar = () => {
                   cursor-pointer
                 "
               >
-                <User size={23} strokeWidth={1.8} />
+                <User size={23} className="text-gray-700" />
                 <span className="text-[12px] font-medium">Account</span>
               </button>
             </div>

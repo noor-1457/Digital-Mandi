@@ -34,7 +34,7 @@ const BestSellers = () => {
               Best Sellers
             </h2>          </div>
           <a
-            href="/best-sellers"
+            href="/allProducts"
             className="flex items-center gap-1 text-sm font-semibold text-[#006400] hover:underline"
           >
             View More <ArrowRight size={16} />

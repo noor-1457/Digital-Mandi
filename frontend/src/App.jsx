@@ -13,6 +13,8 @@ import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import AddProduct from "./pages/addProduct.jsx";
 import MyProducts from "./pages/MyProducts.jsx";
 import AllProducts from "./pages/AllProducts.jsx";
+import { CartItems } from "./pages/Cart.jsx";
+import Wishlist from "./pages/Wishlist.jsx";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Logins />} />
             <Route path="/allProducts" element={<AllProducts />} />
+            <Route path="/cart" element={<CartItems />} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Route>
 
           <Route element={<ProtectedLayout />}>
