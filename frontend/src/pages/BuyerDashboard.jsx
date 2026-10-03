@@ -1,42 +1,25 @@
-import {
-  ShoppingBag,
-  User,
-  Leaf,
-  Menu,
-  X,
-  ArrowRight,
-} from "lucide-react";
-import { Link} from "react-router-dom";
-
+import { ShoppingBag, User, Leaf, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 function BuyerDashboard() {
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
-
-      
+      <Sidebar />
 
       {/* MAIN CONTENT */}
 
       <section className="lg:ml-72 min-h-screen pt-24 lg:pt-0">
-
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8">
-
-
           {/* TOP HEADER */}
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
             <div>
-
-              <p className="text-sm text-[#7a8277]">
-                Welcome back 👋
-              </p>
+              <p className="text-sm text-[#7a8277]">Welcome back 👋</p>
 
               <h2 className="text-3xl font-bold text-[#293829] mt-1">
                 Buyer Dashboard
               </h2>
-
             </div>
-
 
             {/* Profile shortcut */}
 
@@ -44,41 +27,26 @@ function BuyerDashboard() {
               to="/profile"
               className="flex items-center gap-3 bg-white border border-[#e3e7dc] px-4 py-3 rounded-xl hover:shadow-md transition"
             >
-
               <div className="w-9 h-9 rounded-full bg-[#eef3e4] flex items-center justify-center">
-                <User
-                  size={18}
-                  className="text-[#607b37]"
-                />
+                <User size={18} className="text-[#607b37]" />
               </div>
 
               <div>
-
                 <p className="text-sm font-semibold text-[#293829]">
                   My Profile
                 </p>
 
-                <p className="text-xs text-[#8a9186]">
-                  View account
-                </p>
-
+                <p className="text-xs text-[#8a9186]">View account</p>
               </div>
-
             </Link>
-
           </div>
-
 
           {/* WELCOME CARD */}
 
           <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-[1px] shadow-lg">
-
             <div className="rounded-[23px] bg-[#fffef8] p-6 sm:p-8">
-
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
                 <div>
-
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef3e4] text-[#607b37] text-xs font-semibold">
                     <Leaf size={14} />
                     Buyer Account
@@ -89,45 +57,34 @@ function BuyerDashboard() {
                   </h3>
 
                   <p className="mt-2 text-[#737b70] max-w-xl">
-                    Manage your orders and keep your buyer profile
-                    up to date from your dashboard.
+                    Manage your orders and keep your buyer profile up to date
+                    from your dashboard.
                   </p>
-
                 </div>
 
                 <Link
                   to="/products"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
                 >
-
                   Browse Products
-
                   <ArrowRight
                     size={18}
                     className="group-hover:translate-x-1 transition-transform"
                   />
-
                 </Link>
-
               </div>
-
             </div>
-
           </div>
-
 
           {/* DASHBOARD CARDS*/}
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-
-
             {/* ORDERS */}
 
             <Link
               to="/orders"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-
               <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
                 <ShoppingBag size={24} />
               </div>
@@ -147,9 +104,7 @@ function BuyerDashboard() {
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </div>
-
             </Link>
-
 
             {/* PROFILE */}
 
@@ -157,7 +112,6 @@ function BuyerDashboard() {
               to="/profile"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-
               <div className="w-12 h-12 rounded-xl bg-[#f8eee5] text-[#966235] flex items-center justify-center">
                 <User size={24} />
               </div>
@@ -177,14 +131,11 @@ function BuyerDashboard() {
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </div>
-
             </Link>
-
 
             {/* ACCOUNT STATUS */}
 
             <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
-
               <div className="w-12 h-12 rounded-xl bg-[#fff8d9] text-[#b28a00] flex items-center justify-center">
                 <Leaf size={24} />
               </div>
@@ -200,36 +151,25 @@ function BuyerDashboard() {
               <div className="mt-4 inline-flex px-3 py-1 rounded-full bg-[#eef3e4] text-[#607b37] text-xs font-semibold">
                 Active
               </div>
-
             </div>
-
           </div>
-
 
           {/* CONTINUE SHOPPING */}
 
           <div className="mt-10 flex justify-center">
-
             <Link
-              to="/products"
+              to="/"
               className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#fdd835] to-[#006400] text-white font-semibold shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
             >
-
               Continue Shopping
-
               <ArrowRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform duration-300"
               />
-
             </Link>
-
           </div>
-
         </div>
-
       </section>
-
     </main>
   );
 }

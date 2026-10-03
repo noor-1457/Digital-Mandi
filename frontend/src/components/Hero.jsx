@@ -124,7 +124,7 @@ const Hero = () => {
 
             {/* Shop button */}
             <Link
-              to="/products"
+              to="/allProducts"
               className="
                 group
                 mt-7

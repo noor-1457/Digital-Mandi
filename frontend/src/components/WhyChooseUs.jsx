@@ -45,7 +45,7 @@ const WhyChooseUs = () => {
             Why Digital Mandi
           </p>
 
-          <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-[#123f32]">
+          <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-[#006400]">
             Everything You Need in One Place
           </h2>
 

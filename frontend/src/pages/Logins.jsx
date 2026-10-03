@@ -7,15 +7,17 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  ArrowLeftIcon
+  ArrowLeftIcon,
 } from "lucide-react";
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 function Logins() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || null;
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -62,12 +64,9 @@ function Logins() {
       const response = await axios.post(
         "http://localhost:8000/api/auth/login",
         loginData,
-        {
-          withCredentials: true,
-        },
+        { withCredentials: true },
       );
 
-      // console.log(response.data);
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       setSuccess("Login successful!");
@@ -79,11 +78,17 @@ function Logins() {
         password: "",
       });
 
-      // console.log("Navigating to:", response.data.dashboardUrl);
-      navigate(response.data.dashboardUrl);
+      // ✅ Redirect logic
+      if (from) {
+        navigate(from, { replace: true });
+      } else if (user.userRole === "farmer") {
+        navigate("/farmer-dashboard");
+      } else if (user.userRole === "buyer") {
+        navigate("/buyer-dashboard");
+      } else {
+        navigate(response.data.dashboardUrl || "/");
+      }
     } catch (error) {
-      // console.log(error);
-
       setError(
         error.response?.data?.message ||
           "Login failed. Please check your email and password.",
@@ -99,7 +104,13 @@ function Logins() {
           Soft green-tinted background that blends well with the brand green.
           It's lighter and fresher than the previous beige, giving a natural/organic feel. */}
       <main className="min-h-screen bg-gradient-to-br from-[#f0f7ed] via-[#f7fbf5] to-[#eaf3e6] pt-6 pb-10 px-4 sm:px-6">
-        <button onClick={()=>navigate("/")} className="text-[#006400] underline flex absolute cursor-pointer"><ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer"/>Back</button>
+        <button
+          onClick={() => navigate("/")}
+          className="text-[#006400] underline flex absolute cursor-pointer"
+        >
+          <ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer" />
+          Back
+        </button>
         <div className="max-w-md w-full mx-auto">
           {/* LOGIN CARD */}
           <div
@@ -246,7 +257,6 @@ function Logins() {
                   flex items-center justify-center gap-2
                   rounded-lg
                   bg-[#006400]
-                  hover:bg-[#344534]
                   disabled:bg-[#7a8277]
                   disabled:cursor-not-allowed
                   text-white
@@ -281,6 +291,7 @@ function Logins() {
               Don't have an account?
               <Link
                 to="/register"
+                state={{ from }}
                 className="ml-1 font-semibold text-[#006400] transition-colors cursor-pointer"
               >
                 Register

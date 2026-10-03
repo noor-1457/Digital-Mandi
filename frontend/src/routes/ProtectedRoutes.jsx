@@ -17,7 +17,7 @@ function ProtectedRoutes({ allowedRoles }) {
 
   if (allowedRoles && !allowedRoles.includes(user?.userRole)) {
     // console.log("ROLE NOT ALLOWED → HOME");
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   console.log("ACCESS GRANTED");

@@ -12,16 +12,18 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  ArrowLeftIcon
+  ArrowLeftIcon,
 } from "lucide-react";
 
-import { useState} from "react";
-import { Link , useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
   // FORM STATE
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || null;
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -135,6 +137,17 @@ const navigate = useNavigate();
       });
 
       setRole("");
+      // ✅ Redirect logic
+      setTimeout(() => {
+        if (from) {
+          // agar kahin se redirect hokar aaya tha, toh login page pe bhejein
+          // saath mein "from" bhi pass karein taake login ke baad wapas aa sake
+          navigate("/login", { state: { from } });
+        } else {
+          // normal case — login page pe bhejein
+          navigate("/login");
+        }
+      }, 800);
     } catch (error) {
       console.log(error);
 
@@ -149,7 +162,13 @@ const navigate = useNavigate();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#f0f7ed] via-[#f7fbf5] to-[#eaf3e6] pt-8 pb-10 px-4 sm:px-6">
-              <button onClick={()=>navigate("/")} className="text-[#006400] underline flex absolute cursor-pointer"><ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer"/>Back</button>
+      <button
+        onClick={() => navigate("/")}
+        className="text-[#006400] underline flex absolute cursor-pointer"
+      >
+        <ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer" />
+        Back
+      </button>
 
       <div className="max-w-md w-full mx-auto">
         {/* REGISTER CARD */}
@@ -389,9 +408,7 @@ const navigate = useNavigate();
 
                 <option value="Punjab">Punjab</option>
                 <option value="Sindh">Sindh</option>
-                <option value="Khyber Pakhtunkhwa">
-                  Khyber Pakhtunkhwa
-                </option>
+                <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
                 <option value="Balochistan">Balochistan</option>
                 <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
                 <option value="Azad Kashmir">Azad Kashmir</option>
@@ -633,11 +650,7 @@ const navigate = useNavigate();
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9aa296] hover:text-[#536d2d]"
               >
-                {showConfirmPassword ? (
-                  <EyeOff size={16} />
-                ) : (
-                  <Eye size={16} />
-                )}
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
 
@@ -686,6 +699,7 @@ const navigate = useNavigate();
             Already have an account?
             <Link
               to="/login"
+              state={{ from }}
               className="ml-1 font-semibold text-[#006400] transition-colors"
             >
               Login

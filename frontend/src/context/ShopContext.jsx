@@ -128,7 +128,29 @@ const ShopContextProvider = ({ children }) => {
       product.category?.toLowerCase() === selectedCategory.toLowerCase();
     return matchesSearch && matchesCategory;
   });
+// ================= REMOVE ENTIRELY FROM CART =================
+const removeFromCart = (productId) => {
+  setCartItems((prev) => {
+    const updated = { ...prev };
+    delete updated[productId];
+    return updated;
+  });
+};
 
+// ================= UPDATE QUANTITY =================
+const updateQuantity = (productId, quantity) => {
+  if (quantity < 1) return;
+  setCartItems((prev) => ({
+    ...prev,
+    [productId]: quantity,
+  }));
+};
+
+// ================= CLEAR CART =================
+const clearCart = () => {
+  setCartItems({});
+  localStorage.removeItem("cartItems");
+};
   // ================= CONTEXT =================
   const ContextValue = {
     products,
@@ -150,6 +172,9 @@ const ShopContextProvider = ({ children }) => {
     isInWishlist,
     removeFromWishlist,
     getTotalWishlistItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
   };
 
   return (

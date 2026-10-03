@@ -1,4 +1,4 @@
-import "./App.css";
+// import "./App.css";
 import PublicLayout from "./layout/publicLayout.jsx";
 import { Home } from "./pages/Home.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -15,7 +15,9 @@ import MyProducts from "./pages/MyProducts.jsx";
 import AllProducts from "./pages/AllProducts.jsx";
 import { CartItems } from "./pages/Cart.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
-
+import ProductDetail from "./pages/ProductDetail";
+import Checkout from "./pages/Checkout.jsx";
+import OrderSuccess from "./pages/OrderSuccess.jsx";
 function App() {
   return (
     <>
@@ -26,8 +28,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Logins />} />
             <Route path="/allProducts" element={<AllProducts />} />
-            <Route path="/cart" element={<CartItems />} />
-            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/product/:productId" element={<ProductDetail />} />
           </Route>
 
           <Route element={<ProtectedLayout />}>
@@ -37,6 +38,13 @@ function App() {
 
             <Route element={<ProtectedRoutes allowedRoles={["buyer"]} />}>
               <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/cart" element={<CartItems />} />
+              <Route
+                path="/order-success/:orderId"
+                element={<OrderSuccess />}
+              />
             </Route>
 
             <Route element={<ProtectedRoutes allowedRoles={["farmer"]} />}>
@@ -46,6 +54,7 @@ function App() {
               <Route path="/add-product" element={<AddProduct />} />
               <Route path="/edit-product/:id" element={<AddProduct />} />
             </Route>
+
             <Route
               element={
                 <ProtectedRoutes allowedRoles={["buyer", "farmer", "admin"]} />

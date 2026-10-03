@@ -41,7 +41,6 @@ export const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/allProducts", label: "All Products" },
-    { path: "#", label: "Best Sellers" },
     { path: "/contact", label: "Contact Us" },
   ];
 
@@ -170,8 +169,11 @@ export const Navbar = () => {
             {/* ================= RIGHT ACTIONS ================= */}
             <div className="hidden md:flex items-center gap-6 shrink-0">
               {/* Wishlist */}
-              <Link to="/wishlist" className="relative flex flex-col items-center justify-center gap-1
-                  text-[#173f32] hover:text-[#006400] transition-colors">
+              <Link
+                to="/wishlist"
+                className="relative flex flex-col items-center justify-center gap-1
+                  text-[#173f32] hover:text-[#006400] transition-colors"
+              >
                 <Heart size={23} className="text-gray-700" />
                 {getTotalWishlistItems() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -234,9 +236,9 @@ export const Navbar = () => {
       {/* ================= BOTTOM GREEN NAVIGATION ================= */}
       <div className="bg-[#006400]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-[55px] flex">
+          <div className="h-[55px] flex justify-center place-items-center gap-2">
             {/* Desktop Links */}
-            <div className="hidden md:flex gap-1 flex-1">
+            <div className="hidden md:flex gap-1  space-between items-center">
               {navLinks.map((link, index) => (
                 <Link
                   key={`${link.label}-${index}`}

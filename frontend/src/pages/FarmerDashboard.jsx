@@ -7,16 +7,15 @@ import {
   Wheat,
 } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
-
+import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 
 function FarmerDashboard() {
   // const navigate = useNavigate();
 
-
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
-
+      <Sidebar />
       {/* MAIN CONTENT */}
 
       <section className="lg:ml-72 min-h-screen pt-24 lg:pt-0">
