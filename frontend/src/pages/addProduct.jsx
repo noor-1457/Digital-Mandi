@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import Sidebar from "../components/Sidebar";
 const AddProduct = () => {
   const { id } = useParams(); // URL mein id ho to edit mode
   const navigate = useNavigate();
@@ -158,6 +158,7 @@ const AddProduct = () => {
 
   return (
     <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
+      <Sidebar/>
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">

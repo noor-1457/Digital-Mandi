@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-
+import Sidebar from "../components/Sidebar";
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +56,7 @@ function MyProducts() {
 
   return (
     <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
+      <Sidebar />
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto">
       {/* Header */}
 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -1,4 +1,5 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -12,16 +13,29 @@ import {
   ClipboardList,
   House,
 } from "lucide-react";
-import { useState } from "react";
+
+import { useState, useContext } from "react";
+
+import { ShopContext } from "../context/ShopContext";
 
 function Sidebar() {
+  const {
+    clearCart,
+    clearWishlist,
+    setUser,
+  } = useContext(ShopContext);
+
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-const role = user?.userRole || "buyer";
-  const navigate = useNavigate();
+
+  const user = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  );
+
+  const role = user?.userRole || "buyer";
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  /* ================= SIDEBAR DATA ================= */
+  // ================= SIDEBAR DATA =================
 
   const sidebarData = {
     buyer: {
@@ -44,7 +58,8 @@ const role = user?.userRole || "buyer";
           name: "My Profile",
           path: "/profile",
           icon: User,
-        },{
+        },
+        {
           name: "Home",
           path: "/",
           icon: House,
@@ -121,47 +136,67 @@ const role = user?.userRole || "buyer";
     },
   };
 
-  const currentSidebar = sidebarData[role] || sidebarData.buyer;
+  const currentSidebar =
+    sidebarData[role] || sidebarData.buyer;
 
-  /* ================= LOGOUT ================= */
+  // ================= LOGOUT =================
 
- const handleLogout = async () => {
-  try {
-    const token = localStorage.getItem("token");
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-    console.log("TOKEN BEFORE LOGOUT:", token);
+      if (token) {
+        const response = await fetch(
+          "http://localhost:8000/api/auth/logout",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-    const response = await fetch(
-      "http://localhost:8000/api/auth/logout",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        console.log(
+          "LOGOUT STATUS:",
+          response.status
+        );
+
+        try {
+          const data = await response.json();
+          console.log(
+            "LOGOUT RESPONSE:",
+            data
+          );
+        } catch {
+          console.log(
+            "Logout response has no JSON body."
+          );
+        }
       }
-    );
+    } catch (error) {
+      console.error(
+        "Logout API error:",
+        error
+      );
+    } finally {
+      // Clear cart
+      clearCart();
 
-    console.log("LOGOUT STATUS:", response.status);
+      // Clear wishlist
+      clearWishlist();
 
-    const data = await response.json();
+      // Clear context user
+      setUser(null);
 
-    console.log("LOGOUT RESPONSE:", data);
+      // Clear authentication data
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    window.location.href = "/login";
-
-  } catch (error) {
-    console.error("Logout error:", error);
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    window.location.href = "/login";
-  }
-};
+      // Go to login
+      window.location.href = "/login";
+    }
+  };
 
   return (
     <>
@@ -169,9 +204,11 @@ const role = user?.userRole || "buyer";
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#006400] text-white h-20 px-5 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
-
           <div className="w-10 h-10 rounded-xl bg-[#fdd835] flex items-center justify-center">
-            <Leaf size={22} className="text-[#006400]" />
+            <Leaf
+              size={22}
+              className="text-[#006400]"
+            />
           </div>
 
           <div>
@@ -183,11 +220,12 @@ const role = user?.userRole || "buyer";
               {currentSidebar.title}
             </h1>
           </div>
-
         </div>
 
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={() =>
+            setSidebarOpen(!sidebarOpen)
+          }
           className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"
         >
           {sidebarOpen ? (
@@ -202,7 +240,9 @@ const role = user?.userRole || "buyer";
 
       {sidebarOpen && (
         <div
-          onClick={() => setSidebarOpen(false)}
+          onClick={() =>
+            setSidebarOpen(false)
+          }
           className="fixed inset-0 z-40 bg-black/40 lg:hidden"
         />
       )}
@@ -218,16 +258,21 @@ const role = user?.userRole || "buyer";
           flex flex-col
           transition-transform duration-300
           lg:translate-x-0
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          ${
+            sidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full"
+          }
         `}
       >
-
         {/* ================= LOGO ================= */}
 
         <div className="h-24 px-6 flex items-center gap-3 border-b border-white/10">
-
           <div className="w-12 h-12 rounded-2xl bg-[#fdd835] flex items-center justify-center">
-            <Leaf size={26} className="text-[#006400]" />
+            <Leaf
+              size={26}
+              className="text-[#006400]"
+            />
           </div>
 
           <div>
@@ -239,13 +284,11 @@ const role = user?.userRole || "buyer";
               {currentSidebar.portal}
             </p>
           </div>
-
         </div>
 
         {/* ================= NAVIGATION ================= */}
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-
           {currentSidebar.links.map((link) => {
             const Icon = link.icon;
 
@@ -253,14 +296,17 @@ const role = user?.userRole || "buyer";
               <Link
                 key={link.path}
                 to={link.path}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() =>
+                  setSidebarOpen(false)
+                }
                 className={`
                   flex items-center gap-3
                   px-4 py-3.5
                   rounded-xl
                   transition
                   ${
-                    location.pathname === link.path
+                    location.pathname ===
+                    link.path
                       ? "bg-white/10"
                       : "hover:bg-white/10"
                   }
@@ -274,13 +320,11 @@ const role = user?.userRole || "buyer";
               </Link>
             );
           })}
-
         </nav>
 
         {/* ================= LOGOUT ================= */}
 
         <div className="p-4 border-t border-white/10">
-
           <button
             onClick={handleLogout}
             className="
@@ -303,9 +347,7 @@ const role = user?.userRole || "buyer";
               Logout
             </span>
           </button>
-
         </div>
-
       </aside>
     </>
   );

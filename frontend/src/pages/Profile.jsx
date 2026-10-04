@@ -12,6 +12,7 @@ import {
   Tractor,
   ArrowBigLeft,
 } from "lucide-react";
+import Sidebar from "../components/Sidebar";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -167,6 +168,8 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-[#f6f8f5] pt-10 lg:ml-72 px-4 sm:px-6 pb-12">
+              <Sidebar/>
+
       {" "}
       {/* PAGE HEADER */}
       <div className=" mb-8 w-full">

@@ -2,6 +2,7 @@ import { ShoppingBag, User, Leaf, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 function BuyerDashboard() {
+
   return (
     <main className="min-h-screen bg-[#f8f7f2]">
       <Sidebar />
@@ -63,7 +64,7 @@ function BuyerDashboard() {
                 </div>
 
                 <Link
-                  to="/products"
+                  to="/allProducts"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#006400] hover:bg-[#004d00] text-white font-semibold transition-all hover:-translate-y-0.5"
                 >
                   Browse Products
