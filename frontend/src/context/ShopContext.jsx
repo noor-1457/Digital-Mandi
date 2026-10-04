@@ -118,10 +118,7 @@ const ShopContextProvider = ({ children }) => {
     if (!user) return;
 
     try {
-      localStorage.setItem(
-        getCartKey(user),
-        JSON.stringify(cartItems)
-      );
+      localStorage.setItem(getCartKey(user), JSON.stringify(cartItems));
     } catch (error) {
       console.error("Error saving cart:", error);
     }
@@ -133,10 +130,7 @@ const ShopContextProvider = ({ children }) => {
     if (!user) return;
 
     try {
-      localStorage.setItem(
-        getWishlistKey(user),
-        JSON.stringify(wishlistItems)
-      );
+      localStorage.setItem(getWishlistKey(user), JSON.stringify(wishlistItems));
     } catch (error) {
       console.error("Error saving wishlist:", error);
     }
@@ -148,16 +142,12 @@ const ShopContextProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        "http://localhost:8000/api/products"
-      );
+      const response = await axios.get("http://localhost:8000/api/products");
 
       const data = response.data;
 
       const productList =
-        data?.products ||
-        data?.data ||
-        (Array.isArray(data) ? data : []);
+        data?.products || data?.data || (Array.isArray(data) ? data : []);
 
       setProducts(productList);
     } catch (error) {
@@ -232,20 +222,12 @@ const ShopContextProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems({});
-
-    if (user) {
-      localStorage.removeItem(getCartKey(user));
-    }
   };
 
   // ================= CLEAR WISHLIST =================
 
   const clearWishlist = () => {
     setWishlistItems([]);
-
-    if (user) {
-      localStorage.removeItem(getWishlistKey(user));
-    }
   };
 
   // ================= TOGGLE WISHLIST =================
@@ -255,9 +237,7 @@ const ShopContextProvider = ({ children }) => {
 
     setWishlistItems((previousWishlist) => {
       if (previousWishlist.includes(productId)) {
-        return previousWishlist.filter(
-          (id) => id !== productId
-        );
+        return previousWishlist.filter((id) => id !== productId);
       }
 
       return [...previousWishlist, productId];
@@ -274,7 +254,7 @@ const ShopContextProvider = ({ children }) => {
 
   const removeFromWishlist = (productId) => {
     setWishlistItems((previousWishlist) =>
-      previousWishlist.filter((id) => id !== productId)
+      previousWishlist.filter((id) => id !== productId),
     );
   };
 
@@ -284,9 +264,7 @@ const ShopContextProvider = ({ children }) => {
     let total = 0;
 
     for (const productId in cartItems) {
-      const product = products.find(
-        (item) => item._id === productId
-      );
+      const product = products.find((item) => item._id === productId);
 
       if (product) {
         total += product.price * cartItems[productId];
@@ -327,8 +305,7 @@ const ShopContextProvider = ({ children }) => {
 
     const matchesCategory =
       selectedCategory === "All" ||
-      product.category?.toLowerCase() ===
-        selectedCategory.toLowerCase();
+      product.category?.toLowerCase() === selectedCategory.toLowerCase();
 
     return matchesSearch && matchesCategory;
   });
@@ -372,9 +349,7 @@ const ShopContextProvider = ({ children }) => {
   };
 
   return (
-    <ShopContext.Provider value={ContextValue}>
-      {children}
-    </ShopContext.Provider>
+    <ShopContext.Provider value={ContextValue}>{children}</ShopContext.Provider>
   );
 };
 
