@@ -68,28 +68,21 @@ const ShopContextProvider = ({ children }) => {
     }
   });
 
-  // ================= CHECK USER CHANGE =================
-  // Login/logout ke baad localStorage se user detect karega.
-
+  // ================= CHECK USER CHANGE (FIXED) =================
+  // Interval hata kar 'storage' event listener lagaya hai jo tabhi chalega jab sach me storage badlegi (bina performance drop kiye)
   useEffect(() => {
-    const checkUser = () => {
+    const handleStorageChange = () => {
       const currentUser = getUser();
-
-      setUser((previousUser) => {
-        const previousId = previousUser?._id || null;
-        const currentId = currentUser?._id || null;
-
-        if (previousId !== currentId) {
+      setUser((prevUser) => {
+        if (prevUser?._id !== currentUser?._id) {
           return currentUser;
         }
-
-        return previousUser;
+        return prevUser;
       });
     };
 
-    const interval = setInterval(checkUser, 1000);
-
-    return () => clearInterval(interval);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   // ================= LOAD USER CART/WISHLIST =================
@@ -106,17 +99,14 @@ const ShopContextProvider = ({ children }) => {
       setWishlistItems(savedWishlist ? JSON.parse(savedWishlist) : []);
     } catch (error) {
       console.error("Error loading user cart/wishlist:", error);
-
       setCartItems({});
       setWishlistItems([]);
     }
   }, [user?._id]);
 
-  // ================= SAVE CART =================
-
+  // ================= SAVE CART (FIXED) =================
+  // 'if (!user) return;' hata diya taaki Guest User ka cart bhi local storage me save ho sake
   useEffect(() => {
-    if (!user) return;
-
     try {
       localStorage.setItem(getCartKey(user), JSON.stringify(cartItems));
     } catch (error) {
@@ -124,11 +114,9 @@ const ShopContextProvider = ({ children }) => {
     }
   }, [cartItems, user]);
 
-  // ================= SAVE WISHLIST =================
-
+  // ================= SAVE WISHLIST (FIXED) =================
+  // Guest user ke liye bhi automatic save working karega
   useEffect(() => {
-    if (!user) return;
-
     try {
       localStorage.setItem(getWishlistKey(user), JSON.stringify(wishlistItems));
     } catch (error) {
@@ -141,14 +129,9 @@ const ShopContextProvider = ({ children }) => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-
       const response = await axios.get("http://localhost:8000/api/products");
-
       const data = response.data;
-
-      const productList =
-        data?.products || data?.data || (Array.isArray(data) ? data : []);
-
+      const productList = data?.products || data?.data || (Array.isArray(data) ? data : []);
       setProducts(productList);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -166,7 +149,6 @@ const ShopContextProvider = ({ children }) => {
 
   const addToCart = (productId) => {
     if (!productId) return;
-
     setCartItems((previousCart) => ({
       ...previousCart,
       [productId]: (previousCart[productId] || 0) + 1,
@@ -174,19 +156,15 @@ const ShopContextProvider = ({ children }) => {
   };
 
   // ================= REMOVE FROM CART =================
-  // Quantity -1
 
   const remFromCart = (productId) => {
     setCartItems((previousCart) => {
       const currentQuantity = previousCart[productId] || 0;
-
       if (currentQuantity <= 1) {
         const updatedCart = { ...previousCart };
         delete updatedCart[productId];
-
         return updatedCart;
       }
-
       return {
         ...previousCart,
         [productId]: currentQuantity - 1,
@@ -199,9 +177,7 @@ const ShopContextProvider = ({ children }) => {
   const removeFromCart = (productId) => {
     setCartItems((previousCart) => {
       const updatedCart = { ...previousCart };
-
       delete updatedCart[productId];
-
       return updatedCart;
     });
   };
@@ -211,7 +187,6 @@ const ShopContextProvider = ({ children }) => {
   const updateQuantity = (productId, quantity) => {
     if (!productId) return;
     if (quantity < 1) return;
-
     setCartItems((previousCart) => ({
       ...previousCart,
       [productId]: quantity,
@@ -234,12 +209,10 @@ const ShopContextProvider = ({ children }) => {
 
   const toggleWishlist = (productId) => {
     if (!productId) return;
-
     setWishlistItems((previousWishlist) => {
       if (previousWishlist.includes(productId)) {
         return previousWishlist.filter((id) => id !== productId);
       }
-
       return [...previousWishlist, productId];
     });
   };
@@ -262,15 +235,12 @@ const ShopContextProvider = ({ children }) => {
 
   const getTotalAmt = () => {
     let total = 0;
-
     for (const productId in cartItems) {
       const product = products.find((item) => item._id === productId);
-
       if (product) {
         total += product.price * cartItems[productId];
       }
     }
-
     return total;
   };
 
@@ -278,11 +248,9 @@ const ShopContextProvider = ({ children }) => {
 
   const getTotalcartItems = () => {
     let total = 0;
-
     for (const productId in cartItems) {
       total += cartItems[productId];
     }
-
     return total;
   };
 
@@ -296,7 +264,6 @@ const ShopContextProvider = ({ children }) => {
 
   const filteredProducts = products.filter((product) => {
     const searchText = search.toLowerCase().trim();
-
     const matchesSearch =
       product.name?.toLowerCase().includes(searchText) ||
       product.description?.toLowerCase().includes(searchText) ||
@@ -313,23 +280,16 @@ const ShopContextProvider = ({ children }) => {
   // ================= CONTEXT VALUE =================
 
   const ContextValue = {
-    // Products
     products,
     filteredProducts,
     loading,
     fetchProducts,
-
-    // Search / Category
     search,
     setSearch,
     selectedCategory,
     setSelectedCategory,
-
-    // User
     user,
     setUser,
-
-    // Cart
     cartItems,
     addToCart,
     remFromCart,
@@ -338,8 +298,6 @@ const ShopContextProvider = ({ children }) => {
     clearCart,
     getTotalAmt,
     getTotalcartItems,
-
-    // Wishlist
     wishlistItems,
     toggleWishlist,
     isInWishlist,
