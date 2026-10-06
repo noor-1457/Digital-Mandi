@@ -18,6 +18,9 @@ import Wishlist from "./pages/Wishlist.jsx";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout.jsx";
 import OrderSuccess from "./pages/OrderSuccess.jsx";
+import FarmerOrders from "./pages/FarmerOrders.jsx";
+import BuyerOrders from "./pages/BuyerOrders.jsx";
+
 function App() {
   return (
     <>
@@ -45,6 +48,7 @@ function App() {
                 path="/order-success/:orderId"
                 element={<OrderSuccess />}
               />
+              <Route path="/buyer-orders" element={<BuyerOrders />} />
             </Route>
 
             <Route element={<ProtectedRoutes allowedRoles={["farmer"]} />}>
@@ -53,6 +57,7 @@ function App() {
               <Route path="/myProducts" element={<MyProducts />} />
               <Route path="/add-product" element={<AddProduct />} />
               <Route path="/edit-product/:id" element={<AddProduct />} />
+              <Route path="/farmer-orders" element={<FarmerOrders />} />
             </Route>
 
             <Route

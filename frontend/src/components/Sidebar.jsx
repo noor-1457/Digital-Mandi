@@ -51,7 +51,7 @@ function Sidebar() {
         },
         {
           name: "My Orders",
-          path: "/orders",
+          path: "/buyer-orders",
           icon: ShoppingBag,
         },
         {
