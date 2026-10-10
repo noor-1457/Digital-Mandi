@@ -19,17 +19,11 @@ import { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 
 function Sidebar() {
-  const {
-    clearCart,
-    clearWishlist,
-    setUser,
-  } = useContext(ShopContext);
+  const { clearCart, clearWishlist, setUser } = useContext(ShopContext);
 
   const location = useLocation();
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  );
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const role = user?.userRole || "buyer";
 
@@ -93,11 +87,6 @@ function Sidebar() {
           path: "/profile",
           icon: User,
         },
-        {
-          name: "Home",
-          path: "/",
-          icon: House,
-        },
       ],
     },
 
@@ -136,8 +125,7 @@ function Sidebar() {
     },
   };
 
-  const currentSidebar =
-    sidebarData[role] || sidebarData.buyer;
+  const currentSidebar = sidebarData[role] || sidebarData.buyer;
 
   // ================= LOGOUT =================
 
@@ -146,39 +134,25 @@ function Sidebar() {
       const token = localStorage.getItem("token");
 
       if (token) {
-        const response = await fetch(
-          "http://localhost:8000/api/auth/logout",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:8000/api/auth/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-        console.log(
-          "LOGOUT STATUS:",
-          response.status
-        );
+        console.log("LOGOUT STATUS:", response.status);
 
         try {
           const data = await response.json();
-          console.log(
-            "LOGOUT RESPONSE:",
-            data
-          );
+          console.log("LOGOUT RESPONSE:", data);
         } catch {
-          console.log(
-            "Logout response has no JSON body."
-          );
+          console.log("Logout response has no JSON body.");
         }
       }
     } catch (error) {
-      console.error(
-        "Logout API error:",
-        error
-      );
+      console.error("Logout API error:", error);
     } finally {
       // Clear cart
       clearCart();
@@ -205,34 +179,21 @@ function Sidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#006400] text-white h-20 px-5 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#fdd835] flex items-center justify-center">
-            <Leaf
-              size={22}
-              className="text-[#006400]"
-            />
+            <Leaf size={22} className="text-[#006400]" />
           </div>
 
           <div>
-            <p className="text-xs text-[#dce8d5]">
-              Digital Mandi
-            </p>
+            <p className="text-xs text-[#dce8d5]">Digital Mandi</p>
 
-            <h1 className="font-bold">
-              {currentSidebar.title}
-            </h1>
+            <h1 className="font-bold">{currentSidebar.title}</h1>
           </div>
         </div>
 
         <button
-          onClick={() =>
-            setSidebarOpen(!sidebarOpen)
-          }
+          onClick={() => setSidebarOpen(!sidebarOpen)}
           className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"
         >
-          {sidebarOpen ? (
-            <X size={22} />
-          ) : (
-            <Menu size={22} />
-          )}
+          {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
@@ -240,9 +201,7 @@ function Sidebar() {
 
       {sidebarOpen && (
         <div
-          onClick={() =>
-            setSidebarOpen(false)
-          }
+          onClick={() => setSidebarOpen(false)}
           className="fixed inset-0 z-40 bg-black/40 lg:hidden"
         />
       )}
@@ -258,31 +217,20 @@ function Sidebar() {
           flex flex-col
           transition-transform duration-300
           lg:translate-x-0
-          ${
-            sidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
-          }
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* ================= LOGO ================= */}
 
         <div className="h-24 px-6 flex items-center gap-3 border-b border-white/10">
           <div className="w-12 h-12 rounded-2xl bg-[#fdd835] flex items-center justify-center">
-            <Leaf
-              size={26}
-              className="text-[#006400]"
-            />
+            <Leaf size={26} className="text-[#006400]" />
           </div>
 
           <div>
-            <h1 className="text-xl font-bold">
-              Digital Mandi
-            </h1>
+            <h1 className="text-xl font-bold">Digital Mandi</h1>
 
-            <p className="text-xs text-[#dce8d5]">
-              {currentSidebar.portal}
-            </p>
+            <p className="text-xs text-[#dce8d5]">{currentSidebar.portal}</p>
           </div>
         </div>
 
@@ -296,17 +244,14 @@ function Sidebar() {
               <Link
                 key={link.path}
                 to={link.path}
-                onClick={() =>
-                  setSidebarOpen(false)
-                }
+                onClick={() => setSidebarOpen(false)}
                 className={`
                   flex items-center gap-3
                   px-4 py-3.5
                   rounded-xl
                   transition
                   ${
-                    location.pathname ===
-                    link.path
+                    location.pathname === link.path
                       ? "bg-white/10"
                       : "hover:bg-white/10"
                   }
@@ -314,9 +259,7 @@ function Sidebar() {
               >
                 <Icon size={20} />
 
-                <span className="font-medium">
-                  {link.name}
-                </span>
+                <span className="font-medium">{link.name}</span>
               </Link>
             );
           })}
@@ -343,9 +286,7 @@ function Sidebar() {
           >
             <LogOut size={20} />
 
-            <span className="font-medium">
-              Logout
-            </span>
+            <span className="font-medium">Logout</span>
           </button>
         </div>
       </aside>

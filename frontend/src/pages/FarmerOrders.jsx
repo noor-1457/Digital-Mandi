@@ -133,8 +133,8 @@ export default function FarmerOrders() {
   if (loading) {
     return (
       <>
-      <Sidebar/>
-        <section className="flex min-h-[70vh] items-center justify-center bg-[#f7f8f1] px-4 pt-[100px]">
+        <Sidebar />
+        <section className="lg:ml-70 px-4 py-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Loader2
               size={40}
@@ -149,7 +149,7 @@ export default function FarmerOrders() {
 
   return (
     <>
-    <Sidebar/>
+      <Sidebar />
       <main className="min-h-screen bg-[#f8f7f2] lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* ================= HEADER ================= */}
@@ -231,10 +231,14 @@ export default function FarmerOrders() {
                 return (
                   <div
                     key={order._id}
+                    onClick={() => navigate(`/order/${order._id}`)}
                     className="overflow-hidden rounded-2xl border border-[#e8ebdf] bg-white shadow-sm transition hover:shadow-md"
                   >
                     {/* ================= ORDER HEADER ================= */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#edf0e7] bg-[#fbfcf8] px-5 py-3.5">
+                    <div
+                      key={order._id}
+                      className="flex cursor-pointer flex-wrap items-center justify-between gap-3 border-b border-[#edf0e7] bg-[#fbfcf8] px-5 py-3.5"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#edf3e5]">
                           <Package size={16} className="text-[#2f8f1f]" />

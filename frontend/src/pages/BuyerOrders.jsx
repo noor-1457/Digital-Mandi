@@ -137,7 +137,7 @@ export default function BuyerOrders() {
     return (
       <>
         <Sidebar />
-        <section className="flex min-h-[70vh] items-center justify-center bg-[#f7f8f1] px-4 pt-[100px]">
+        <section className="flex min-h-[70vh] items-center justify-center bg-[#f7f8f1] px-4 pt-25">
           <div className="text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#dce6c9] border-t-[#006400]" />
             <p className="font-medium text-[#52604b]">Loading your orders...</p>
@@ -264,7 +264,11 @@ export default function BuyerOrders() {
                     className="overflow-hidden rounded-2xl border border-[#e8ebdf] bg-white shadow-sm transition hover:shadow-md"
                   >
                     {/* ================= HEADER ================= */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#edf0e7] bg-[#fbfcf8] px-5 py-3.5">
+                    <div
+                      key={order._id}
+                      onClick={() => navigate(`/order/${order._id}`)}
+                      className=" cursor-pointer flex flex-wrap items-center justify-between gap-3 border-b border-[#edf0e7] bg-[#fbfcf8] px-5 py-3.5"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#edf3e5]">
                           <Package size={16} className="text-[#2f8f1f]" />

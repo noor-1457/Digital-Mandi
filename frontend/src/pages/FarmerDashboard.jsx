@@ -53,7 +53,7 @@ function FarmerDashboard() {
 
           {/* WELCOME CARD */}
 
-          <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-[1px] shadow-lg">
+          <div className="mt-8 rounded-3xl bg-linear-to-r from-[#fdd835] to-[#006400] p-px shadow-lg">
             <div className="rounded-[23px] bg-[#fffef8] p-6 sm:p-8">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>

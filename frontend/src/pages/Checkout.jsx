@@ -98,7 +98,7 @@ export default function Checkout() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#f7f8f1] pb-16 pt-[100px]">
+      <main className="min-h-screen bg-[#f7f8f1] pb-16 pt-25">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl font-extrabold text-[#033303] mb-6">
             Checkout
@@ -214,7 +214,7 @@ export default function Checkout() {
             </div>
 
             {/* ================= RIGHT: SUMMARY ================= */}
-            <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 h-fit lg:sticky lg:top-[100px]">
+            <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 h-fit lg:sticky lg:top-25">
               <h2 className="font-bold text-[#033303] mb-4 flex items-center gap-2">
                 <Package size={18} className="text-[#2f8f1f]" />
                 Order Summary
