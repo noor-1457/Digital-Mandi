@@ -170,7 +170,7 @@ function Register() {
         Back
       </button>
 
-      <div className="max-w-md w-full mx-auto">
+      <div className="max-w-md w-full mx-auto pt-10">
         {/* REGISTER CARD */}
         <div
           className="
@@ -184,8 +184,8 @@ function Register() {
           {/* CARD HEADER */}
           <div className="text-center mb-5">
             <div className="flex justify-center mb-3">
-              {/* ================= LOGO ================= */}
               <Link to="/" className="flex items-center gap-2 shrink-0">
+              {/* ================= LOGO ================= */}
                 <div className="relative w-10 h-10 flex items-center justify-center">
                   <Leaf
                     size={36}

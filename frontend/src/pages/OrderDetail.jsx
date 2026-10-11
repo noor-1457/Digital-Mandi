@@ -1,7 +1,6 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-// import { ShopContext } from "../context/ShopContext";
 import Sidebar from "../components/Sidebar.jsx";
 import {
   ArrowLeft,
@@ -18,24 +17,26 @@ import {
   FileText,
   Loader2,
   RefreshCw,
+  MessageCircle,
 } from "lucide-react";
 
 export default function OrderDetail() {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  // const { products } = useContext(ShopContext);
 
+  // ================= STATE =================
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Current user ka role check karein
+  // ✅ Current user ka role check karein (localStorage se)
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isFarmer = user?.userRole === "farmer";
   const isBuyer = user?.userRole === "buyer";
 
   // ================= FETCH ORDER =================
+  // Order ki poori detail API se laayein
   const fetchOrder = async () => {
     try {
       setLoading(true);
@@ -60,7 +61,8 @@ export default function OrderDetail() {
     fetchOrder();
   }, [orderId]);
 
-  // ================= UPDATE STATUS =================
+  // ================= UPDATE STATUS (Farmer only) =================
+  // Order ka status change karein (pending → confirmed → delivered)
   const handleStatusUpdate = async (newStatus) => {
     setUpdating(true);
     try {
@@ -77,6 +79,56 @@ export default function OrderDetail() {
       alert(err.response?.data?.message || "Failed to update status");
     } finally {
       setUpdating(false);
+    }
+  };
+
+  // ================= CONTACT BUTTON HANDLER =================
+  // Buyer ya farmer ke saath chat shuru karein
+  // Floating chat panel ko "openChat" event bhejta hai
+  const handleContact = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // ✅ Determine karein ke kis se baat karni hai
+      // Farmer hai → buyer se contact
+      // Buyer hai → farmer se contact
+      let otherUserId;
+      if (isFarmer) {
+        // Farmer → buyer
+        otherUserId = order.buyerId?._id || order.buyerId;
+      } else {
+        // Buyer → farmer
+        // Product mein "farmer" field ho sakti hai object ya string
+        const farmerField = order.items?.[0]?.productId?.farmer;
+        otherUserId = farmerField?._id || farmerField;
+      }
+
+      // Agar farmer/buyer ka ID nahi mila
+      if (!otherUserId) {
+        alert("Contact information not available for this order");
+        return;
+      }
+
+      // ✅ Conversation create ya get karein
+      const response = await axios.post(
+        "http://localhost:8000/api/messages/conversation",
+        { otherUserId },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      // ✅ FloatingChat component ko custom event bhejein
+      // FloatingChat is event ko sunta hai aur us conversation ke saath panel kholega
+      window.dispatchEvent(
+        new CustomEvent("openChat", {
+          detail: { conversation: response.data },
+        }),
+      );
+    } catch (err) {
+      console.error("Contact error:", err);
+      alert(
+        err.response?.data?.message ||
+          "Could not open chat. Please try again.",
+      );
     }
   };
 
@@ -231,6 +283,7 @@ export default function OrderDetail() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Status badge */}
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}
               >
@@ -238,6 +291,7 @@ export default function OrderDetail() {
                 {statusStyle.label}
               </span>
 
+              {/* Refresh button */}
               <button
                 onClick={fetchOrder}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e2e7dc] bg-white text-[#566151] transition hover:bg-[#f8faf5] cursor-pointer"
@@ -249,6 +303,7 @@ export default function OrderDetail() {
           </div>
 
           {/* ================= TIMELINE ================= */}
+          {/* Sirf tab dikhayein jab order cancel na hua ho */}
           {order.status !== "cancelled" && (
             <div className="mb-6 rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
               <h2 className="mb-5 text-xs font-bold uppercase tracking-widest text-[#596753]">
@@ -256,8 +311,10 @@ export default function OrderDetail() {
               </h2>
 
               <div className="relative">
-                {/* Progress line */}
+                {/* Background line */}
                 <div className="absolute top-5 left-0 right-0 h-0.5 bg-[#e9ede2]" />
+
+                {/* Progress line — status ke hisaab se width */}
                 <div
                   className="absolute top-5 left-0 h-0.5 bg-[#2f8f1f] transition-all duration-500"
                   style={{
@@ -319,7 +376,7 @@ export default function OrderDetail() {
                   <h3 className="font-bold text-rose-700">Order Cancelled</h3>
                   <p className="text-xs text-rose-600 mt-0.5">
                     This order has been cancelled. If you have any questions,
-                    please contact the farmer.
+                    please contact the {isFarmer ? "buyer" : "farmer"}.
                   </p>
                 </div>
               </div>
@@ -427,7 +484,7 @@ export default function OrderDetail() {
 
             {/* ================= RIGHT COLUMN ================= */}
             <div className="space-y-6">
-              {/* ---- BUYER/FARMER INFO ---- */}
+              {/* ---- BUYER INFO (Farmer ke liye) ---- */}
               {isFarmer && order.buyerId && (
                 <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
                   <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#596753]">
@@ -489,6 +546,26 @@ export default function OrderDetail() {
                     {order.paymentMethod || "COD"}
                   </span>
                 </div>
+              </div>
+
+              {/* ================= CONTACT BUTTON ================= */}
+              {/* Buyer ya Farmer dono ke liye — dusre party se chat shuru karein */}
+              <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
+                <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#596753]">
+                  Communication
+                </h2>
+
+                <button
+                  onClick={handleContact}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-[#006400] bg-white px-4 py-3 text-sm font-bold text-[#006400] transition hover:bg-[#f0f7ed] cursor-pointer"
+                >
+                  <MessageCircle size={15} />
+                  {isFarmer ? "Contact Buyer" : "Contact Farmer"}
+                </button>
+
+                <p className="mt-2 text-center text-[10px] text-[#8a9285]">
+                  Chat panel right-bottom corner se khulega
+                </p>
               </div>
 
               {/* ================= FARMER ACTIONS ================= */}
@@ -567,7 +644,7 @@ export default function OrderDetail() {
                 </div>
               )}
 
-              {/* ================= BUYER INFO BOX (for buyer) ================= */}
+              {/* ================= BUYER INFO BOX (Buyer ke liye) ================= */}
               {isBuyer && (
                 <div className="rounded-2xl border border-[#e8ebdf] bg-[#fbfcf8] p-5 shadow-sm">
                   <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-[#596753]">

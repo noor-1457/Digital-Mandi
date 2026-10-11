@@ -111,7 +111,7 @@ function Logins() {
           <ArrowLeftIcon className="relative top-0.5 pr-0.5 cursor-pointer" />
           Back
         </button>
-        <div className="max-w-md w-full mx-auto">
+        <div className="max-w-md w-full mx-auto pt-10">
           {/* LOGIN CARD */}
           <div
             className="

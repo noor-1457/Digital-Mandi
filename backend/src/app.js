@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import orderRoutes from "./routes/order.routes.js";
-
+import messageRoutes from "./routes/message.routes.js";
 dotenv.config();
 
 const app = express();
@@ -78,7 +78,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-
+app.use("/api/messages", messageRoutes);
 // ERROR HANDLING
 
 app.use((req, res) => {

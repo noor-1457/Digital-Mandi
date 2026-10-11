@@ -41,7 +41,7 @@ export const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/allProducts", label: "All Products" },
-    { path: "/contact", label: "Contact Us" },
+    { path: "/chat", label: "Contact Us" },
   ];
 
   // ==============================

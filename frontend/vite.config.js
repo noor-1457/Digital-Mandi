@@ -7,4 +7,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-});
+ server: {
+    host: true,    // 👈 Yeh add karein — network accessible
+    port: 5173,
+  },});
