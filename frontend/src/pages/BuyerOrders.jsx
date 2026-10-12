@@ -137,7 +137,7 @@ export default function BuyerOrders() {
     return (
       <>
         <Sidebar />
-        <section className="min-h-screen bg-[#f8f7f2] m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
+        <section className="min-h-screen m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
           <div className="text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#dce6c9] border-t-[#006400]" />
             <p className="font-medium text-[#52604b]">Loading your orders...</p>
@@ -152,7 +152,7 @@ export default function BuyerOrders() {
     return (
       <>
         <Sidebar />
-        <section className="min-h-screen bg-[#f8f7f2] m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
+        <section className="min-h-screen m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
           <div className="lg:ml-138 m-auto max-w-md rounded-3xl border border-[#e7eadf] bg-white lg:pt-20 text-center shadow-sm">
             <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#f0f4e8]">
               <ShoppingBag size={36} className="text-[#006400]" />
@@ -181,7 +181,7 @@ export default function BuyerOrders() {
     <>
       <Sidebar />
 
-      <main className="min-h-screen bg-[#f8f7f2] m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
+      <main className="min-h-screen m-auto pt-20 lg:pt-6 px-4 sm:px-6 pb-12]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* ================= HEADER ================= */}
           <div className="mb-6 flex flex-wrap items-end justify-between gap-3">

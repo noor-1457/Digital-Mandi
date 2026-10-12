@@ -150,14 +150,14 @@ const AddProduct = () => {
   // ---------- Loading state (edit mode mein fetch hotay waqt) ----------
   if (fetching) {
     return (
-      <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0 flex items-center justify-center">
+      <div className="min-h-screen lg:ml-72 pt-20 lg:pt-0 flex items-center justify-center">
         <p className="text-gray-500">Loading product...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
+    <div className="min-h-screen lg:ml-72 pt-20 lg:pt-0">
       <Sidebar/>
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto">
         {/* Header */}

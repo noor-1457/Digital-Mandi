@@ -98,7 +98,7 @@ export default function Checkout() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#f7f8f1] pb-16 pt-25">
+      <main className="min-h-screen  pb-16 pt-25">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl font-extrabold text-[#033303] mb-6">
             Checkout

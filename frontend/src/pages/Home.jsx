@@ -7,7 +7,7 @@ import Footer from "../components/Footer.jsx";   // ✅ Default import
 
 export const Home = () => {
   return (
-    <div className="bg-[#f8f7f2] text-[#263326] pt-[138px]">
+    <div className=" text-[#263326] pt-[138px]">
       <Navbar />
 
      <Hero />

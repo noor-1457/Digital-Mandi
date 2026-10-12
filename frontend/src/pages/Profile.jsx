@@ -137,7 +137,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f6f8f5] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#1B5E20]"></div>
 
@@ -151,7 +151,7 @@ const Profile = () => {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen bg-[#f6f8f5] flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="rounded-xl bg-white p-8 text-center shadow-sm">
           <p className="mb-4 text-red-600">{error}</p>
 
@@ -167,7 +167,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f6f8f5] pt-10 lg:ml-72 px-4 sm:px-6 pb-12">
+    <div className="min-h-screen pt-10 lg:ml-72 px-4 sm:px-6 pb-12">
               <Sidebar/>
 
       {" "}

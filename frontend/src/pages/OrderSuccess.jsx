@@ -11,7 +11,7 @@ export default function OrderSuccess() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#f7f8f1] flex items-center justify-center pb-16 pt-[100px] px-4">
+      <main className="min-h-screen flex items-center justify-center pb-16 pt-[100px] px-4">
         <div className="max-w-lg w-full rounded-2xl border border-[#e8ebdf] bg-white p-8 text-center shadow-sm">
           <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
             <CheckCircle2 size={44} className="text-[#006400]" />

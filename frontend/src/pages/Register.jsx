@@ -161,7 +161,7 @@ function Register() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#f0f7ed] via-[#f7fbf5] to-[#eaf3e6] pt-8 pb-10 px-4 sm:px-6">
+    <main className="min-h-screen  pt-8 pb-10 px-4 sm:px-6">
       <button
         onClick={() => navigate("/")}
         className="text-[#006400] underline flex absolute cursor-pointer"

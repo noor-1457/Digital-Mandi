@@ -55,7 +55,7 @@ function MyProducts() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f5f7f2] lg:ml-72 pt-20 lg:pt-0">
+    <div className="min-h-screen lg:ml-72 pt-20 lg:pt-0">
       <Sidebar />
       <div className="px-4 py-6 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto">
       {/* Header */}
@@ -82,7 +82,7 @@ function MyProducts() {
   </Link>
 </div>
         {/* Product List */}
-        <div className="w-full rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+        <div className="w-full rounded-2xl p-6 shadow-sm sm:p-8">
           {loading ? (
             <div className="py-10 text-center text-gray-500">
               Loading products...

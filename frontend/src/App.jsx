@@ -24,6 +24,7 @@ import OrderDetail from "./pages/OrderDetail.jsx";
 import { SocketProvider } from "./context/SocketContext";
 import FloatingChat from "./components/FloatingChat";
 import { Toaster } from "react-hot-toast";
+import Contact from "./pages/Contact.jsx";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/login" element={<Logins />} />
             <Route path="/allProducts" element={<AllProducts />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>
 
           {/* PROTECTED */}

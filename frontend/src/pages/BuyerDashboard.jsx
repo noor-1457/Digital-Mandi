@@ -2,9 +2,8 @@ import { ShoppingBag, User, Leaf, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 function BuyerDashboard() {
-
   return (
-    <main className="min-h-screen bg-[#f8f7f2]">
+    <main className="min-h-screen">
       <Sidebar />
 
       {/* MAIN CONTENT */}

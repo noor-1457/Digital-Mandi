@@ -122,7 +122,7 @@ export const CartItems = () => {
               return (
                 <div
                   key={product._id}
-                  className="bg-white border border-gray-100 rounded-xl shadow-sm p-4 flex flex-col sm:flex-row sm:items-center gap-4"
+                  className=" border border-gray-100 rounded-xl shadow-sm p-4 flex flex-col sm:flex-row sm:items-center gap-4"
                 >
                   {/* Image */}
                   <img

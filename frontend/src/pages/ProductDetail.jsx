@@ -43,7 +43,7 @@ export default function ProductDetail() {
       <>
         <Navbar />
 
-        <section className="flex min-h-[70vh] items-center justify-center bg-[#f7f8f1] px-4">
+        <section className="flex min-h-[70vh] items-center justify-center px-4">
           <div className="text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#dce6c9] border-t-[#006400]" />
 
@@ -64,7 +64,7 @@ export default function ProductDetail() {
       <>
         <Navbar />
 
-        <section className="flex min-h-[70vh] items-center justify-center bg-[#f7f8f1] px-4">
+        <section className="flex min-h-[70vh] items-center justify-center px-4">
           <div className="max-w-md rounded-3xl border border-[#e7eadf] bg-white p-9 text-center shadow-sm">
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f4e8] text-[#006400]">
               <Sprout size={30} />
@@ -120,7 +120,7 @@ export default function ProductDetail() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f7f8f1] pb-10 mt-[138px]">
+      <main className="min-h-screen pb-10 mt-[138px]">
         <div className="mx-auto max-w-5xl px-4 pt-5 sm:px-6 lg:px-8">
           {/* ================= BACK BUTTON ================= */}
 

@@ -214,7 +214,7 @@ export default function OrderDetail() {
       <>
         <Sidebar />
         <section className="lg:ml-70 px-4 py-4 sm:px-6">
-          <div className="max-w-md rounded-3xl border border-[#e7eadf] bg-white p-9 text-center shadow-sm">
+          <div className="max-w-md rounded-3xl border border-[#e7eadf] p-9 text-center shadow-sm">
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-rose-500">
               <XCircle size={30} />
             </div>

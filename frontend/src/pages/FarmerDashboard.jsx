@@ -14,7 +14,7 @@ function FarmerDashboard() {
   // const navigate = useNavigate();
 
   return (
-    <main className="min-h-screen bg-[#f8f7f2]">
+    <main className="min-h-screen">
       <Sidebar />
       {/* MAIN CONTENT */}
 

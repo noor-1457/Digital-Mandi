@@ -43,7 +43,7 @@ function BuyerDashboard() {
   return (
     <>
       <Sidebar />
-      <main className="min-h-screen bg-[#f8f7f2] lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
+      <main className="min-h-screen lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           {/* HEADER */}
           <div className="bg-[#006400] rounded-3xl p-6 sm:p-8 text-white shadow-xl">

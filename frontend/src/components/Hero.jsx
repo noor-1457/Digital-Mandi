@@ -17,7 +17,6 @@ const Hero = () => {
           lg:min-h-[430px]
           rounded-2xl
           overflow-hidden
-          bg-[#f3f1df]
         "
       >
 

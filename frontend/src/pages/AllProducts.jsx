@@ -147,7 +147,7 @@ const handleApplyFilters = (e) => {
   const searchQuery = searchParams.get("search") || "";
 
   return (
-    <div className="min-h-screen bg-[#f5f7f2]">
+    <div className="min-h-screen ">
       {/* ================= NAVBAR ================= */}
       <Navbar />
 

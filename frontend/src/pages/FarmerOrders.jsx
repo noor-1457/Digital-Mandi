@@ -150,7 +150,7 @@ export default function FarmerOrders() {
   return (
     <>
       <Sidebar />
-      <main className="min-h-screen bg-[#f8f7f2] lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
+      <main className="min-h-screen lg:ml-70 pt-20 lg:pt-6 px-4 sm:px-6 pb-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* ================= HEADER ================= */}
           <div className="mb-6 flex flex-wrap items-end justify-between gap-3">

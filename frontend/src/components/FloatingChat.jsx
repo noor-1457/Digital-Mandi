@@ -173,7 +173,7 @@ export default function FloatingChat() {
             <div className="flex items-center justify-between bg-[#006400] px-4 py-3 text-white shrink-0">
               <div className="flex items-center gap-2">
                 <MessageCircle size={18} />
-                <h3 className="text-sm font-bold">Messages</h3>
+                <h2 className="text-white text-sm font-bold">Messages</h2>
               </div>
               <button
                 onClick={handleClose}
