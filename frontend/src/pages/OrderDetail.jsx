@@ -244,8 +244,8 @@ export default function OrderDetail() {
     <>
       <Sidebar />
 
-      <main className="lg:ml-70 px-4 py-4 sm:px-6">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <main className="lg:ml-70 px-4 py-4 sm:px-6 m-auto">
+        <div className="mt-20 lg:m-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* ================= BACK BUTTON ================= */}
           <button
             onClick={() => navigate(-1)}

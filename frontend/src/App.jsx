@@ -23,11 +23,13 @@ import BuyerOrders from "./pages/BuyerOrders.jsx";
 import OrderDetail from "./pages/OrderDetail.jsx";
 import { SocketProvider } from "./context/SocketContext";
 import FloatingChat from "./components/FloatingChat";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <BrowserRouter>
       <SocketProvider>
+        <Toaster position="top-right" /> {/* ✅ Add karein */}
         <Routes>
           {/* PUBLIC */}
           <Route element={<PublicLayout />}>
@@ -51,7 +53,10 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/cart" element={<CartItems />} />
-              <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+              <Route
+                path="/order-success/:orderId"
+                element={<OrderSuccess />}
+              />
               <Route path="/buyer-orders" element={<BuyerOrders />} />
             </Route>
 
@@ -66,7 +71,9 @@ function App() {
             </Route>
 
             {/* Buyer + Farmer */}
-            <Route element={<ProtectedRoutes allowedRoles={["buyer", "farmer"]} />}>
+            <Route
+              element={<ProtectedRoutes allowedRoles={["buyer", "farmer"]} />}
+            >
               <Route path="/order/:orderId" element={<OrderDetail />} />
             </Route>
 
@@ -80,7 +87,6 @@ function App() {
             </Route>
           </Route>
         </Routes>
-
         {/* ✅ Floating Chat — poori app mein */}
         <FloatingChat />
       </SocketProvider>

@@ -6,6 +6,7 @@ import connectDB from "./db/index.js";
 import { app } from "./app.js";
 import Message from "./models/message.model.js";
 import Conversation from "./models/conversation.model.js";
+import User from "./models/user.model.js";
 
 // Load environment variables
 dotenv.config({
@@ -73,54 +74,60 @@ io.on("connection", (socket) => {
   // ============================================================
   // Client se data aayega: { receiverId, text }
   // Server: DB mein save karega, phir receiver ko push karega
-  socket.on("sendMessage", async (data) => {
-    try {
-      const { receiverId, text } = data;
+socket.on("sendMessage", async (data) => {
+  try {
+    const { receiverId, text } = data;
 
-      if (!receiverId || !text) {
-        return socket.emit("errorMessage", {
-          message: "receiverId and text required",
-        });
-      }
-
-      // 1. Conversation dhoondein ya banao
-      let conversation = await Conversation.findOne({
-        participants: { $all: [userId, receiverId] },
+    if (!receiverId || !text) {
+      return socket.emit("errorMessage", {
+        message: "receiverId and text required",
       });
-
-      if (!conversation) {
-        conversation = await Conversation.create({
-          participants: [userId, receiverId],
-        });
-      }
-
-      // 2. Message DB mein save karein
-      const newMessage = await Message.create({
-        conversationId: conversation._id,
-        senderId: userId,
-        receiverId,
-        text,
-      });
-
-      // 3. Conversation ka lastMessage update karein
-      conversation.lastMessage = newMessage._id;
-      conversation.lastMessageAt = newMessage.createdAt;
-      await conversation.save();
-
-      // 4. Sender ko bhi confirm karein (UI mein add karne ke liye)
-      socket.emit("messageSent", newMessage);
-
-      // 5. Receiver ko push karein (agar online hai)
-      io.to(receiverId).emit("newMessage", newMessage);
-
-      console.log(
-        `📩 Message from ${userId} to ${receiverId}: "${text.substring(0, 30)}..."`
-      );
-    } catch (error) {
-      console.error("sendMessage socket error:", error);
-      socket.emit("errorMessage", { message: error.message });
     }
-  });
+
+    // 1. Conversation dhoondein ya banao
+    let conversation = await Conversation.findOne({
+      participants: { $all: [userId, receiverId] },
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [userId, receiverId],
+      });
+    }
+
+    // 2. Message DB mein save karein
+    const newMessage = await Message.create({
+      conversationId: conversation._id,
+      senderId: userId,
+      receiverId,
+      text,
+    });
+
+    // 3. Conversation ka lastMessage update karein
+    conversation.lastMessage = newMessage._id;
+    conversation.lastMessageAt = newMessage.createdAt;
+    await conversation.save();
+
+    // ✅ 4. Sender ka naam fetch karein (YAHAN — sendMessage ke andar)
+    const sender = await User.findById(userId).select("fullName");
+
+    // 5. Sender ko confirm
+    socket.emit("messageSent", newMessage);
+
+    // ✅ 6. Receiver ko senderName ke saath bhejein
+    io.to(receiverId).emit("newMessage", {
+      ...newMessage.toObject(),
+      senderName: sender?.fullName || "User",
+    });
+
+    console.log(
+      `📩 Message from ${userId} to ${receiverId}: "${text.substring(0, 30)}..."`
+    );
+  } catch (error) {
+    console.error("sendMessage socket error:", error);
+    socket.emit("errorMessage", { message: error.message });
+  }
+});
 
   // ============================================================
   // ✅ EVENT: markAsRead
@@ -174,6 +181,8 @@ io.on("connection", (socket) => {
     console.log(`❌ User disconnected: ${userId} (socket: ${socket.id})`);
   });
 });
+
+
 
 // ============================================================
 // ✅ Database connect + Server start
