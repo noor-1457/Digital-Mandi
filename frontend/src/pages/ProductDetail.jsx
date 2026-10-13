@@ -13,6 +13,7 @@ import {
 import { ShopContext } from "../context/ShopContext";
 import { Navbar } from "../components/Navbar";
 import Footer from "../components/Footer";
+import ReviewList from "../components/ReviewList";
 
 export default function ProductDetail() {
   const { productId } = useParams();
@@ -23,7 +24,7 @@ export default function ProductDetail() {
 
   const product = products.find((item) => item._id === productId);
 
- // ✅ Login check
+  // ✅ Login check
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!token && !!user;
@@ -106,11 +107,11 @@ export default function ProductDetail() {
   // ================= ADD TO CART =================
 
   const handleAddToCart = () => {
- requireLogin(() => {
+    requireLogin(() => {
       addToCart(product._id);
     });
   };
-//================Add to wishlist================
+  //================Add to wishlist================
   const handleWishlist = () => {
     requireLogin(() => {
       toggleWishlist(product._id);
@@ -281,7 +282,9 @@ export default function ProductDetail() {
                 <div className="grid gap-2 sm:grid-cols-[0.9fr_1.1fr]">
                   {/* Wishlist */}
                   <button
-                onClick={() => requireLogin(() => handleWishlist(product._id))}
+                    onClick={() =>
+                      requireLogin(() => handleWishlist(product._id))
+                    }
                     className={`inline-flex min-h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-bold transition ${
                       inWishlist
                         ? "border-rose-200 bg-rose-50 text-rose-600"
@@ -311,6 +314,10 @@ export default function ProductDetail() {
                 </p>
               </div>
             </div>
+          </div>
+          {/* ================= REVIEWS SECTION ================= */}
+          <div className="mt-8">
+            <ReviewList productId={productId} />
           </div>
         </div>
       </main>

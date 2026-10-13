@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../components/Sidebar.jsx";
+import StarRating from "../components/StartRating.jsx";
 import {
   ArrowLeft,
   Package,
@@ -18,6 +19,7 @@ import {
   Loader2,
   RefreshCw,
   MessageCircle,
+  Star,
 } from "lucide-react";
 
 export default function OrderDetail() {
@@ -30,13 +32,20 @@ export default function OrderDetail() {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Current user ka role check karein (localStorage se)
+  // ✅ Current user ka role check (localStorage se)
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isFarmer = user?.userRole === "farmer";
   const isBuyer = user?.userRole === "buyer";
 
+  // ================= REVIEW STATES =================
+  const [canReview, setCanReview] = useState(false);
+  const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+
   // ================= FETCH ORDER =================
-  // Order ki poori detail API se laayein
   const fetchOrder = async () => {
     try {
       setLoading(true);
@@ -61,8 +70,66 @@ export default function OrderDetail() {
     fetchOrder();
   }, [orderId]);
 
+  // ================= CHECK CAN REVIEW =================
+  useEffect(() => {
+    const checkCanReview = async () => {
+      if (!isBuyer || !orderId) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `http://localhost:8000/api/reviews/can-review/${orderId}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setCanReview(response.data.canReview);
+        setAlreadyReviewed(response.data.alreadyReviewed);
+      } catch (err) {
+        console.error("Can review check error:", err);
+      }
+    };
+
+    if (order && order.status === "delivered") {
+      checkCanReview();
+    }
+  }, [order, isBuyer, orderId]);
+
+  // ================= SUBMIT REVIEW =================
+  const handleSubmitReview = async () => {
+    if (reviewRating < 1) {
+      alert("Please select a rating");
+      return;
+    }
+
+    setSubmittingReview(true);
+    try {
+      const token = localStorage.getItem("token");
+      const firstProduct = order.items[0]?.productId;
+      const productId = firstProduct?._id || firstProduct;
+
+      await axios.post(
+        "http://localhost:8000/api/reviews",
+        {
+          orderId,
+          productId,
+          rating: reviewRating,
+          comment: reviewComment,
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setAlreadyReviewed(true);
+      setCanReview(false);
+      setShowReviewForm(false);
+      alert("Review submitted! Thank you.");
+    } catch (err) {
+      console.error("Review submit error:", err);
+      alert(err.response?.data?.message || "Failed to submit review");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   // ================= UPDATE STATUS (Farmer only) =================
-  // Order ka status change karein (pending → confirmed → delivered)
   const handleStatusUpdate = async (newStatus) => {
     setUpdating(true);
     try {
@@ -82,42 +149,32 @@ export default function OrderDetail() {
     }
   };
 
-  // ================= CONTACT BUTTON HANDLER =================
-  // Buyer ya farmer ke saath chat shuru karein
-  // Floating chat panel ko "openChat" event bhejta hai
+  // ================= CONTACT HANDLER =================
   const handleContact = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // ✅ Determine karein ke kis se baat karni hai
-      // Farmer hai → buyer se contact
-      // Buyer hai → farmer se contact
+      // Farmer → buyer se baat, Buyer → farmer se baat
       let otherUserId;
       if (isFarmer) {
-        // Farmer → buyer
         otherUserId = order.buyerId?._id || order.buyerId;
       } else {
-        // Buyer → farmer
-        // Product mein "farmer" field ho sakti hai object ya string
         const farmerField = order.items?.[0]?.productId?.farmer;
         otherUserId = farmerField?._id || farmerField;
       }
 
-      // Agar farmer/buyer ka ID nahi mila
       if (!otherUserId) {
         alert("Contact information not available for this order");
         return;
       }
 
-      // ✅ Conversation create ya get karein
       const response = await axios.post(
         "http://localhost:8000/api/messages/conversation",
         { otherUserId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      // ✅ FloatingChat component ko custom event bhejein
-      // FloatingChat is event ko sunta hai aur us conversation ke saath panel kholega
+      // Floating chat panel kholein custom event se
       window.dispatchEvent(
         new CustomEvent("openChat", {
           detail: { conversation: response.data },
@@ -303,7 +360,6 @@ export default function OrderDetail() {
           </div>
 
           {/* ================= TIMELINE ================= */}
-          {/* Sirf tab dikhayein jab order cancel na hua ho */}
           {order.status !== "cancelled" && (
             <div className="mb-6 rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
               <h2 className="mb-5 text-xs font-bold uppercase tracking-widest text-[#596753]">
@@ -311,10 +367,7 @@ export default function OrderDetail() {
               </h2>
 
               <div className="relative">
-                {/* Background line */}
                 <div className="absolute top-5 left-0 right-0 h-0.5 bg-[#e9ede2]" />
-
-                {/* Progress line — status ke hisaab se width */}
                 <div
                   className="absolute top-5 left-0 h-0.5 bg-[#2f8f1f] transition-all duration-500"
                   style={{
@@ -327,7 +380,6 @@ export default function OrderDetail() {
                   }}
                 />
 
-                {/* Steps */}
                 <div className="relative flex justify-between">
                   {timelineSteps.map((step, index) => {
                     const StepIcon = step.icon;
@@ -548,8 +600,109 @@ export default function OrderDetail() {
                 </div>
               </div>
 
+              {/* ================= REVIEW SECTION (Buyer only) ================= */}
+              {isBuyer && order.status === "delivered" && (
+                <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
+                  <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#596753]">
+                    <Star size={13} className="text-[#2f8f1f]" />
+                    Rate Your Order
+                  </h2>
+
+                  {/* Already reviewed */}
+                  {alreadyReviewed && !showReviewForm && (
+                    <div className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-center">
+                      <CheckCircle2
+                        size={20}
+                        className="mx-auto text-green-600 mb-1"
+                      />
+                      <p className="text-xs font-bold text-green-700">
+                        Thanks for your feedback!
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Can review + form closed */}
+                  {canReview && !showReviewForm && (
+                    <>
+                      <p className="text-xs text-[#788174] mb-3">
+                        Write a review about your experience with this order.
+                      </p>
+                      <button
+                        onClick={() => setShowReviewForm(true)}
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#006400] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#004d00] cursor-pointer"
+                      >
+                        <Star size={15} />
+                        Write a Review
+                      </button>
+                    </>
+                  )}
+
+                  {/* Review form */}
+                  {showReviewForm && (
+                    <div className="space-y-3">
+                      {/* Star picker */}
+                      <div className="text-center">
+                        <p className="mb-2 text-xs font-semibold text-[#033303]">
+                          Rating
+                        </p>
+                        <div className="flex justify-center">
+                          <StarRating
+                            rating={reviewRating}
+                            size={32}
+                            interactive={true}
+                            onRatingChange={setReviewRating}
+                          />
+                        </div>
+                        {reviewRating > 0 && (
+                          <p className="mt-1 text-[10px] text-[#788174]">
+                            {reviewRating} star{reviewRating > 1 ? "s" : ""}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Comment */}
+                      <textarea
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        placeholder="Share your experience (optional)"
+                        rows={3}
+                        maxLength={500}
+                        className="w-full resize-none rounded-lg border border-[#dfe4d9] bg-[#fafbf8] px-3 py-2.5 text-xs outline-none transition focus:border-[#8da94d] focus:ring-2 focus:ring-[#a7c957]/20"
+                      />
+
+                      {/* Buttons */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => {
+                            setShowReviewForm(false);
+                            setReviewRating(0);
+                            setReviewComment("");
+                          }}
+                          disabled={submittingReview}
+                          className="rounded-xl border border-[#e0e5da] bg-white py-2.5 text-xs font-bold text-[#566151] hover:bg-[#f8faf5] disabled:opacity-50 cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+
+                        <button
+                          onClick={handleSubmitReview}
+                          disabled={submittingReview || reviewRating < 1}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#006400] py-2.5 text-xs font-bold text-white transition hover:bg-[#004d00] disabled:opacity-50 cursor-pointer"
+                        >
+                          {submittingReview ? (
+                            <Loader2 size={13} className="animate-spin" />
+                          ) : (
+                            <Star size={13} />
+                          )}
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* ================= CONTACT BUTTON ================= */}
-              {/* Buyer ya Farmer dono ke liye — dusre party se chat shuru karein */}
               <div className="rounded-2xl border border-[#e8ebdf] bg-white p-5 shadow-sm">
                 <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#596753]">
                   Communication
@@ -644,7 +797,7 @@ export default function OrderDetail() {
                 </div>
               )}
 
-              {/* ================= BUYER INFO BOX (Buyer ke liye) ================= */}
+              {/* ================= BUYER HELP BOX ================= */}
               {isBuyer && (
                 <div className="rounded-2xl border border-[#e8ebdf] bg-[#fbfcf8] p-5 shadow-sm">
                   <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-[#596753]">
