@@ -1,6 +1,7 @@
 import Review from "../models/review.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import mongoose from "mongoose";
 
 // ================= CREATE REVIEW =================
 // Buyer review likhta hai (delivered order ke liye)
@@ -112,7 +113,7 @@ export const getProductRatingStats = async (req, res) => {
     const stats = await Review.aggregate([
       {
         $match: {
-          productId: new (require("mongoose").Types.ObjectId)(productId),
+          productId: new mongoose.Types.ObjectId(productId), // ✅ FIX: mongoose direct use
         },
       },
       {
@@ -165,11 +166,7 @@ export const getFarmerRatingStats = async (req, res) => {
     const { farmerId } = req.params;
 
     const stats = await Review.aggregate([
-      {
-        $match: {
-          farmerId: new (require("mongoose").Types.ObjectId)(farmerId),
-        },
-      },
+      { $match: { farmerId: new mongoose.Types.ObjectId(farmerId) } },
       {
         $group: {
           _id: null,

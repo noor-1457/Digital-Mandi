@@ -1,7 +1,10 @@
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import { validationResult } from "express-validator";
+import { createNotification } from "./notificationController.js";
+import { getSocketIO } from "../utils/socket.js"; // ✅ Socket Helper Import
 
+// ================= CREATE ORDER (Buyer) =================
 export const createOrder = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -58,6 +61,32 @@ export const createOrder = async (req, res) => {
       });
     }
 
+    // ✅ 4. FARMER KO NOTIFICATION BHEJEIN (Real-time)
+    const io = getSocketIO(); // Socket instance nikalein
+    const farmerIds = new Set(); 
+    
+    for (const item of items) {
+      const product = await Product.findById(item.productId).populate("farmer");
+      if (product && product.farmer) {
+        farmerIds.add(product.farmer._id.toString());
+      }
+    }
+
+    for (const fId of farmerIds) {
+      const notif = await createNotification({
+        userId: fId,
+        type: "order",
+        title: "New Order Received! 🎉",
+        message: `You have a new order of Rs. ${totalAmount}. Check your dashboard.`,
+        relatedId: newOrder._id,
+      });
+
+      // ✅ REAL-TIME EMIT (Farmer ko turant bhejein)
+      if (io && notif) {
+        io.to(fId).emit("newNotification", notif);
+      }
+    }
+
     res.status(201).json({
       message: "Order created successfully",
       order: newOrder,
@@ -87,7 +116,6 @@ export const getFarmerOrders = async (req, res) => {
   try {
     const farmerId = req.user._id;
 
-    // Un orders ko dhoondein jismein is farmer ke products hain
     const orders = await Order.find({
       "items.productId": {
         $in: await Product.find({ farmer: farmerId }).distinct("_id"),
@@ -110,25 +138,48 @@ export const updateOrderStatus = async (req, res) => {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    const validStatuses = [
-      "pending",
-      "confirmed",
-      "delivered",
-      "cancelled",
-    ];
+    const validStatuses = ["pending", "confirmed", "delivered", "cancelled"];
 
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    );
-
-    if (!order) {
+    const existingOrder = await Order.findById(orderId);
+    if (!existingOrder) {
       return res.status(404).json({ message: "Order not found" });
+    }
+
+    const order = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+
+    // ✅ 5. BUYER KO NOTIFICATION BHEJEIN (Real-time)
+    let title = "";
+    let message = "";
+
+    if (status === "confirmed") {
+      title = "Order Confirmed! ✅";
+      message = "The farmer has accepted your order and is preparing it.";
+    } else if (status === "delivered") {
+      title = "Order Delivered! 📦";
+      message = "Your order has been delivered. Don't forget to leave a review!";
+    } else if (status === "cancelled") {
+      title = "Order Cancelled ❌";
+      message = "Unfortunately, the farmer had to cancel your order.";
+    }
+
+    if (title && message) {
+      const notif = await createNotification({
+        userId: existingOrder.buyerId,
+        type: "order",
+        title,
+        message,
+        relatedId: order._id,
+      });
+
+      // ✅ REAL-TIME EMIT (Buyer ko turant bhejein)
+      const io = getSocketIO();
+      if (io && notif) {
+        io.to(existingOrder.buyerId.toString()).emit("newNotification", notif);
+      }
     }
 
     res.status(200).json({ success: true, order });
@@ -147,9 +198,9 @@ export const getOrderById = async (req, res) => {
       .populate("buyerId", "fullName email mobileNumber")
       .populate(
         "items.productId",
-        "name image price category location farmer",  // ✅ farmer bhi add kiya
+        "name image price category location farmer",
       )
-      .populate("items.productId.farmer", "fullName email mobileNumber"); // ✅ farmer ki details
+      .populate("items.productId.farmer", "fullName email mobileNumber");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });

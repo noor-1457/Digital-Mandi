@@ -25,6 +25,7 @@ import { SocketProvider } from "./context/SocketContext";
 import FloatingChat from "./components/FloatingChat";
 import { Toaster } from "react-hot-toast";
 import Contact from "./pages/Contact.jsx";
+import FloatingNotification from "./components/FloatingNotification";
 
 function App() {
   return (
@@ -90,6 +91,7 @@ function App() {
           </Route>
         </Routes>
         {/* ✅ Floating Chat — poori app mein */}
+        <FloatingNotification /> {/* ✅ NAYA BUTTON */}
         <FloatingChat />
       </SocketProvider>
     </BrowserRouter>
