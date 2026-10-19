@@ -3,14 +3,12 @@ import { Navbar } from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
   Mail,
-  Phone,
-  MapPin,
   Send,
   User,
   CheckCircle2,
   Loader2,
 } from "lucide-react";
-
+import axios from "axios";
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -29,13 +27,11 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError("");
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
 
-    // Validation
     if (!formData.name || !formData.email || !formData.message) {
       setError("Please fill all required fields.");
       return;
@@ -43,15 +39,19 @@ export default function Contact() {
 
     setLoading(true);
 
-    // Simulate API call (yahan aap backend API call laga sakti hain)
-    setTimeout(() => {
+    try {
+      await axios.post("http://localhost:8000/api/contact", formData);
+      
       setSuccess(true);
-      setLoading(false);
       setFormData({ name: "", email: "", subject: "", message: "" });
 
       // 5 second baad success message hata dein
       setTimeout(() => setSuccess(false), 5000);
-    }, 1000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to send message.");
+    } finally {
+      setLoading(false);
+    }
   };
 
 

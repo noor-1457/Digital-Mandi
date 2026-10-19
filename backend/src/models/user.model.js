@@ -75,6 +75,17 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    // Blocked User Field (Admin ke liye)
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+
+    // Refresh Token Field
+    refreshToken: {
+      type: String,
+      default: null,
+    },
 
     // Refresh Token Field
     refreshToken: {
