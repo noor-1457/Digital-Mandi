@@ -59,16 +59,16 @@ h4 {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f4e8;
+  background: #fdd835;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c5d2b5;
+  background: #006400;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9db282;
+  background: #006400;
 }
 
 /* ================= SELECTION ================= */

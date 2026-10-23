@@ -34,6 +34,15 @@ const productSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  // ✅ Naye Fields Location ke liye
+  latitude: {
+    type: Number,
+    default: null,
+  },
+  longitude: {
+    type: Number,
+    default: null,
+  },
 });
 
 export default mongoose.model("Product", productSchema);

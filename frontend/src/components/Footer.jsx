@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { FaLeaf, FaFacebookF, FaInstagram, FaTwitter, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-
+import {  FaFacebookF, FaInstagram, FaTwitter, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { Leaf } from "lucide-react";
 const Footer = () => {
   return (
     <footer className="bg-[#006400] text-white">
@@ -11,8 +11,13 @@ const Footer = () => {
           {/* ================= BRAND ================= */}
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-[#e5efc9] flex items-center justify-center">
-                <FaLeaf size={18} className="text-[#26734d]" />
+                      <div className="relative w-12 h-12 flex items-center justify-center bg-[#fdd835] rounded-2xl p-2">
+                <Leaf size={42} strokeWidth={1.7} className="text-[#006400]" />
+                <Leaf
+                  size={20}
+                  strokeWidth={2}
+                  className="absolute bottom-1 right-0 text-[#5b9b58]"
+                />
               </div>
               <div>
                 <h2 className="text-lg font-bold">Digital Mandi</h2>

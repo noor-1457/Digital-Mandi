@@ -26,6 +26,7 @@ import FloatingChat from "./components/FloatingChat";
 import { Toaster } from "react-hot-toast";
 import Contact from "./pages/Contact.jsx";
 import FloatingNotification from "./components/FloatingNotification";
+import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
             <Route
               element={<ProtectedRoutes allowedRoles={["buyer", "farmer"]} />}
             >
+              <Route path="/transactions" element={<Transactions />} />
               <Route path="/order/:orderId" element={<OrderDetail />} />
             </Route>
 

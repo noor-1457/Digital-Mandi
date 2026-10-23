@@ -16,7 +16,7 @@ function BuyerDashboard() {
             <div>
               <p className="text-sm text-[#7a8277]">Welcome back 👋</p>
 
-              <h2 className="text-3xl font-bold text-[#293829] mt-1">
+              <h2 className="text-3xl font-bold text-[#033303] mt-1">
                 Buyer Dashboard
               </h2>
             </div>
@@ -32,7 +32,7 @@ function BuyerDashboard() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-[#293829]">
+                <p className="text-sm font-semibold text-[#033303]">
                   My Profile
                 </p>
 
@@ -43,8 +43,8 @@ function BuyerDashboard() {
 
           {/* WELCOME CARD */}
 
-          <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-[1px] shadow-lg">
-            <div className="rounded-[23px] bg-[#fffef8] p-6 sm:p-8">
+          <div className="mt-8 rounded-3xl bg-gradient-to-r from-[#fdd835] to-[#006400] p-1 shadow-lg">
+            <div className="rounded-2xl bg-[#fffef8] p-6 sm:p-8">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef3e4] text-[#607b37] text-xs font-semibold">
@@ -52,7 +52,7 @@ function BuyerDashboard() {
                     Buyer Account
                   </span>
 
-                  <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-[#293829]">
+                  <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-[#033303]">
                     Welcome to Digital Mandi!
                   </h3>
 
@@ -82,14 +82,14 @@ function BuyerDashboard() {
             {/* ORDERS */}
 
             <Link
-              to="/orders"
+              to="/buyer-orders"
               className="group bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
             >
               <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center">
                 <ShoppingBag size={24} />
               </div>
 
-              <h3 className="mt-5 text-lg font-bold text-[#293829]">
+              <h3 className="mt-5 text-lg font-bold text-[#033303]">
                 My Orders
               </h3>
 
@@ -116,7 +116,7 @@ function BuyerDashboard() {
                 <User size={24} />
               </div>
 
-              <h3 className="mt-5 text-lg font-bold text-[#293829]">
+              <h3 className="mt-5 text-lg font-bold text-[#033303]">
                 My Profile
               </h3>
 

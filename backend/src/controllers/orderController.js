@@ -212,3 +212,41 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ================= GET TRANSACTION HISTORY =================
+// Buyer ke liye (jo orders usne kiye) ya Farmer ke liye (jo orders usay mile)
+export const getTransactionHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const role = req.user.role || req.user.userRole; 
+
+    let transactions = [];
+
+    if (role === "buyer") {
+      // Buyer ki transactions: Jo orders usne place kiye aur delivered ho gaye
+      transactions = await Order.find({ 
+        buyerId: userId,
+        status: "delivered" // Sirf delivered orders ka paisa count hoga
+      })
+      .populate("items.productId", "name image")
+      .sort({ createdAt: -1 });
+
+    } else if (role === "farmer") {
+      // Farmer ki transactions: Jismein uske products hain aur delivered ho chuke hain
+      const products = await Product.find({ farmer: userId }).distinct("_id");
+      
+      transactions = await Order.find({
+        "items.productId": { $in: products },
+        status: "delivered"
+      })
+      .populate("buyerId", "fullName")
+      .populate("items.productId", "name image farmer")
+      .sort({ createdAt: -1 });
+    }
+
+    res.status(200).json({ success: true, transactions });
+  } catch (error) {
+    console.error("getTransactionHistory error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

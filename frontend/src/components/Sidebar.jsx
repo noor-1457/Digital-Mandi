@@ -11,6 +11,7 @@ import {
   Package,
   ClipboardList,
   House,
+  Receipt,
 } from "lucide-react";
 import { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
@@ -32,6 +33,11 @@ function Sidebar() {
         { name: "My Orders", path: "/buyer-orders", icon: ShoppingBag },
         { name: "My Profile", path: "/profile", icon: User },
         { name: "Home", path: "/", icon: House },
+        {
+          name: "Transactions",
+          path: "/transactions",
+          icon: Receipt, 
+        },
       ],
     },
     farmer: {
@@ -43,6 +49,11 @@ function Sidebar() {
         { name: "My Products", path: "/myProducts", icon: Package },
         { name: "Orders", path: "/farmer-orders", icon: ClipboardList },
         { name: "My Profile", path: "/profile", icon: User },
+        {
+          name: "Transactions",
+          path: "/transactions",
+          icon: Receipt, 
+        },
       ],
     },
     admin: {
@@ -101,8 +112,6 @@ function Sidebar() {
         </div>
 
         <div className="flex items-center gap-4">
-        
-
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"

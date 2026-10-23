@@ -10,27 +10,27 @@ const categories = [
   {
     name: "Grains",
     image: grains,
-    path: "/products?category=grains",
+    path: "/allProducts?category=grains",
   },
   {
     name: "Pulses",
     image: pulses,
-    path: "/products?category=pulses",
+    path: "/allProducts?category=pulses",
   },
   {
     name: "Fruits",
     image: fruits,
-    path: "/products?category=fruits",
+    path: "/allProducts?category=fruits",
   },
   {
     name: "Veggies",
     image: veggies,
-    path: "/products?category=veggies",
+    path: "/allProducts?category=veggies",
   },
   {
     name: "Spices",
     image: spices,
-    path: "/products?category=spices",
+    path: "/allProducts?category=spices",
   },
 ];
 
@@ -46,7 +46,7 @@ const Categories = () => {
           <div className="flex items-center gap-3">
 
             {/* small box */}
-                     <div className="bg-[#006400] h-5 w-15 rounded"></div>
+                     <div className=" bg-gradient-to-r from-[#006400] via-[#017001] to-[#fdd835] h-5 w-15 rounded"></div>
 
 
             <h2 className="text-2xl sm:text-3xl font-bold text-[#006400]">
@@ -85,7 +85,7 @@ const Categories = () => {
                   lg:w-[175px]
                   lg:h-[175px]
                   rounded-full
-                  bg-[#edf1df]
+                  bg-[#fdd835]
                   flex
                   items-center
                   justify-center

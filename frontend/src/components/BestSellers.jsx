@@ -29,7 +29,7 @@ const BestSellers = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
-                     <div className="bg-[#006400] h-5 w-15 rounded"></div>
+                     <div className=" bg-gradient-to-r from-[#006400] via-[#017001] to-[#fdd835] h-5 w-15 rounded"></div>
  <h2 className="text-2xl sm:text-3xl font-bold text-[#006400]">
               Best Sellers
             </h2>          </div>

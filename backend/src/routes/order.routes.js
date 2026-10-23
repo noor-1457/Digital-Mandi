@@ -5,6 +5,7 @@ import {
   getFarmerOrders,
   updateOrderStatus,
   getOrderById,
+  getTransactionHistory,
 } from "../controllers/orderController.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
@@ -22,5 +23,7 @@ router.put("/:orderId/status", verifyJWT, updateOrderStatus);
 
 // ================= COMMON =================
 router.get("/:orderId", verifyJWT, getOrderById);
+
+router.get("/transactions/history", verifyJWT, getTransactionHistory);
 
 export default router;

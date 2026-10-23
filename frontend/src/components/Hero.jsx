@@ -131,7 +131,7 @@ const Hero = () => {
                 items-center
                 gap-3
                 rounded-full
-                bg-[#006400]
+                 bg-gradient-to-r from-[#006400] via-[#017001] to-[#fdd835]
                 hover:bg-[#024202]
                 px-7
                 py-3.5

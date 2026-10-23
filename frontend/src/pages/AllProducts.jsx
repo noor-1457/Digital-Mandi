@@ -1,463 +1,294 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { SlidersHorizontal, X } from "lucide-react";
-import { useCallback } from "react";
-import { Navbar } from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
-import ProductCard from "../components/ProductCard.jsx";
-
-function AllProducts() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Navbar } from "../components/Navbar";
+import Footer from "../components/Footer";
+import ProductCard from "../components/ProductCard"; // Apne path ke mutabiq check kar lein
+import {
+  Search,
+  Loader2,
+  PackageOpen,
+  X,
+  MapPin,
+  Navigation,
+} from "lucide-react";
+export default function AllProducts() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [sortByNearby, setSortByNearby] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // ==============================
-  // FILTER STATES
-  // ==============================
-
-  const [category, setCategory] = useState(searchParams.get("category") || "");
-  const [location, setLocation] = useState(searchParams.get("location") || "");
-  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
-  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
-  const [availability, setAvailability] = useState(
-    searchParams.get("availability") || ""
-  );
-  const [freshness, setFreshness] = useState(
-    searchParams.get("freshness") || ""
-  );
-
-  const [showFilters, setShowFilters] = useState(false);
-
-  // ==============================
-  // STABLE SEARCH PARAMS STRING
-  // ==============================
-  // searchParams object ka reference har render pe badal sakta hai.
-  // Isliye hum ek stable string banate hain jo sirf tab change hoti hai
-  // jab actual query values change hon.
-
-  const searchParamsString = searchParams.toString();
-
-  // ==============================
-  // SYNC FILTER STATES WITH URL
-  // ==============================
-
-  useEffect(() => {
-    setCategory(searchParams.get("category") || "");
-    setLocation(searchParams.get("location") || "");
-    setMinPrice(searchParams.get("minPrice") || "");
-    setMaxPrice(searchParams.get("maxPrice") || "");
-    setAvailability(searchParams.get("availability") || "");
-    setFreshness(searchParams.get("freshness") || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParamsString]);
-
-  // ==============================
-  // FETCH PRODUCTS
-  // ==============================
-
-const fetchProducts = useCallback(async () => {
-  try {
-    setLoading(true);
-
-    const params = new URLSearchParams(searchParamsString);
-    const fullUrl = `http://localhost:8000/api/products?${params.toString()}`;
-
-    console.log("🔥 FETCH URL:", fullUrl);
-
-    const response = await fetch(fullUrl);
-
-    console.log("🔥 RESPONSE STATUS:", response.status);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
-
-    const data = await response.json();
-
-    console.log("🔥 PRODUCTS COUNT:", data.length);
-
-    setProducts(data);
-  } catch (error) {
-    console.error("❌ Error fetching products:", error);
-    setProducts([]);
-  } finally {
-    setLoading(false);
-  }
-}, [searchParamsString]);
-
-useEffect(() => {
-  fetchProducts();
-}, [fetchProducts]);
-
-  // ==============================
-  // APPLY FILTERS
-  // ==============================
-const handleApplyFilters = (e) => {
-  e.preventDefault();
-
-  const params = new URLSearchParams();
-
-  const search = searchParams.get("search");
-  if (search) params.set("search", search);
-
-  if (category) params.set("category", category);
-  if (location.trim()) params.set("location", location.trim());
-  if (minPrice) params.set("minPrice", minPrice);
-  if (maxPrice) params.set("maxPrice", maxPrice);
-  if (availability) params.set("availability", availability);
-  if (freshness) params.set("freshness", freshness);
-
-  // 👇👇👇 YAHAN STRING BHEJO — OBJECT NAHI
-  setSearchParams(params.toString());
-
-  setShowFilters(false);
-};
-
-  // ==============================
-  // CLEAR FILTERS
-  // ==============================
-
-  const clearFilters = () => {
-    setCategory("");
-    setLocation("");
-    setMinPrice("");
-    setMaxPrice("");
-    setAvailability("");
-    setFreshness("");
-
-    // Navbar ka search preserve rahega
-    const search = searchParams.get("search");
-    if (search) {
-      setSearchParams({ search });
-    } else {
-      setSearchParams({});
-    }
-
-    setShowFilters(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Haversine Formula (Distance in Kilometers)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   };
 
-  // ==============================
-  // CHECK IF ANY FILTER IS ACTIVE
-  // ==============================
+  const handleNearMe = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
 
-  const hasActiveFilters =
-    category || location || minPrice || maxPrice || availability || freshness;
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setSortByNearby(true);
+        setIsLocating(false);
+      },
+      (error) => {
+        console.error("Location error:", error);
+        alert("Location access denied or unavailable.");
+        setIsLocating(false);
+      },
+    );
+  };
+  // ================= FILTER & SORT LOGIC =================
+  useEffect(() => {
+    let result = [...products];
 
-  const searchQuery = searchParams.get("search") || "";
+    // 1. Search Filter
+    if (search.trim()) {
+      const searchLower = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(searchLower) ||
+          p.description?.toLowerCase().includes(searchLower) ||
+          p.location?.toLowerCase().includes(searchLower),
+      );
+    }
+
+    // 2. Category Filter
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase(),
+      );
+    }
+
+    // 3. ✅ Nearby Sort
+    if (sortByNearby && userLocation) {
+      result = result.filter((p) => p.latitude && p.longitude); // Sirf woh jin ki location hai
+
+      result.sort((a, b) => {
+        const distA = calculateDistance(
+          userLocation.lat,
+          userLocation.lng,
+          a.latitude,
+          a.longitude,
+        );
+        const distB = calculateDistance(
+          userLocation.lat,
+          userLocation.lng,
+          b.latitude,
+          b.longitude,
+        );
+        return distA - distB; // Qareeb wale pehle
+      });
+    }
+
+    setFilteredProducts(result);
+  }, [products, search, selectedCategory, sortByNearby, userLocation]);
+  // ================= URL SE SEARCH & CATEGORY NIKALEIN =================
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const searchParam = queryParams.get("search") || "";
+    const categoryParam = queryParams.get("category") || "All";
+
+    setSearch(searchParam);
+
+    // Category ko Capitalize karein (e.g. grains -> Grains)
+    const formattedCategory =
+      categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1);
+    setSelectedCategory(categoryParam === "All" ? "All" : formattedCategory);
+  }, [location.search]);
+
+  // ================= PRODUCTS FETCH KAREIN =================
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:8000/api/products");
+        const data = response.data;
+        const productList =
+          data?.products || data?.data || (Array.isArray(data) ? data : []);
+        setProducts(productList);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // ================= FILTER LOGIC =================
+  useEffect(() => {
+    let result = products;
+
+    // 1. Search Filter
+    if (search.trim()) {
+      const searchLower = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(searchLower) ||
+          p.description?.toLowerCase().includes(searchLower) ||
+          p.location?.toLowerCase().includes(searchLower),
+      );
+    }
+
+    // 2. Category Filter
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase(),
+      );
+    }
+
+    setFilteredProducts(result);
+  }, [products, search, selectedCategory]);
+
+  // Categories list dropdown ke liye
+  const categories = ["All", "Grains", "Pulses", "Fruits", "Veggies", "Spices"];
+
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    if (cat === "All") {
+      navigate("/allProducts");
+    } else {
+      navigate(`/allProducts?category=${cat.toLowerCase()}`);
+    }
+  };
 
   return (
-    <div className="min-h-screen ">
-      {/* ================= NAVBAR ================= */}
+    <>
       <Navbar />
 
-      {/* ================= MAIN ================= */}
-      <main className="pt-[143px]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          {/* ================= HEADER ================= */}
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#006400]">
-              {searchQuery
-                ? `Search Results for "${searchQuery}"`
-                : "Browse Products"}
-            </h1>
-
-            <p className="mt-2 text-sm md:text-base text-gray-600">
-              {searchQuery
-                ? "Showing products matching your search."
-                : "Find fresh agricultural products from local farmers."}
-            </p>
-          </div>
-
-          {/* ================= FILTER BUTTON ================= */}
-          <div className="flex justify-end mb-6">
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="
-                h-12
-                px-6
-                rounded-full
-                bg-[#006400]
-                text-white
-                font-semibold
-                flex
-                items-center
-                justify-center
-                gap-2
-                hover:bg-[#004d00]
-                transition
-                cursor-pointer
-              "
-            >
-              <SlidersHorizontal size={19} />
-              Filters
-              {hasActiveFilters && (
-                <span className="w-2 h-2 rounded-full bg-yellow-400" />
-              )}
-            </button>
-          </div>
-
-          {/* ================= FILTER PANEL ================= */}
-          {showFilters && (
-            <form
-              onSubmit={handleApplyFilters}
-              className="
-                bg-white
-                rounded-2xl
-                p-5
-                md:p-6
-                mb-8
-                border
-                border-gray-100
-                shadow-sm
-              "
-            >
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-[#173f32]">
-                  Filter Products
-                </h2>
-
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="
-                    flex
-                    items-center
-                    gap-1
-                    text-sm
-                    text-red-500
-                    hover:text-red-700
-                    cursor-pointer
-                  "
-                >
-                  <X size={16} />
-                  Clear All
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {/* CATEGORY */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Category
-                  </label>
-
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      bg-white
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  >
-                    <option value="">All Categories</option>
-                    <option value="fruits">Fruits</option>
-                    <option value="vegetables">Vegetables</option>
-                    <option value="grains">Grains</option>
-                    <option value="seeds">Seeds</option>
-                    <option value="pulses">Pulses</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                {/* LOCATION */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Location
-                  </label>
-
-                  <input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="e.g. Lahore"
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  />
-                </div>
-
-                {/* AVAILABILITY */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Availability
-                  </label>
-
-                  <select
-                    value={availability}
-                    onChange={(e) => setAvailability(e.target.value)}
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      bg-white
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  >
-                    <option value="">All Products</option>
-                    <option value="available">Available Only</option>
-                  </select>
-                </div>
-
-                {/* MIN PRICE */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Minimum Price
-                  </label>
-
-                  <input
-                    type="number"
-                    min="0"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    placeholder="Min price"
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  />
-                </div>
-
-                {/* MAX PRICE */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Maximum Price
-                  </label>
-
-                  <input
-                    type="number"
-                    min="0"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    placeholder="Max price"
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  />
-                </div>
-
-                {/* FRESHNESS */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Freshness
-                  </label>
-
-                  <select
-                    value={freshness}
-                    onChange={(e) => setFreshness(e.target.value)}
-                    className="
-                      w-full
-                      h-11
-                      px-4
-                      rounded-lg
-                      border
-                      border-gray-200
-                      bg-white
-                      outline-none
-                      focus:border-[#006400]
-                    "
-                  >
-                    <option value="">Any Time</option>
-                    <option value="today">Added Today</option>
-                    <option value="week">Last 7 Days</option>
-                    <option value="month">Last 30 Days</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* APPLY */}
-              <button
-                type="submit"
-                className="
-                  mt-6
-                  w-full
-                  sm:w-auto
-                  px-8
-                  py-3
-                  rounded-full
-                  bg-[#006400]
-                  hover:bg-[#004d00]
-                  text-white
-                  font-semibold
-                  transition
-                  cursor-pointer
-                "
-              >
-                Apply Filters
-              </button>
-            </form>
-          )}
-
-          {/* ================= RESULTS HEADER ================= */}
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-xl font-bold text-[#173f32]">
-                {searchQuery ? "Search Results" : "All Products"}
-              </h2>
-
-              {!loading && (
-                <p className="text-sm text-gray-500 mt-1">
-                  {products.length} product
-                  {products.length !== 1 ? "s" : ""} found
+      <main className="min-h-screen bg-[#f7f8f1] pb-16 pt-20 mt-20 lg:mt-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* ================= HEADER & FILTERS ================= */}
+          <div className="mb-8 rounded-3xl bg-white p-5 sm:p-6 shadow-sm border border-[#e8ebdf]">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#033303]">
+                  {selectedCategory === "All"
+                    ? "All Products"
+                    : selectedCategory}
+                </h1>
+                <p className="text-sm text-[#788174] mt-1">
+                  Showing {filteredProducts.length} results{" "}
+                  {search && `for "${search}"`}
                 </p>
-              )}
+              </div>
+
+              {/* Search Bar (Local) */}
+              <div className="relative w-full md:w-72">
+                <Search
+                  size={18}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  type="text"
+                  placeholder="Search in results..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-full border border-[#d5d9d5] bg-[#fafbf8] text-sm outline-none focus:border-[#006400]"
+                />
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Category Pills */}
+            <div className="mt-5 flex flex-wrap gap-2 items-center justify-between">
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition ${
+                      selectedCategory === cat
+                        ? "bg-[#006400] text-white shadow-md"
+                        : "bg-[#edf3e5] text-[#2f8f1f] hover:bg-[#dce6c9]"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* ✅ NEAR ME BUTTON */}
+              <button
+                onClick={handleNearMe}
+                disabled={isLocating}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2 ${
+                  sortByNearby
+                    ? "bg-[#006400] text-white shadow-md"
+                    : "bg-white border border-[#e0e5da] text-[#006400] hover:bg-gray-50"
+                }`}
+              >
+                {isLocating ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <MapPin size={14} />
+                )}
+                {sortByNearby ? "Showing Nearby" : "Near Me"}
+              </button>
             </div>
           </div>
 
-          {/* ================= PRODUCTS ================= */}
+          {/* ================= PRODUCTS GRID ================= */}
           {loading ? (
-            <div className="py-20 text-center">
-              <p className="text-gray-500">Loading products...</p>
+            <div className="flex flex-col items-center justify-center py-20 text-[#006400]">
+              <Loader2 size={40} className="animate-spin mb-4" />
+              <p className="font-semibold">Fetching fresh produce...</p>
             </div>
-          ) : products.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 text-center">
-              <h3 className="text-lg font-semibold text-gray-700">
+          ) : filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-[#e8ebdf]">
+              <PackageOpen size={50} className="text-gray-300 mb-4" />
+              <h2 className="text-xl font-bold text-gray-700">
                 No products found
-              </h3>
-
-              <p className="mt-2 text-sm text-gray-500">
-                {searchQuery
-                  ? `No products match "${searchQuery}". Try a different search.`
-                  : "Try changing your search or filters."}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Try changing the category or search term.
               </p>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  handleCategoryChange("All");
+                }}
+                className="mt-5 rounded-xl bg-[#006400] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#004d00]"
+              >
+                Clear Filters
+              </button>
             </div>
           ) : (
-            <div
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4
-              "
-            >
-              {products.map((product) => (
+            <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+              {filteredProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
@@ -465,10 +296,7 @@ const handleApplyFilters = (e) => {
         </div>
       </main>
 
-      {/* ================= FOOTER ================= */}
       <Footer />
-    </div>
+    </>
   );
 }
-
-export default AllProducts;

@@ -69,9 +69,9 @@ const WhyChooseUs = () => {
                 className="
                   group
                   rounded-2xl
-                  border
-                  border-[#e4e9df]
-                  bg-[#f8faf5]
+                  border-3
+                  border-[#fdd835]
+                  bg-[#e0f8bd]
                   p-6
                   text-center
                   transition-all
@@ -87,7 +87,7 @@ const WhyChooseUs = () => {
                     w-14
                     h-14
                     rounded-full
-                    bg-[#e3f0df]
+                    bg-[#fdd835]
                     flex
                     items-center
                     justify-center

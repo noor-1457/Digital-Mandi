@@ -167,13 +167,13 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen pt-10 lg:ml-72 px-4 sm:px-6 pb-12">
+    <div className="min-h-screen pt-24 lg:ml-72 px-4 sm:px-6 pb-12">
               <Sidebar/>
 
       {" "}
       {/* PAGE HEADER */}
       <div className=" mb-8 w-full">
-        <h1 className="text-3xl font-bold text-[#006400]">My Profile</h1>
+        <h1 className="text-3xl font-bold text-[#033303]">My Profile</h1>
 
         <p className="mt-1 text-gray-500">
           Manage your personal information and account details.
@@ -181,7 +181,7 @@ const Profile = () => {
       </div>
       <div className="w-full">
         {/* PROFILE HEADER */}
-        <div className="overflow-hidden rounded-2xl border border-[#fdd835] bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border-3 border-[#fdd835] bg-white shadow-sm">
           {/* COVER */}
           <div className="h-32 bg-gradient-to-r from-[#006400] via-[#017001] to-[#fdd835] text-white"></div>
 
@@ -231,7 +231,7 @@ const Profile = () => {
         )}
 
         {/* PERSONAL INFORMATION */}
-        <div className="mt-6 rounded-2xl border border-[#fdd835] bg-white p-6 shadow-sm md:p-8">
+        <div className="mt-6 rounded-2xl border-3 border-[#fdd835] bg-white p-6 shadow-sm md:p-8">
           <div className="mb-7">
             <h2 className="text-xl font-bold text-gray-900">
               Personal Information

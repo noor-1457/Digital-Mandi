@@ -61,7 +61,7 @@ export default function Contact() {
     <>
       <Navbar />
 
-      <main className="min-h-screen pb-16 m-auto lg:pt-35">
+      <main className="min-h-screen pb-16 pt-24 m-auto lg:pt-35">
      
 
         {/* ================= MAIN CONTENT ================= */}

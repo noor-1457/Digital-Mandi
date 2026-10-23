@@ -82,7 +82,7 @@ export const Navbar = () => {
               onClick={handleLinkClick}
               className="flex items-center gap-2.5 shrink-0"
             >
-              <div className="relative w-11 h-11 flex items-center justify-center">
+              <div className="relative w-12 h-12 flex items-center justify-center bg-[#fdd835] rounded-2xl p-2">
                 <Leaf size={42} strokeWidth={1.7} className="text-[#006400]" />
                 <Leaf
                   size={20}
@@ -188,7 +188,7 @@ export const Navbar = () => {
                 <Link
                   key={`${link.label}-${index}`}
                   to={link.path}
-                  className={`relative h-[50px] flex items-center px-6 text-[14px] font-semibold text-white transition-colors hover:bg-white/5 ${
+                  className={`relative h-13 flex items-center px-6 text-[14px] font-semibold text-white transition-colors hover:bg-white/5 ${
                     isActive(link.path) ? "bg-white/5" : ""
                   }`}
                 >
@@ -201,7 +201,7 @@ export const Navbar = () => {
             </div>
 
             {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="md:hidden flex-1 relative mt-1.5">
+            <form onSubmit={handleSearch} className="md:hidden flex-1 relative mt-1.5 mb-1.5">
               <Search
                 size={17}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60"
