@@ -98,4 +98,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-export { app };
+export default app;
