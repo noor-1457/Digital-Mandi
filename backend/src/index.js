@@ -3,7 +3,7 @@ import http from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import connectDB from "./db/index.js";
-import { app } from "./app.js";
+import  app  from "./app.js";
 import Message from "./models/message.model.js";
 import Conversation from "./models/conversation.model.js";
 import User from "./models/user.model.js";
