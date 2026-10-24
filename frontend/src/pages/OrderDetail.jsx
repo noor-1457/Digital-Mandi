@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api.js"
 import Sidebar from "../components/Sidebar.jsx";
 import StarRating from "../components/StartRating.jsx";
 import {
@@ -50,8 +50,8 @@ export default function OrderDetail() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `http://localhost:8000/api/orders/${orderId}`,
+      const response = await api.get(
+        `/api/orders/${orderId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -77,8 +77,8 @@ export default function OrderDetail() {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:8000/api/reviews/can-review/${orderId}`,
+        const response = await api.get(
+          `/api/reviews/can-review/${orderId}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
         setCanReview(response.data.canReview);
@@ -106,8 +106,8 @@ export default function OrderDetail() {
       const firstProduct = order.items[0]?.productId;
       const productId = firstProduct?._id || firstProduct;
 
-      await axios.post(
-        "http://localhost:8000/api/reviews",
+      await api.post(
+        "/api/reviews",
         {
           orderId,
           productId,
@@ -134,8 +134,8 @@ export default function OrderDetail() {
     setUpdating(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `http://localhost:8000/api/orders/${orderId}/status`,
+      const response = await api.put(
+        `/api/orders/${orderId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -168,8 +168,8 @@ export default function OrderDetail() {
         return;
       }
 
-      const response = await axios.post(
-        "http://localhost:8000/api/messages/conversation",
+      const response = await api.post(
+        "/api/messages/conversation",
         { otherUserId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -460,7 +460,7 @@ export default function OrderDetail() {
                             src={
                               product.image.startsWith("http")
                                 ? product.image
-                                : `http://localhost:8000/${product.image}`
+                                : `${api.baseURL}/${product.image}`
                             }
                             alt={product.name}
                             className="h-16 w-16 rounded-xl object-cover bg-[#f4f6ec]"

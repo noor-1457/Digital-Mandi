@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 // Shop context create ho raha hai taaki data poori app me access ho sake
 export const ShopContext = createContext(null);
@@ -158,7 +158,7 @@ const ShopContextProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const response = await axios.get("http://localhost:8000/api/products");
+      const response = await api.get("/api/products");
 
       const data = response.data;
 

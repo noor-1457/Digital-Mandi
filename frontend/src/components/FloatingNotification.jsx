@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell, CheckCheck } from "lucide-react";
-import axios from "axios";
 import { useSocket } from "../context/SocketContext";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function FloatingNotification() {
   const [notifications, setNotifications] = useState([]);
@@ -20,7 +20,7 @@ export default function FloatingNotification() {
   const fetchNotifications = async () => {
     if (!isLoggedIn) return;
     try {
-      const res = await axios.get("http://localhost:8000/api/notifications", {
+      const res = await api.get("/api/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications(res.data.notifications);
@@ -60,8 +60,8 @@ export default function FloatingNotification() {
   // ================= MARK ALL READ =================
   const handleMarkAllRead = async () => {
     try {
-      await axios.put(
-        "http://localhost:8000/api/notifications/read-all",
+      await api.put(
+        "/api/notifications/read-all",
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { Navbar } from "../components/Navbar.jsx";
-import axios from "axios";
+import api from "../utils/api.js";
 import { MapPin, Phone, User, CreditCard, Package } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -72,8 +72,8 @@ export default function Checkout() {
         totalAmount: total,
       };
 
-      const response = await axios.post(
-        "http://localhost:8000/api/orders/create-order",
+      const response = await api.post(
+        "/api/orders/create-order",
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },

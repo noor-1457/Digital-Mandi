@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api.js";
 import { Navbar } from "../components/Navbar.jsx";
 import { Minus, Plus, ShoppingBag, ArrowLeft, Trash2 } from "lucide-react";
 
@@ -23,7 +23,7 @@ export const CartItems = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:8000/api/products");
+        const response = await api.get("/api/products");
 
         const data = response.data;
         const allProducts =
@@ -43,7 +43,7 @@ export const CartItems = () => {
 
   const getImageUrl = (image) => {
     if (!image) return "https://via.placeholder.com/150?text=No+Image";
-    return image.startsWith("http") ? image : `http://localhost:8000/${image}`;
+    return image.startsWith("http") ? image : `${api.baseURL}/${image}`;
   };
 
   const subtotal = cartProducts.reduce(

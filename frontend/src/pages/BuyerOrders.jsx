@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api.js";
 import {
   Package,
   CheckCircle2,
@@ -30,8 +30,8 @@ export default function BuyerOrders() {
       else setLoading(true);
 
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "http://localhost:8000/api/orders/my-orders",
+      const response = await api.get(
+        "/api/orders/my-orders",
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -334,7 +334,7 @@ export default function BuyerOrders() {
                                 src={
                                   product.image.startsWith("http")
                                     ? product.image
-                                    : `http://localhost:8000/${product.image}`
+                                    : `${api.baseURL}/${product.image}`
                                 }
                                 alt={product.name}
                                 className="h-14 w-14 rounded-xl object-cover bg-[#f4f6ec]"

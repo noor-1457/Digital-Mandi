@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import toast from "react-hot-toast";
-
+import api from "../utils/api";
 const ProductCard = ({ product }) => {
   const { addToCart, toggleWishlist, isInWishlist } = useContext(ShopContext);
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
 
   const imageUrl = image?.startsWith("http")
     ? image
-    : `http://localhost:8000/${image}`;
+    : `${api.baseURL}/${image}`;
 
   const liked = isInWishlist(_id);
   const token = localStorage.getItem("token");

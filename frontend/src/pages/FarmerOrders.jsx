@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Package,
   CheckCircle2,
@@ -28,8 +28,8 @@ export default function FarmerOrders() {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://localhost:8000/api/orders/farmer-orders",
+        const response = await api.get(
+          "/api/orders/farmer-orders",
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -51,8 +51,8 @@ export default function FarmerOrders() {
     setUpdating(orderId);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `http://localhost:8000/api/orders/${orderId}/status`,
+      const response = await api.put(
+        `/api/orders/${orderId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -339,7 +339,7 @@ export default function FarmerOrders() {
                                 src={
                                   product.image.startsWith("http")
                                     ? product.image
-                                    : `http://localhost:8000/${product.image}`
+                                    : `${api.baseURL}/${product.image}`
                                 }
                                 alt={product.name}
                                 className="h-14 w-14 rounded-xl object-cover bg-[#f4f6ec]"

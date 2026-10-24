@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { Search, MessageCircle, Loader2 } from "lucide-react";
 
-export default function ChatList({ onSelectChat, currentUserId, unreadCounts }) {
+export default function ChatList({ onSelectChat, }) {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -11,8 +11,8 @@ export default function ChatList({ onSelectChat, currentUserId, unreadCounts }) 
     const fetchConversations = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://localhost:8000/api/messages/conversations",
+        const response = await api.get(
+          "/api/messages/conversations",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setConversations(response.data || []);

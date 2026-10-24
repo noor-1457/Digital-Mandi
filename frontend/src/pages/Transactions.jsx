@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import Sidebar from "../components/Sidebar";
 import { Loader2, Receipt, ArrowDownRight, ArrowUpRight, Calendar, User } from "lucide-react";
 
@@ -14,7 +14,7 @@ export default function Transactions() {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:8000/api/orders/transactions/history", {
+        const res = await api.get("/api/orders/transactions/history", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTransactions(res.data.transactions || []);

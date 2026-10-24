@@ -5,8 +5,8 @@ import {
   useState,
   useRef,
 } from "react";
-import axios from "axios";
 import { io } from "socket.io-client";
+import api from "../utils/api"; // ✅ Nayi api file import ki
 
 const SocketContext = createContext(null);
 
@@ -14,6 +14,9 @@ export const useSocket = () => useContext(SocketContext);
 
 // ✅ Singleton socket (StrictMode double-connect se bachne ke liye)
 let globalSocket = null;
+
+// ✅ URL .env se uthayein
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:8000";
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
@@ -23,19 +26,13 @@ export const SocketProvider = ({ children }) => {
   // ============================================================
   // ✅ LOGIN HONE PE UNREAD COUNTS FETCH KAREIN
   // ============================================================
-  // Jab user login karta hai, toh API se saari conversations laayein
-  // aur unka unreadCount nikaal kar state mein set karein.
-  // Isse purane unread messages bhi count honge.
-  // ============================================================
   const fetchUnreadCounts = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await axios.get(
-        "http://localhost:8000/api/messages/conversations",
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      // ✅ axios ki jagah api use kiya (baseURL khud handle karega)
+      const response = await api.get("/api/messages/conversations");
 
       // ✅ Har conversation ka unreadCount nikaal kar map banayein
       const counts = {};
@@ -80,7 +77,8 @@ export const SocketProvider = ({ children }) => {
     if (isConnecting.current) return;
     isConnecting.current = true;
 
-    const newSocket = io("http://localhost:8000", {
+    // ✅ SOCKET_URL variable use kiya
+    const newSocket = io(SOCKET_URL, {
       auth: { token },
       transports: ["websocket", "polling"],
       reconnection: true,
@@ -91,8 +89,6 @@ export const SocketProvider = ({ children }) => {
       console.log("✅ Socket connected:", newSocket.id);
       isConnecting.current = false;
 
-      // ✅ Socket connect hone ke baad bhi counts refresh karein
-      // (taake jo messages socket connect hone se pehle aaye woh bhi count hon)
       fetchUnreadCounts();
     });
 
@@ -101,7 +97,6 @@ export const SocketProvider = ({ children }) => {
       isConnecting.current = false;
     });
 
-    // ✅ Naya message aaye toh unread count badhayein
     newSocket.on("newMessage", (message) => {
       setUnreadCounts((prev) => ({
         ...prev,
@@ -112,7 +107,6 @@ export const SocketProvider = ({ children }) => {
     globalSocket = newSocket;
     setSocket(newSocket);
 
-    // Cleanup — StrictMode ke dauraan socket disconnect na karein
     return () => {};
   }, []);
 
@@ -132,7 +126,6 @@ export const SocketProvider = ({ children }) => {
         }
         setUnreadCounts({});
       } else {
-        // ✅ Login hua — unread counts fetch karein
         fetchUnreadCounts();
       }
     };
@@ -161,7 +154,7 @@ export const SocketProvider = ({ children }) => {
         unreadCounts,
         clearUnread,
         totalUnread,
-        fetchUnreadCounts, // ✅ Export karein taake ChatList bhi use kar sake
+        fetchUnreadCounts,
       }}
     >
       {children}

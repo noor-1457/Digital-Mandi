@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import {
   Users,
@@ -36,11 +36,11 @@ function AdminDashboard() {
 
       const [statsRes, usersRes, productsRes, ordersRes, contactRes] =
         await Promise.all([
-          axios.get("http://localhost:8000/api/admin/stats", config),
-          axios.get("http://localhost:8000/api/admin/users", config),
-          axios.get("http://localhost:8000/api/admin/products", config),
-          axios.get("http://localhost:8000/api/admin/orders", config),
-          axios.get("http://localhost:8000/api/contact", config),
+          api.get("/api/admin/stats", config),
+          api.get("/api/admin/users", config),
+          api.get("/api/admin/products", config),
+          api.get("/api/admin/orders", config),
+          api.get("/api/contact", config),
         ]);
 
       setStats(statsRes.data.stats);
@@ -65,11 +65,7 @@ function AdminDashboard() {
   const handleBlockToggle = async (userId) => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.put(
-        `http://localhost:8000/api/admin/users/${userId}/block`,
-        {},
-        config,
-      );
+      const res = await api.put(`/api/admin/users/${userId}/block`, {}, config);
       // Update local state
       setUsers((prev) =>
         prev.map((u) => (u._id === userId ? res.data.user : u)),
@@ -82,7 +78,7 @@ function AdminDashboard() {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("http://localhost:8000/api/auth/logout", {
+      await fetch(`${api.baseURL}/api/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -348,7 +344,7 @@ function AdminDashboard() {
                         src={
                           p.image?.startsWith("http")
                             ? p.image
-                            : `http://localhost:8000/${p.image}`
+                            : `${api.baseURL}/${p.image}`
                         }
                         alt={p.name}
                         className="w-20 h-20 rounded-xl object-cover bg-[#f8f9f5]"
@@ -447,13 +443,10 @@ function AdminDashboard() {
                             {msg.status === "unread" && (
                               <button
                                 onClick={async () => {
-                                  await axios.put(
-                                    `http://localhost:8000/api/contact/${msg._id}/read`,
-                                    {},
-                                    {
-                                      headers: {
-                                        Authorization: `Bearer ${token}`,
-                                      },
+                                  await api.put(`/api/contact/${msg._id}/read`, {}, {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
                                     },
                                   );
                                   setContactMessages((prev) =>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
+import api from "../utils/api";
 const AddProduct = () => {
   const { id } = useParams(); // URL mein id ho to edit mode
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AddProduct = () => {
       setFetching(true);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/products/${id}`,
+          `${api.baseURL}/api/products/${id}`,
         );
         const data = await response.json();
 
@@ -92,8 +93,8 @@ const AddProduct = () => {
       }
 
       const url = isEditMode
-        ? `http://localhost:8000/api/products/${id}`
-        : "http://localhost:8000/api/products";
+        ? `${api.baseURL}/api/products/${id}`
+        : `${api.baseURL}/api/products`;
 
       const method = isEditMode ? "PUT" : "POST";
 

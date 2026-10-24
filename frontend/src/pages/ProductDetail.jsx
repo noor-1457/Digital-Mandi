@@ -14,6 +14,7 @@ import { ShopContext } from "../context/ShopContext";
 import { Navbar } from "../components/Navbar";
 import Footer from "../components/Footer";
 import ReviewList from "../components/ReviewList";
+import api from "../utils/api";
 
 export default function ProductDetail() {
   const { productId } = useParams();
@@ -100,7 +101,7 @@ export default function ProductDetail() {
 
   const imageUrl = product.image?.startsWith("http")
     ? product.image
-    : `http://localhost:8000/${product.image}`;
+    : `${api.baseURL}/${product.image}`;
 
   const stock = Number(product.quantity) || 0;
 

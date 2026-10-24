@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Sidebar from "../components/Sidebar";
@@ -13,8 +13,8 @@ function MyProducts() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get(
-        "http://localhost:8000/api/products/my-products",
+      const response = await api.get(
+        "/api/products/my-products",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -34,8 +34,8 @@ function MyProducts() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      await axios.delete(
-        `http://localhost:8000/api/products/${productId}`,
+      await api.delete(
+        `/api/products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

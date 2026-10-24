@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { useSocket } from "../context/SocketContext";
 
@@ -22,15 +22,15 @@ export default function ChatWindow({ conversation, currentUserId, onBack }) {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:8000/api/messages/${conversationId}`,
+        const response = await api.get(
+          `/api/messages/${conversationId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setMessages(response.data || []);
 
         // Read mark karein
-        await axios.put(
-          `http://localhost:8000/api/messages/read/${conversationId}`,
+        await api.put(
+          `/api/messages/read/${conversationId}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -58,8 +58,8 @@ export default function ChatWindow({ conversation, currentUserId, onBack }) {
 
         // Read mark karein
         const token = localStorage.getItem("token");
-        axios.put(
-          `http://localhost:8000/api/messages/read/${conversationId}`,
+        api.put(
+          `/api/messages/read/${conversationId}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -112,8 +112,8 @@ export default function ChatWindow({ conversation, currentUserId, onBack }) {
       } else {
         // Fallback: REST API
         const token = localStorage.getItem("token");
-        const response = await axios.post(
-          "http://localhost:8000/api/messages/send",
+        const response = await api.post(
+          "/api/messages/send",
           { receiverId: otherUser._id, text: messageText },
           { headers: { Authorization: `Bearer ${token}` } }
         );

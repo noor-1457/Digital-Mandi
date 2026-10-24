@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2, MessageCircle } from "lucide-react";
 import StarRating from "../components/StartRating";
+import api from "../utils/api";
 
 export default function ReviewList({ productId }) {
   const [reviews, setReviews] = useState([]);
@@ -15,9 +16,9 @@ export default function ReviewList({ productId }) {
 
         // Reviews aur stats dono parallel fetch karein
         const [reviewsRes, statsRes] = await Promise.all([
-          axios.get(`http://localhost:8000/api/reviews/product/${productId}`),
-          axios.get(
-            `http://localhost:8000/api/reviews/product/${productId}/stats`,
+          api.get(`/api/reviews/product/${productId}`),
+          api.get(
+            `/api/reviews/product/${productId}/stats`,
           ),
         ]);
 

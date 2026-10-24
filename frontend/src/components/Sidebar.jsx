@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
+import api from "../utils/api";
 
 function Sidebar() {
   const { clearCart, clearWishlist, setUser } = useContext(ShopContext);
@@ -76,7 +77,7 @@ function Sidebar() {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        const response = await fetch("http://localhost:8000/api/auth/logout", {
+        const response = await api.get("/api/auth/logout", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -104,6 +105,8 @@ function Sidebar() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#fdd835] flex items-center justify-center">
             <Leaf size={22} className="text-[#006400]" />
+
+
           </div>
           <div>
             <p className="text-xs text-[#dce8d5]">Digital Mandi</p>

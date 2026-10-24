@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api.js";
 import { Navbar } from "../components/Navbar.jsx";
 import {
   Heart,
@@ -33,8 +33,8 @@ export const Wishlist = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(
-          "http://localhost:8000/api/products"
+        const response = await api.get(
+          "/api/products"
         );
 
         const data = response.data;
@@ -62,7 +62,7 @@ export const Wishlist = () => {
     if (!image) return "https://via.placeholder.com/150?text=No+Image";
     return image.startsWith("http")
       ? image
-      : `http://localhost:8000/${image}`;
+      : `${api.baseURL}/${image}`;
   };
 
   const handleAddToCart = (id) => {

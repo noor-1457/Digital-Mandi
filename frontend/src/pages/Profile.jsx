@@ -4,15 +4,14 @@ import {
   Mail,
   Phone,
   MapPin,
-  Camera,
   Pencil,
   Save,
   X,
   ShieldCheck,
   Tractor,
-  ArrowBigLeft,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import api from "../utils/api"; // ✅ Aapki API file
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -22,36 +21,23 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  //  GET PROFILE 
-
+  // ================= GET PROFILE =================
   const fetchProfile = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const token = localStorage.getItem("token");
-
-      const response = await fetch("http://localhost:8000/api/auth/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
+      // ✅ api use kiya (Token khud handle ho jayega)
+      const response = await api.get("/api/auth/profile");
+      const data = response.data;
 
       console.log("PROFILE RESPONSE:", data);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to load profile");
-      }
-
-      setProfile(data.user);
-      setFormData(data.user);
+      setProfile(data.user || data.data);
+      setFormData(data.user || data.data);
     } catch (error) {
       console.error("Profile Error:", error);
-      setError(error.message);
+      setError(error.response?.data?.message || error.message || "Failed to load profile");
     } finally {
       setLoading(false);
     }
@@ -61,8 +47,7 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  // INPUT CHANGE 
-
+  // ================= INPUT CHANGE =================
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -70,91 +55,68 @@ const Profile = () => {
     });
   };
 
-  // EDIT
-
   const handleEdit = () => {
     setFormData(profile);
     setIsEditing(true);
   };
-
-  // CANCEL 
 
   const handleCancel = () => {
     setFormData(profile);
     setIsEditing(false);
   };
 
-  // UPDATE PROFILE 
-
+  // ================= UPDATE PROFILE =================
   const handleSave = async () => {
     try {
       setSaving(true);
       setError("");
 
-      const token = localStorage.getItem("token");
-
-      const response = await fetch("http://localhost:8000/api/auth/profile", {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          mobileNumber: formData.mobileNumber,
-          address: formData.address,
-          city: formData.city,
-          province: formData.province,
-
-          ...(profile.userRole === "farmer" && {
-            farmName: formData.farmName,
-            farmLocation: formData.farmLocation,
-            primaryCropType: formData.primaryCropType,
-          }),
+      // ✅ api.put use kiya
+      const response = await api.put("/api/auth/profile", {
+        fullName: formData.fullName,
+        mobileNumber: formData.mobileNumber,
+        address: formData.address,
+        city: formData.city,
+        province: formData.province,
+        ...(profile.userRole === "farmer" && {
+          farmName: formData.farmName,
+          farmLocation: formData.farmLocation,
+          primaryCropType: formData.primaryCropType,
         }),
       });
 
-      const data = await response.json();
-
+      const data = response.data;
       console.log("UPDATE PROFILE RESPONSE:", data);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to update profile");
-      }
-
-      setProfile(data.user);
-      setFormData(data.user);
+      setProfile(data.user || data.data);
+      setFormData(data.user || data.data);
       setIsEditing(false);
     } catch (error) {
       console.error("Update Profile Error:", error);
-      setError(error.message);
+      setError(error.response?.data?.message || error.message || "Failed to update profile");
     } finally {
       setSaving(false);
     }
   };
 
-  // LOADING 
-
+  // ================= LOADING =================
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#1B5E20]"></div>
-
           <p className="text-sm text-gray-500">Loading profile...</p>
         </div>
       </div>
     );
   }
 
-  // ERROR 
-
+  // ================= ERROR =================
   if (error && !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="rounded-xl bg-white p-8 text-center shadow-sm">
           <p className="mb-4 text-red-600">{error}</p>
-
           <button
             onClick={fetchProfile}
             className="rounded-lg bg-[#12372A] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1B5E20] cursor-pointer"
@@ -168,17 +130,16 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen pt-24 lg:ml-72 px-4 sm:px-6 pb-12">
-              <Sidebar/>
+      <Sidebar />
 
-      {" "}
       {/* PAGE HEADER */}
-      <div className=" mb-8 w-full">
+      <div className="mb-8 w-full">
         <h1 className="text-3xl font-bold text-[#033303]">My Profile</h1>
-
         <p className="mt-1 text-gray-500">
           Manage your personal information and account details.
         </p>
       </div>
+
       <div className="w-full">
         {/* PROFILE HEADER */}
         <div className="overflow-hidden rounded-2xl border-3 border-[#fdd835] bg-white shadow-sm">
@@ -187,17 +148,15 @@ const Profile = () => {
 
           <div className="px-6 pb-6 md:px-8">
             <div className="-mt-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-              {/* INFO */}
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end">
-                {/* USER INFO */}
                 <div className="pb-8">
                   <h2 className="text-2xl font-bold text-white">
-                    {profile.fullName}
+                    {profile?.fullName || "User"}
                   </h2>
 
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold capitalize text-green-700">
-                      {profile.userRole}
+                      {profile?.userRole || "buyer"}
                     </span>
                     <div className="bg-[#fdd835] rounded-full font-semibold p-1">
                       <span className="flex items-center gap-1 text-xs text-[#006400]">
@@ -233,10 +192,7 @@ const Profile = () => {
         {/* PERSONAL INFORMATION */}
         <div className="mt-6 rounded-2xl border-3 border-[#fdd835] bg-white p-6 shadow-sm md:p-8">
           <div className="mb-7">
-            <h2 className="text-xl font-bold text-gray-900">
-              Personal Information
-            </h2>
-
+            <h2 className="text-xl font-bold text-gray-900">Personal Information</h2>
             <p className="mt-1 text-sm text-gray-500">
               Your basic account information.
             </p>
@@ -248,13 +204,8 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Full Name
               </label>
-
               <div className="relative">
-                <User
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
+                <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   name="fullName"
@@ -271,24 +222,16 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Email Address
               </label>
-
               <div className="relative">
-                <Mail
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
+                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="email"
-                  value={profile.email || ""}
+                  value={profile?.email || ""}
                   disabled
                   className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm text-gray-600"
                 />
               </div>
-
-              <p className="mt-1 text-xs text-gray-400">
-                Email cannot be changed.
-              </p>
+              <p className="mt-1 text-xs text-gray-400">Email cannot be changed.</p>
             </div>
 
             {/* PHONE */}
@@ -296,13 +239,8 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Phone Number
               </label>
-
               <div className="relative">
-                <Phone
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
+                <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   name="mobileNumber"
@@ -319,13 +257,8 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Address
               </label>
-
               <div className="relative">
-                <MapPin
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
+                <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   name="address"
@@ -342,7 +275,6 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 City
               </label>
-
               <input
                 type="text"
                 name="city"
@@ -358,7 +290,6 @@ const Profile = () => {
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Province
               </label>
-
               <input
                 type="text"
                 name="province"
@@ -371,17 +302,13 @@ const Profile = () => {
           </div>
 
           {/* FARMER INFORMATION */}
-          {profile.userRole === "farmer" && (
+          {profile?.userRole === "farmer" && (
             <div className="mt-10 border-t border-gray-100 pt-8">
               <div className="mb-7">
                 <div className="flex items-center gap-2">
                   <Tractor size={21} className="text-[#1B5E20]" />
-
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Farm Information
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">Farm Information</h2>
                 </div>
-
                 <p className="mt-1 text-sm text-gray-500">
                   Information about your farm and agricultural activities.
                 </p>
@@ -393,7 +320,6 @@ const Profile = () => {
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Farm Name
                   </label>
-
                   <input
                     type="text"
                     name="farmName"
@@ -409,7 +335,6 @@ const Profile = () => {
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Farm Location
                   </label>
-
                   <input
                     type="text"
                     name="farmLocation"
@@ -425,7 +350,6 @@ const Profile = () => {
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Primary Crop Type
                   </label>
-
                   <input
                     type="text"
                     name="primaryCropType"
@@ -454,10 +378,9 @@ const Profile = () => {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg  bg-gradient-to-r from-[#fdd835] to-[#006400] cursor-pointer px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1B5E20] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#fdd835] to-[#006400] cursor-pointer px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1B5E20] disabled:opacity-50"
               >
                 <Save size={17} />
-
                 {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>

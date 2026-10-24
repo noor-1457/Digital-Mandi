@@ -12,6 +12,7 @@ import {
   MapPin,
   Navigation,
 } from "lucide-react";
+import api from "../utils/api";
 export default function AllProducts() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -126,7 +127,7 @@ export default function AllProducts() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:8000/api/products");
+        const response = await api.get("/api/products");
         const data = response.data;
         const productList =
           data?.products || data?.data || (Array.isArray(data) ? data : []);

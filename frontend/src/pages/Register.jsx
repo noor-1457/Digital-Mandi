@@ -17,7 +17,7 @@ import {
 
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 
 function Register() {
   // FORM STATE
@@ -112,8 +112,8 @@ function Register() {
         primaryCropType: role === "farmer" ? formData.primaryCropType : "",
       };
 
-      const response = await axios.post(
-        "http://localhost:8000/api/auth/register",
+      const response = await api.post(
+        "/api/auth/register",
         registrationData,
       );
 

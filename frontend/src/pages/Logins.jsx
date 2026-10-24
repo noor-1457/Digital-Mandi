@@ -12,7 +12,7 @@ import {
 
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 
 function Logins() {
   const navigate = useNavigate();
@@ -61,8 +61,8 @@ function Logins() {
         password: formData.password,
       };
 
-      const response = await axios.post(
-        "http://localhost:8000/api/auth/login",
+      const response = await api.post(
+        "/api/auth/login",
         loginData,
         { withCredentials: true },
       );

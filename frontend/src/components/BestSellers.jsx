@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 
@@ -9,7 +9,7 @@ const BestSellers = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/products");
+      const response = await api.get("/api/products");
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);

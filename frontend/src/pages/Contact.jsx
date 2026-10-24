@@ -8,7 +8,7 @@ import {
   CheckCircle2,
   Loader2,
 } from "lucide-react";
-import axios from "axios";
+import api from "../utils/api";
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -40,7 +40,7 @@ export default function Contact() {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:8000/api/contact", formData);
+      await api.post("/api/contact", formData);
       
       setSuccess(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
