@@ -53,8 +53,7 @@ app.use(
 );
 
 // ✅ Vercel Preflight (OPTIONS) fix: Yeh line sabse zaroori hai
-app.options("*", cors());
-
+app.options(/.*/, cors());
 // Body Parser
 app.use(express.json({ limit: "16kb" })); 
 app.use(express.urlencoded({ extended: true, limit: "16kb" })); 
