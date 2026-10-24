@@ -13,6 +13,7 @@ import { setSocketIO } from "./utils/socket.js"; // ✅ path check kar lein
 dotenv.config({
   path: "./env",
 });
+connectDB().catch((err) => console.log("❌ DB Error:", err));
 
 // HTTP server + Socket.IO
 const server = http.createServer(app);

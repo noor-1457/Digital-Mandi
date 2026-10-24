@@ -1,15 +1,28 @@
 import mongoose from "mongoose";
-import { DB_NAME } from "../constants.js";
 
+let cached = global.mongoose;
 
-const connectDB = async () =>{
-try {
-    const connectionInstance =  await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
-    console.log(`/n MONGODB connected !! DB HOST: ${connectionInstance.connection.host}`)
-} catch (error) {
-    console.log("ERROR",error);
-    process.exit(1)          //process to execute after error
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
-} 
 
-export default connectDB; 
+const connectDB = async () => {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false, // ✅ Timeout error se bachne ke liye
+    };
+
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then((mongoose) => {
+      console.log("✅ MongoDB Connected");
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+};
+
+export default connectDB;
