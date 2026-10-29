@@ -13,7 +13,9 @@ import {
   Leaf,
   MessageSquare,
   MailOpen,
+  CheckCircle,
 } from "lucide-react";
+
 function AdminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
@@ -62,16 +64,33 @@ function AdminDashboard() {
     fetchAllData();
   }, []);
 
+  // Block / Unblock User
   const handleBlockToggle = async (userId) => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const res = await api.put(`/api/admin/users/${userId}/block`, {}, config);
-      // Update local state
       setUsers((prev) =>
         prev.map((u) => (u._id === userId ? res.data.user : u)),
       );
     } catch (err) {
-      alert("Failed to update user status", err);
+      alert("Failed to update user status",err);
+    }
+  };
+
+  // ✅ Approve / Reject User
+  const handleApproveToggle = async (userId) => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await api.put(
+        `/api/admin/users/${userId}/approve`,
+        {},
+        config,
+      );
+      setUsers((prev) =>
+        prev.map((u) => (u._id === userId ? res.data.user : u)),
+      );
+    } catch (err) {
+      alert("Failed to update approval status");
     }
   };
 
@@ -188,7 +207,6 @@ function AdminDashboard() {
               {/* ================= TAB 1: OVERVIEW ================= */}
               {activeTab === "overview" && stats && (
                 <div className="space-y-6 animate-fade-in">
-                  {/* STATS CARDS */}
                   <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
                       <div className="w-12 h-12 rounded-xl bg-[#eef3e4] text-[#607b37] flex items-center justify-center mb-4">
@@ -231,7 +249,6 @@ function AdminDashboard() {
                     </div>
                   </div>
 
-                  {/* BREAKDOWN */}
                   <div className="grid lg:grid-cols-2 gap-6">
                     <div className="bg-white border border-[#e3e7dc] rounded-2xl p-6 shadow-sm">
                       <h3 className="text-lg font-bold text-[#293829] mb-4">
@@ -303,7 +320,11 @@ function AdminDashboard() {
                             </span>
                           </td>
                           <td className="p-4">
-                            {u.isBlocked ? (
+                            {!u.isApproved && u.userRole !== "admin" ? (
+                              <span className="text-yellow-600 font-bold text-xs flex items-center gap-1">
+                                <ShieldAlert size={14} /> Pending
+                              </span>
+                            ) : u.isBlocked ? (
                               <span className="text-red-500 font-bold text-xs flex items-center gap-1">
                                 <ShieldAlert size={14} /> Blocked
                               </span>
@@ -314,16 +335,30 @@ function AdminDashboard() {
                             )}
                           </td>
                           <td className="p-4 text-right">
-                            <button
-                              onClick={() => handleBlockToggle(u._id)}
-                              className={`text-xs px-4 py-2 rounded-lg font-bold transition cursor-pointer ${
-                                u.isBlocked
-                                  ? "bg-green-100 text-green-700 hover:bg-green-200"
-                                  : "bg-red-100 text-red-700 hover:bg-red-200"
-                              }`}
-                            >
-                              {u.isBlocked ? "Unblock" : "Block"}
-                            </button>
+                            <div className="flex items-center justify-end gap-2">
+                              
+                              {/* ✅ Approve Button */}
+                              {!u.isApproved && u.userRole !== "admin" && (
+                                <button
+                                  onClick={() => handleApproveToggle(u._id)}
+                                  className="text-xs px-3 py-2 rounded-lg font-bold bg-green-600 text-white hover:bg-green-700 transition cursor-pointer flex items-center gap-1"
+                                >
+                                  <CheckCircle size={14} /> Approve
+                                </button>
+                              )}
+
+                              {/* Block/Unblock Button */}
+                              <button
+                                onClick={() => handleBlockToggle(u._id)}
+                                className={`text-xs px-3 py-2 rounded-lg font-bold transition cursor-pointer ${
+                                  u.isBlocked
+                                    ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                    : "bg-red-100 text-red-700 hover:bg-red-200"
+                                }`}
+                              >
+                                {u.isBlocked ? "Unblock" : "Block"}
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -443,10 +478,13 @@ function AdminDashboard() {
                             {msg.status === "unread" && (
                               <button
                                 onClick={async () => {
-                                  await api.put(`/api/contact/${msg._id}/read`, {}, {
-                                    headers: {
-                                      Authorization: `Bearer ${token}`,
-                                    },
+                                  await api.put(
+                                    `/api/contact/${msg._id}/read`,
+                                    {},
+                                    {
+                                      headers: {
+                                        Authorization: `Bearer ${token}`,
+                                      },
                                     },
                                   );
                                   setContactMessages((prev) =>

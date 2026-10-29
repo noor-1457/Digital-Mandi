@@ -5,6 +5,7 @@ import {
   toggleUserBlock,
   getAllProductsAdmin,
   getAllOrdersAdmin,
+  toggleUserApproval
 } from "../controllers/adminController.js";
 import { verifyJWT } from "../middlewares/user.middleware.js";
 
@@ -17,5 +18,6 @@ router.get("/users", verifyJWT, getAllUsers);
 router.put("/users/:userId/block", verifyJWT, toggleUserBlock);
 router.get("/products", verifyJWT, getAllProductsAdmin);
 router.get("/orders", verifyJWT, getAllOrdersAdmin);
+router.put("/users/:userId/approve", verifyJWT, toggleUserApproval);
 
 export default router;
