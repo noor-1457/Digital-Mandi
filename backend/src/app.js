@@ -10,7 +10,7 @@ import reviewRoutes from "./routes/review.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
-import connectDB from "./config/db.js";
+import connectDB from "./db/index.js";
 
 dotenv.config();
 
