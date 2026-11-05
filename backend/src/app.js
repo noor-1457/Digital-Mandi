@@ -10,19 +10,31 @@ import reviewRoutes from "./routes/review.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
+import connectDB from "./config/db.js";
 
 dotenv.config();
 
 const app = express();
-
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("❌ Database connection failed inside middleware:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Database connection failed" });
+  }
+});
 // ============================================================
 // ✅ CORS — Allowed Origins
 // ============================================================
 const allowedOrigins = [
-  "http://localhost:5173",         // Local laptop (Vite)
-  "http://localhost:3000",         
-  "http://127.0.0.1:5173",         
-  process.env.FRONTEND_URL,        // Vercel Env se aayega
+  "http://localhost:5173", // Local laptop (Vite)
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  process.env.FRONTEND_URL, // Vercel Env se aayega
 ].filter(Boolean);
 
 app.use(
@@ -37,7 +49,10 @@ app.use(
       }
 
       // Local network IPs (192.168.x.x, 10.x.x.x, 172.x.x.x)
-      const isLocalNetwork = /^http:\/\/(192\.168|10\.|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+(:\d+)?$/.test(origin);
+      const isLocalNetwork =
+        /^http:\/\/(192\.168|10\.|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+(:\d+)?$/.test(
+          origin,
+        );
       if (isLocalNetwork) {
         return callback(null, true);
       }
@@ -46,17 +61,17 @@ app.use(
       console.log("❌ CORS blocked origin:", origin);
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, 
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ Methods allow kiye
-    allowedHeaders: ["Content-Type", "Authorization"],   // ✅ Headers allow kiye
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ Headers allow kiye
   }),
 );
 
 // ✅ Vercel Preflight (OPTIONS) fix: Yeh line sabse zaroori hai
 app.options(/.*/, cors());
 // Body Parser
-app.use(express.json({ limit: "16kb" })); 
-app.use(express.urlencoded({ extended: true, limit: "16kb" })); 
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
 // Cookie Parser
 app.use(cookieParser());
