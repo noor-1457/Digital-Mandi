@@ -34,6 +34,7 @@ const allowedOrigins = [
   "http://localhost:5173", // Local laptop (Vite)
   "http://localhost:3000",
   "http://127.0.0.1:5173",
+  "https://digital-mandi-8036c.web.app",
   process.env.FRONTEND_URL, // Vercel Env se aayega
 ].filter(Boolean);
 
