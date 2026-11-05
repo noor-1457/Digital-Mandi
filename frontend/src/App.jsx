@@ -27,12 +27,14 @@ import { Toaster } from "react-hot-toast";
 import Contact from "./pages/Contact.jsx";
 import FloatingNotification from "./components/FloatingNotification";
 import Transactions from "./pages/Transactions";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <SocketProvider>
         <Toaster position="top-right" /> {/* ✅ Add karein */}
+        <ScrollToTop />
         <Routes>
           {/* PUBLIC */}
           <Route element={<PublicLayout />}>
